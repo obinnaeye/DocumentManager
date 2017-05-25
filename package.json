@@ -1,0 +1,24 @@
+{
+  "name": "okdocs",
+  "version": "1.0.0",
+  "description": "A simple document management application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andela-onnenanya/Document-Manager.git"
+  },
+  "keywords": [
+    "document",
+    "document-manager",
+    "document-management"
+  ],
+  "author": "Nnenanya Obinna K",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andela-onnenanya/Document-Manager/issues"
+  },
+  "homepage": "https://github.com/andela-onnenanya/Document-Manager#readme"
+}

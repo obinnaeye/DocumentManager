@@ -5,7 +5,12 @@
   "main": "server.js",
   "scripts": {
     "start:dev": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./node_modules/.bin/webpack",
+    "deploy": "npm start",
+    "mocha": "NODE_ENV=test mocha server/test/*.spec.js --compilers js:babel-register",
+    "cover": "rm -rf coverage/ && NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec server/test/*.spec.js",
+    "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls",
+    "test": "npm run mocha"
   },
   "repository": {
     "type": "git",
@@ -27,7 +32,9 @@
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
+    "babel-istanbul": "^0.12.2",
     "babel-loader": "^7.0.0",
+    "babel-register": "^6.24.1",
     "body-parser": "^1.17.2",
     "css-loader": "^0.28.2",
     "dotenv": "^4.0.0",
@@ -48,11 +55,15 @@
     "webpack-hot-middleware": "^2.18.0"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-react": "^7.0.1",
+    "mocha": "^3.4.2",
     "nodemon": "^1.11.0"
   }
 }

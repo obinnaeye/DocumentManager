@@ -3,10 +3,7 @@ node_js:
   - 6.10.2
 before_script:
   - npm install
-  - npm install -g bower
-  - bower install
 script: 
-  - npm run coverage
-after_success:
-  - "cat ./coverage/lcov.info | coveralls"
-  
+  - npm test
+# after_success:
+#   - "cat ./coverage/lcov.info | coveralls"

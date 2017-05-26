@@ -3,3 +3,4 @@
 .env
 .DS_Store
 /reports
+npm-debug.log

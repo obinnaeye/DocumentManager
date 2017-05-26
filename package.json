@@ -5,6 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start:dev": "nodemon server.js",
+    "build": "./node_modules/.bin/webpack",
+    "deploy": "npm start",
     "mocha": "NODE_ENV=test mocha server/test/*.spec.js --compilers js:babel-register",
     "cover": "rm -rf coverage/ && NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec server/test/*.spec.js",
     "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls",

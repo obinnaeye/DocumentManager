@@ -1,0 +1,21 @@
+{
+  "development": {
+    "username": "obinna",
+    "password": "mat610",
+    "database": "doc-dev",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL"
+  },
+  "test": {
+    "username": "postgres",
+    "password": {"use_env_variable": "DATABASE-PASS"},
+    "database": "doc-test",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  }
+}

@@ -35,6 +35,7 @@
     "babel-istanbul": "^0.12.2",
     "babel-loader": "^7.0.0",
     "babel-register": "^6.24.1",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
     "css-loader": "^0.28.2",
     "dotenv": "^4.0.0",

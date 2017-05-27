@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "obinna",
+    "username": "postgres",
     "password": "mat610",
-    "database": "doc-dev",
+    "database": "postgres",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"

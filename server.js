@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import UserRoutes from './server/routes/UserRoutes';
+import RoleRoutes from './server/routes/RoleRoutes';
 
 // Set up the express app
 const app = express();
@@ -13,6 +14,9 @@ app.use(morgan('dev'));
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// set role routes
+RoleRoutes.initializeRoutes(router);
 
 // set up User routes
 UserRoutes.initializeRoutes(router);

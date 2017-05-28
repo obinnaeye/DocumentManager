@@ -4,7 +4,8 @@
   "description": "A simple document management application",
   "main": "server.js",
   "scripts": {
-    "start:dev": "nodemon server.js",
+    "start": "babel-node server.js",
+    "start:dev": "nodemon server.js --exec babel-node",
     "build": "./node_modules/.bin/webpack",
     "deploy": "npm start",
     "mocha": "NODE_ENV=test mocha server/test/*.spec.js --compilers js:babel-register",

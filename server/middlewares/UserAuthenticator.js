@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { User } from '../models';
 
+dotenv.config();
 const JWT_SECRETE = process.env.JWT_SECRETE;
 
 export default class UserAuthenticator {

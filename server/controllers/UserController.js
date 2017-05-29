@@ -1,11 +1,23 @@
-import jwt from 'jsonwebtoken';
 import { User } from '../models';
+import UserAuthenticator from '../middlewares/UserAuthenticator';
 
 /**
  * @export
  * @class UserController
  */
 export default class UserController {
+
+  static getUserDetails(user, token) {
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      roleId: user.roleId,
+      createdAt: user.createdAt,
+      token
+    };
+  }
 
   /**
    *
@@ -33,8 +45,17 @@ export default class UserController {
         } else {
           const newUser = request.body;
           newUser.roleId = newUser.roleId || 2;
-          User.create(newUser);
-          response.status(200).json(newUser);
+          User.create(newUser)
+            .then((user) => {
+              const activeToken = UserAuthenticator.generateToken(user);
+              user.update({ activeToken })
+              .then(() => {
+                response.status(200).json({
+                  message: 'You have successfully signed up!',
+                  activeToken
+                });
+              });
+            });
         }
       }, (err) => {
         response.status(500).json({ message: `An internal Server

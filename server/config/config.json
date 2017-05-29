@@ -12,8 +12,8 @@
   },
   "test": {
     "username": "postgres",
-    "password": {"use_env_variable": "DATABASE-PASS"},
-    "database": "doc-test",
+    "password": "mat610",
+    "database": "postgres",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"

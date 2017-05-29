@@ -21,8 +21,8 @@ export default class UserAuthenticator {
 
   static getRequestToken(request) {
     const token = request.headers.authorization ||
-      request.body.token ||
-      request.headers['x-access-token'];
+      request.body.activeToken ||
+      request.headers['xsrf-token'];
     return token;
   }
 

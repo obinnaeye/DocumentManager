@@ -62,4 +62,36 @@ export default class UserController {
         error occured, please try again or contact the site admin` });
       });
   }
+
+  static login(request, response) {
+    const { email, password } = request.body;
+    if (email && password) {
+      console.log(email, password);
+      User.findOne({ where: { email } })
+        .then((existingUser) => {
+          if (existingUser) {
+            if (existingUser.verifyPassword(password)) {
+              const activeToken = UserAuthenticator.generateToken(existingUser);
+              // update user's activeToken
+              existingUser.update({ activeToken })
+                .then(() => {
+                  // send the token here
+                  response.status(200).json({
+                    message: 'You have successfully logged in',
+                    activeToken
+                  });
+                });
+            } else {
+              response.status(400).json({
+                message: 'Wrong password'
+              });
+            }
+          } else {
+            response.status(404).json({
+              message: `You have not registered the email ${email}` });
+          }
+        });
+    }
+  }
+
 }

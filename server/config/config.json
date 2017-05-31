@@ -13,7 +13,7 @@
   "test": {
     "username": "postgres",
     "password": "mat610",
-    "database": "postgres",
+    "database": "test",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"

@@ -41,7 +41,9 @@ export default class UserController {
     User.findOne({ where: { email } })
       .then((user) => {
         if (user) {
-          response.status(201).send(`${email} has been taken, try another.`);
+          response.status(201).json({
+            message: `${email} has been taken, try another.`
+          });
         } else {
           const newUser = request.body;
           newUser.roleId = newUser.roleId || 2;

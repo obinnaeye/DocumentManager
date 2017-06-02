@@ -9,7 +9,7 @@ import ErrorHandler from '../helpers/ErrorHandler';
  */
 export default class UserController {
 
-  static getUserDetails(user, token) {
+  static getUserDetails(user, activeToken) {
     return {
       id: user.id,
       email: user.email,
@@ -17,7 +17,7 @@ export default class UserController {
       lastName: user.lastName,
       roleId: user.roleId,
       createdAt: user.createdAt,
-      token
+      activeToken
     };
   }
 
@@ -39,6 +39,8 @@ export default class UserController {
           });
         } else {
           const newUser = request.body;
+          // Restrict creating a new user specified id
+          newUser.id = null;
           newUser.roleId = newUser.roleId || 2;
           User.create(newUser)
             .then((createdUser) => {
@@ -89,26 +91,29 @@ export default class UserController {
   }
 
   static searchUser(request, response) {
-    if (request.query.searchString) {
+    if (request.query.q) {
+      const like = `%${request.query.q}%`;
       User.findAll({ where:
       {
-        $or: [{ email: { $like: request.query.searchString } },
-          { firstName: { $like: request.query.searchString } },
-          { lastName: { $like: request.query.searchString } }
+        $or: [{ email: { $like: like } },
+          { firstName: { $like: like } },
+          { lastName: { $like: like } }
         ]
       },
-        order: ['email', 'DESC']
+        order: '"email" DESC'
       })
-       .then((foundUser) => {
-         if (foundUser) {
+       .then((foundUsers) => {
+         if (foundUsers) {
+           const formatedUsers  = foundUsers.map(foundUser =>
+             UserController.getUserDetails(foundUser)
+           );
            return ResponseHandler.send200(
              response,
-             UserController.getUserDetails(foundUser)
+             formatedUsers
             );
          }
-       }).catch(err => ResponseHandler.sendResponse(
+       }).catch(err => ResponseHandler.send404(
            response,
-           404,
            { status: false, message: err }
          ));
     }
@@ -118,7 +123,10 @@ export default class UserController {
     User.findById(request.params.id)
     .then((user) => {
       if (user) {
-        user.update(request.body)
+        // Restrict email from being changed
+        const updateFields = request.body;
+        updateFields.email = user.email;
+        user.update(updateFields)
         .then((updatedUser) => {
           ResponseHandler.send200(
             response,
@@ -138,9 +146,8 @@ export default class UserController {
     const id = Number(request.params.id);
     User.destroy({
       where: { id }
-    }).then((deletedUser) => {
-      console.log(deletedUser);
-      if (deletedUser === 1) {
+    }).then((deletedUserCount) => {
+      if (deletedUserCount === 1) {
         ResponseHandler.send200(
           response,
           { message: 'User Deleted' }
@@ -175,6 +182,24 @@ export default class UserController {
         response,
         error
       );
+    });
+  }
+
+  static fetchUsers(request, response) {
+    const limit = request.query.limit || '10';
+    const offset = request.query.offset || '0';
+    const queryBuilder = {
+      limit,
+      offset,
+      order: '"createdAt" DESC'
+    };
+    User.findAndCountAll(queryBuilder)
+    .then((users) => {
+      if (users.count > 0) {
+        ResponseHandler.send200(response, users);
+      } else {
+        ResponseHandler.send404(response);
+      }
     });
   }
 }

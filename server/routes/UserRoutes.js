@@ -18,6 +18,11 @@ class UserRoutes {
   static initializeRoutes(router) {
     UserRoutes.createUser(router);
     UserRoutes.login(router);
+    UserRoutes.searchUser(router);
+    UserRoutes.updateUser(router);
+    UserRoutes.deleteUser(router);
+    UserRoutes.getUser(router);
+    UserRoutes.fetchUsers(router);
   }
 
   /**
@@ -33,6 +38,26 @@ class UserRoutes {
 
   static login(router) {
     router.post('/users/login', UserController.login);
+  }
+
+  static searchUser(router) {
+    router.get('/search/users/', UserController.searchUser);
+  }
+
+  static updateUser(router) {
+    router.put('/users/:id', UserController.updateUser);
+  }
+
+  static deleteUser(router) {
+    router.delete('/users/:id', UserController.deleteUser);
+  }
+
+  static getUser(router) {
+    router.get('/users/:id', UserController.getUser);
+  }
+
+  static fetchUsers(router) {
+    router.get('/users/', UserController.fetchUsers);
   }
 }
 

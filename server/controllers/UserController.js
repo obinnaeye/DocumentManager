@@ -153,4 +153,28 @@ export default class UserController {
       }
     });
   }
+
+  static getUser(request, response) {
+    const id = Number(request.params.id);
+    User.findById(id)
+    .then((foundUser) => {
+      if (foundUser) {
+        ResponseHandler.send200(
+          response,
+          UserController.getUserDetails(foundUser)
+        );
+      } else {
+        ResponseHandler.send404(
+          response,
+          { message: 'User not found'
+          });
+      }
+    })
+    .catch((error) => {
+      ErrorHandler.handleRequestError(
+        response,
+        error
+      );
+    });
+  }
 }

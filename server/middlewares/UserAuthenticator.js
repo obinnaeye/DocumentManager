@@ -42,6 +42,7 @@ export default class UserAuthenticator {
         User.findById(verifiedToken.userId)
           .then((user) => {
             if (user && user.activeToken === token) {
+              request.decoded = verifiedToken;
               next();
             } else {
               response.status(400).send('Invalid User Authentication Token!');

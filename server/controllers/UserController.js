@@ -35,10 +35,11 @@ export default class UserController {
       .then((user) => {
         if (user) {
           response.status(201).json({
-            message: `${email} has been taken, try another.`
+            message: `${email} has been taken, use another email`
           });
         } else {
           const newUser = request.body;
+          //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImZpcnN0TmFtZSI6InVzZXIxIiwibGFzdE5hbWUiOiJhbm90aGVyIiwiZW1haWwiOiJvYmlvYmlAeWFob28uY29tIiwicm9sZUlkIjoyLCJpYXQiOjE0OTY0MjUyNzksImV4cCI6MTQ5NzAzMDA3OX0.wsZmuWVRi20zxecF9R21fVWRmND_C-XmpdZsLAKf_PY
           // Restrict creating a new user specified id
           newUser.id = null;
           newUser.roleId = newUser.roleId || 2;
@@ -95,9 +96,9 @@ export default class UserController {
       const like = `%${request.query.q}%`;
       User.findAll({ where:
       {
-        $or: [{ email: { $like: like } },
-          { firstName: { $like: like } },
-          { lastName: { $like: like } }
+        $or: [{ email: { $ilike: like } },
+          { firstName: { $ilike: like } },
+          { lastName: { $ilike: like } }
         ]
       },
         order: '"email" DESC'
@@ -112,9 +113,9 @@ export default class UserController {
              formatedUsers
             );
          }
-       }).catch(err => ResponseHandler.send404(
+       }).catch(error => ResponseHandler.send500(
            response,
-           { status: false, message: err }
+           { message: error }
          ));
     }
   }

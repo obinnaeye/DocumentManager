@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import UserRoutes from './server/routes/UserRoutes';
 import RoleRoutes from './server/routes/RoleRoutes';
+import DocumentRoutes from './server/routes/DocumentRoutes';
 
 // Set up the express app
 const app = express();
@@ -20,6 +21,9 @@ RoleRoutes.initializeRoutes(router);
 
 // set up User routes
 UserRoutes.initializeRoutes(router);
+
+// set up Document routes
+DocumentRoutes.initializeRoutes(router);
 
 app.use(router);
 

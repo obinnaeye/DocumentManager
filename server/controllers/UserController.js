@@ -112,9 +112,9 @@ export default class UserController {
              formatedUsers
             );
          }
-       }).catch(err => ResponseHandler.send404(
+       }).catch(error => ResponseHandler.send500(
            response,
-           { status: false, message: err }
+           { message: error }
          ));
     }
   }

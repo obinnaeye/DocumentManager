@@ -1,5 +1,7 @@
 import { User } from '../models';
 import UserAuthenticator from '../middlewares/UserAuthenticator';
+import ResponseHandler from '../helpers/ResponseHandler';
+import ErrorHandler from '../helpers/ErrorHandler';
 
 /**
  * @export
@@ -7,7 +9,7 @@ import UserAuthenticator from '../middlewares/UserAuthenticator';
  */
 export default class UserController {
 
-  static getUserDetails(user, token) {
+  static getUserDetails(user, activeToken) {
     return {
       id: user.id,
       email: user.email,
@@ -15,29 +17,20 @@ export default class UserController {
       lastName: user.lastName,
       roleId: user.roleId,
       createdAt: user.createdAt,
-      token
+      activeToken
     };
   }
 
-  /**
-   *
-   *
-   * @static
-   * @param {any} request
-   * @param {any} response
-   * @return {void}
-   * @memberOf UserController
-   */
   static createUser(request, response) {
     const { email, firstName, lastName, password } = request.body;
     if (!email || !firstName || !lastName || !password) {
-      response.status(300).json({ message: 'Incomplete registration data' });
+      ResponseHandler.send400(response,
+      { message: 'Incomplete registration data' });
     }
-
     if (password.length < 8 || password.length > 50) {
-      response.status(300).json('Password should be between 8 and 50 letters');
+      ResponseHandler.send400(response,
+      { message: 'Password should be between 8 and 50 letters' });
     }
-
     User.findOne({ where: { email } })
       .then((user) => {
         if (user) {
@@ -46,11 +39,13 @@ export default class UserController {
           });
         } else {
           const newUser = request.body;
+          // Restrict creating a new user specified id
+          newUser.id = null;
           newUser.roleId = newUser.roleId || 2;
           User.create(newUser)
-            .then((user) => {
-              const activeToken = UserAuthenticator.generateToken(user);
-              user.update({ activeToken })
+            .then((createdUser) => {
+              const activeToken = UserAuthenticator.generateToken(createdUser);
+              createdUser.update({ activeToken })
               .then(() => {
                 response.status(200).json({
                   message: 'You have successfully signed up!',
@@ -59,16 +54,14 @@ export default class UserController {
               });
             });
         }
-      }, (err) => {
-        response.status(500).json({ message: `An internal Server
-        error occured, please try again or contact the site admin` });
+      }, (error) => {
+        ErrorHandler.handleRequestError(response, error);
       });
   }
 
   static login(request, response) {
     const { email, password } = request.body;
     if (email && password) {
-      console.log(email, password);
       User.findOne({ where: { email } })
         .then((existingUser) => {
           if (existingUser) {
@@ -78,22 +71,135 @@ export default class UserController {
               existingUser.update({ activeToken })
                 .then(() => {
                   // send the token here
-                  response.status(200).json({
-                    message: 'You have successfully logged in',
-                    activeToken
-                  });
+                  ResponseHandler.send200(response,
+                    { message: 'You have successfully logged in',
+                      activeToken
+                    });
                 });
             } else {
-              response.status(400).json({
-                message: 'Wrong password'
-              });
+              ResponseHandler.send422(response,
+                { message: 'Wrong password' }
+              );
             }
           } else {
-            response.status(404).json({
-              message: `You have not registered the email ${email}` });
+            ResponseHandler.send422(response,
+                { message: `You have not registered the email ${email}` }
+              );
           }
         });
     }
   }
 
+  static searchUser(request, response) {
+    if (request.query.q) {
+      const like = `%${request.query.q}%`;
+      User.findAll({ where:
+      {
+        $or: [{ email: { $like: like } },
+          { firstName: { $like: like } },
+          { lastName: { $like: like } }
+        ]
+      },
+        order: '"email" DESC'
+      })
+       .then((foundUsers) => {
+         if (foundUsers) {
+           const formatedUsers  = foundUsers.map(foundUser =>
+             UserController.getUserDetails(foundUser)
+           );
+           return ResponseHandler.send200(
+             response,
+             formatedUsers
+            );
+         }
+       }).catch(err => ResponseHandler.send404(
+           response,
+           { status: false, message: err }
+         ));
+    }
+  }
+
+  static updateUser(request, response) {
+    User.findById(request.params.id)
+    .then((user) => {
+      if (user) {
+        // Restrict email from being changed
+        const updateFields = request.body;
+        updateFields.email = user.email;
+        user.update(updateFields)
+        .then((updatedUser) => {
+          ResponseHandler.send200(
+            response,
+            updatedUser
+          );
+        })
+        .catch((error) => {
+          ErrorHandler.handleRequestError(response, error);
+        });
+      } else {
+        ResponseHandler.send404(response);
+      }
+    });
+  }
+
+  static deleteUser(request, response) {
+    const id = Number(request.params.id);
+    User.destroy({
+      where: { id }
+    }).then((deletedUserCount) => {
+      if (deletedUserCount === 1) {
+        ResponseHandler.send200(
+          response,
+          { message: 'User Deleted' }
+        );
+      } else {
+        ResponseHandler.send404(
+          response,
+          { message: 'User not found, no user was deleted'
+          });
+      }
+    });
+  }
+
+  static getUser(request, response) {
+    const id = Number(request.params.id);
+    User.findById(id)
+    .then((foundUser) => {
+      if (foundUser) {
+        ResponseHandler.send200(
+          response,
+          UserController.getUserDetails(foundUser)
+        );
+      } else {
+        ResponseHandler.send404(
+          response,
+          { message: 'User not found'
+          });
+      }
+    })
+    .catch((error) => {
+      ErrorHandler.handleRequestError(
+        response,
+        error
+      );
+    });
+  }
+
+  static fetchUsers(request, response) {
+    const limit = request.query.limit || '10';
+    const offset = request.query.offset || '0';
+    const queryBuilder = {
+      limit,
+      offset,
+      order: '"createdAt" DESC'
+    };
+    User.findAndCountAll(queryBuilder)
+    .then((users) => {
+      if (users.count > 0) {
+        ResponseHandler.send200(response, users);
+      } else {
+        ResponseHandler.send404(response);
+      }
+    });
+  }
 }

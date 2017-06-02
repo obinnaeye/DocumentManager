@@ -1,5 +1,7 @@
 import { User } from '../models';
 import UserAuthenticator from '../middlewares/UserAuthenticator';
+import ResponseHandler from '../helpers/ResponseHandler';
+import ErrorHandler from '../helpers/ErrorHandler';
 
 /**
  * @export
@@ -19,25 +21,16 @@ export default class UserController {
     };
   }
 
-  /**
-   *
-   *
-   * @static
-   * @param {any} request
-   * @param {any} response
-   * @return {void}
-   * @memberOf UserController
-   */
   static createUser(request, response) {
     const { email, firstName, lastName, password } = request.body;
     if (!email || !firstName || !lastName || !password) {
-      response.status(300).json({ message: 'Incomplete registration data' });
+      ResponseHandler.send400(response,
+      { message: 'Incomplete registration data' });
     }
-
     if (password.length < 8 || password.length > 50) {
-      response.status(300).json('Password should be between 8 and 50 letters');
+      ResponseHandler.send400(response,
+      { message: 'Password should be between 8 and 50 letters' });
     }
-
     User.findOne({ where: { email } })
       .then((user) => {
         if (user) {
@@ -48,9 +41,9 @@ export default class UserController {
           const newUser = request.body;
           newUser.roleId = newUser.roleId || 2;
           User.create(newUser)
-            .then((user) => {
-              const activeToken = UserAuthenticator.generateToken(user);
-              user.update({ activeToken })
+            .then((createdUser) => {
+              const activeToken = UserAuthenticator.generateToken(createdUser);
+              createdUser.update({ activeToken })
               .then(() => {
                 response.status(200).json({
                   message: 'You have successfully signed up!',
@@ -59,16 +52,14 @@ export default class UserController {
               });
             });
         }
-      }, (err) => {
-        response.status(500).json({ message: `An internal Server
-        error occured, please try again or contact the site admin` });
+      }, (error) => {
+        ErrorHandler.handleRequestError(response, error);
       });
   }
 
   static login(request, response) {
     const { email, password } = request.body;
     if (email && password) {
-      console.log(email, password);
       User.findOne({ where: { email } })
         .then((existingUser) => {
           if (existingUser) {
@@ -78,22 +69,88 @@ export default class UserController {
               existingUser.update({ activeToken })
                 .then(() => {
                   // send the token here
-                  response.status(200).json({
-                    message: 'You have successfully logged in',
-                    activeToken
-                  });
+                  ResponseHandler.send200(response,
+                    { message: 'You have successfully logged in',
+                      activeToken
+                    });
                 });
             } else {
-              response.status(400).json({
-                message: 'Wrong password'
-              });
+              ResponseHandler.send422(response,
+                { message: 'Wrong password' }
+              );
             }
           } else {
-            response.status(404).json({
-              message: `You have not registered the email ${email}` });
+            ResponseHandler.send422(response,
+                { message: `You have not registered the email ${email}` }
+              );
           }
         });
     }
   }
 
+  static searchUser(request, response) {
+    if (request.query.searchString) {
+      User.findAll({ where:
+      {
+        $or: [{ email: { $like: request.query.searchString } },
+          { firstName: { $like: request.query.searchString } },
+          { lastName: { $like: request.query.searchString } }
+        ]
+      },
+        order: ['email', 'DESC']
+      })
+       .then((foundUser) => {
+         if (foundUser) {
+           return ResponseHandler.send200(
+             response,
+             UserController.getUserDetails(foundUser)
+            );
+         }
+       }).catch(err => ResponseHandler.sendResponse(
+           response,
+           404,
+           { status: false, message: err }
+         ));
+    }
+  }
+
+  static updateUser(request, response) {
+    User.findById(request.params.id)
+    .then((user) => {
+      if (user) {
+        user.update(request.body)
+        .then((updatedUser) => {
+          ResponseHandler.send200(
+            response,
+            updatedUser
+          );
+        })
+        .catch((error) => {
+          ErrorHandler.handleRequestError(response, error);
+        });
+      } else {
+        ResponseHandler.send404(response);
+      }
+    });
+  }
+
+  static deleteUser(request, response) {
+    const id = Number(request.params.id);
+    User.destroy({
+      where: { id }
+    }).then((deletedUser) => {
+      console.log(deletedUser);
+      if (deletedUser === 1) {
+        ResponseHandler.send200(
+          response,
+          { message: 'User Deleted' }
+        );
+      } else {
+        ResponseHandler.send404(
+          response,
+          { message: 'User not found, no user was deleted'
+          });
+      }
+    });
+  }
 }

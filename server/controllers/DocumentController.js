@@ -1,4 +1,4 @@
-import Document from '../models/document';
+import { Document } from '../models';
 import ResponseHandler from '../helpers/ResponseHandler';
 import ErrorHandler from '../helpers/ErrorHandler';
 
@@ -14,7 +14,7 @@ class DocumentController {
       createdAt
     };
   }
-  
+
   static createDocument(request, response) {
     // const { title, content } = request.body;
     const newDocument = {
@@ -28,7 +28,7 @@ class DocumentController {
     .then((createdDocument) => {
       ResponseHandler.send200(
         response,
-        DocumentController.getDocumentFields(createdDocument)
+        DocumentController.getDocumentDetails(createdDocument)
       );
     })
     .catch((error) => {
@@ -126,13 +126,13 @@ class DocumentController {
     }
   }
 
-  static searchUser(request, response) {
+  static searchDocuments(request, response) {
     if (request.query.q) {
       const like = `%${request.query.q}%`;
       const queryBuilder = {
         where: {
           title: {
-            $like: like
+            $ilike: like
           }
         },
         attributes: ['id', 'access', 'title', 'createdAt'],
@@ -164,7 +164,7 @@ class DocumentController {
         // chceck document access type
         // give access to owner, admin;
         if (
-          userId === foundDocument.OwnerId
+          userId === foundDocument.ownerId
           || userRoleId === 1
           ) {
           foundDocument.update(request.body)
@@ -205,7 +205,7 @@ class DocumentController {
         // chceck document access type
         // give access to owner, admin;
         if (
-          userId === foundDocument.OwnerId
+          userId === foundDocument.ownerId
           || userRoleId === 1
           ) {
           foundDocument.destroy(request.body)
@@ -230,3 +230,5 @@ class DocumentController {
     });
   }
 }
+
+export default DocumentController;

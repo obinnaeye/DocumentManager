@@ -20,17 +20,22 @@ export default class ResponseHandler {
     return ResponseHandler.sendResponse(response, 401, message);
   }
 
+  static send403(response, body) {
+    const message = body || { message: 'Access Denied' };
+    return ResponseHandler.sendResponse(response, 401, message);
+  }
+
   static send404(response, body) {
     const message = body || { message: 'Resource(s) Not Found' };
     return ResponseHandler.sendResponse(response, 404, message);
   }
 
-   static send409(response, body) {
+  static send409(response, body) {
     const message = body || { message: 'Operation will create data conflicts' };
     return ResponseHandler.sendResponse(response, 409, message);
   }
 
-   static send422(response, body) {
+  static send422(response, body) {
     const message = body || { message: 'Unprocessable Entity' };
     return ResponseHandler.sendResponse(response, 422, message);
   }

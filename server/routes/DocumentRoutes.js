@@ -5,10 +5,11 @@ import DocumentMiddleware from '../middlewares/DocumentMiddleware';
  * Class for creating Document routes
  */
 class DocumentRoutes {
-  static setDocumentRoutes(router) {
+  static initializeRoutes(router) {
     DocumentRoutes.createDocument(router);
     DocumentRoutes.getDocument(router);
     DocumentRoutes.getDocuments(router);
+    DocumentRoutes.searchDocuments(router);
     DocumentRoutes.updateDocument(router);
     DocumentRoutes.deleteDocument(router);
   }
@@ -40,10 +41,12 @@ class DocumentRoutes {
     );
   }
 
-  static searchDocument(router) {
-    router.get('/search/documents', UserAuthenticator.authenticateUser,
-    DocumentMiddleware.validateGetRequest,
-    DocumentController.searchDocuments);
+  static searchDocuments(router) {
+    router.get(
+      '/search/documents',
+      UserAuthenticator.authenticateUser,
+      DocumentMiddleware.validateGetRequest,
+      DocumentController.searchDocuments);
   }
 
   static updateDocument(router) {

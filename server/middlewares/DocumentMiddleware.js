@@ -1,5 +1,5 @@
 import ResponseHandler from '../helpers/ResponseHandler';
-import Document from '../models';
+import { Document } from '../models';
 
 export default class DocumentMiddleware {
   static validateCreateRequest(request, response, next) {
@@ -30,10 +30,10 @@ export default class DocumentMiddleware {
         ]
       }
     }).then((documents) => {
-      if (documents.count > 0) {
+      if (documents.length > 0) {
         ResponseHandler.send409(
           response,
-          { message: `A document with the title ${title}
+          { message: `A document with the title '${title}'
           already exist. Choose a different title.` }
         );
       } else {

@@ -64,7 +64,6 @@ export default (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: (models) => {
-        // associations defined here
         User.belongsTo(models.Role, { foreignKey: 'roleId' });
         User.hasMany(models.Document, { foreignKey: 'ownerId' });
       }
@@ -82,7 +81,7 @@ export default (sequelize, DataTypes) => {
       /**
        * Hash user's password
        * @method
-       * @returns {Void} no return
+       * @returns {Void} - Returns void
        */
       hashPassword() {
         this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync(8));

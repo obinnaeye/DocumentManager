@@ -1,29 +1,23 @@
 import RoleController from '../controllers/RoleController';
 
 /**
- *
- *
- * @class UserRoutes
+ * Class for creating Role routes
  */
 class RoleRoutes {
 
   /**
-   *
-   * @static
-   * @param {function} router
-   * @return {void}
-   * @memberOf UserRoutes
+   * Method that sets all Role routes
+   * @param{Object} router - Express router
+   * @return{Void} returns void
    */
   static initializeRoutes(router) {
     RoleRoutes.createRole(router);
   }
 
   /**
-   *
-   * @static
-   * @param {any} router
-   * @return {void}
-   * @memberOf UserRoutes
+   * Method that sets up Route for creating a new role
+   * @param{Object} router - Express router
+   * @return{Void} returns void
    */
   static createRole(router) {
     router.post('/roles', RoleController.createRole);

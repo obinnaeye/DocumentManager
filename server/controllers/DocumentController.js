@@ -16,7 +16,6 @@ class DocumentController {
   }
 
   static createDocument(request, response) {
-    // const { title, content } = request.body;
     const newDocument = {
       title: request.body.title,
       content: request.body.content,

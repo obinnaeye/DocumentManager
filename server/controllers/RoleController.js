@@ -1,20 +1,16 @@
-import jwt from 'jsonwebtoken';
 import { Role } from '../models';
 
 /**
- * @export
- * @class UserController
+ * Class that controls role requests
  */
 export default class RoleController {
 
   /**
-   *
-   *
-   * @static
-   * @param {any} request
-   * @param {any} response
-   * @return {void}
-   * @memberOf RoleController
+   * Method to create a a new Role
+   * @param{Object} request - Request Object
+   * @param{Object} response - Response Object
+   * @return{Void} - Returns void
+   * @memberof RoleController
    */
   static createRole(request, response) {
     const newRole = request.body;

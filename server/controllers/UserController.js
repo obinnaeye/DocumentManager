@@ -4,11 +4,17 @@ import ResponseHandler from '../helpers/ResponseHandler';
 import ErrorHandler from '../helpers/ErrorHandler';
 
 /**
- * @export
- * @class UserController
+ * Class that handles request to user database
  */
 export default class UserController {
 
+  /**
+   * Method to get get user fields from a user object
+   * @param {Object} user - User object
+   * @param {String} activeToken - user's current token (Optional)
+   * @return {Object} - new User with user details
+   * for public view
+   */
   static getUserDetails(user, activeToken) {
     return {
       id: user.id,
@@ -21,6 +27,12 @@ export default class UserController {
     };
   }
 
+  /**
+   * Controller method that creates a new User
+   * @param{Object} request - Request Object
+   * @param{Object} response - Response Object
+   * @return{Void} - returns void
+   */
   static createUser(request, response) {
     const { email, firstName, lastName, password } = request.body;
     if (!email || !firstName || !lastName || !password) {
@@ -39,7 +51,6 @@ export default class UserController {
           });
         } else {
           const newUser = request.body;
-          //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImZpcnN0TmFtZSI6InVzZXIxIiwibGFzdE5hbWUiOiJhbm90aGVyIiwiZW1haWwiOiJvYmlvYmlAeWFob28uY29tIiwicm9sZUlkIjoyLCJpYXQiOjE0OTY0MjUyNzksImV4cCI6MTQ5NzAzMDA3OX0.wsZmuWVRi20zxecF9R21fVWRmND_C-XmpdZsLAKf_PY
           // Restrict creating a new user specified id
           newUser.id = null;
           newUser.roleId = newUser.roleId || 2;
@@ -60,6 +71,12 @@ export default class UserController {
       });
   }
 
+  /**
+   * Method to login a user
+   * @param{Object} request - Request object
+   * @param{Object} response - Response object
+   * @return{Void} - returns Void
+   */
   static login(request, response) {
     const { email, password } = request.body;
     if (email && password) {
@@ -91,6 +108,33 @@ export default class UserController {
     }
   }
 
+  /**
+   * Method to logout a specific user (POST)
+   * @param{Object} request - Request object
+   * @param{Object} response - Response object
+   * @return{undefined} - returns undefined
+   */
+  static logoutUser(request, response) {
+    const id = request.decoded.userId;
+    User.findById(id)
+    .then((user) => {
+      user.update({ activeToken: null })
+      .then(() => {
+        ResponseHandler.sendResponse(
+          response,
+          200,
+          { message: 'Logout Successful' }
+        );
+      });
+    });
+  }
+
+  /**
+   * Method to search for all instances of user
+   * @param{Object} request - Request object
+   * @param{Object} response - Response object
+   * @return{Void} - returns Void
+   */
   static searchUser(request, response) {
     if (request.query.q) {
       const like = `%${request.query.q}%`;
@@ -105,7 +149,7 @@ export default class UserController {
       })
        .then((foundUsers) => {
          if (foundUsers) {
-           const formatedUsers  = foundUsers.map(foundUser =>
+           const formatedUsers = foundUsers.map(foundUser =>
              UserController.getUserDetails(foundUser)
            );
            return ResponseHandler.send200(
@@ -120,6 +164,12 @@ export default class UserController {
     }
   }
 
+  /**
+   * Method to update a user's profiles
+   * @param{Object} request - Request object
+   * @param{Object} response - Response object
+   * @return{Void} - returns Void
+   */
   static updateUser(request, response) {
     User.findById(request.params.id)
     .then((user) => {
@@ -143,6 +193,12 @@ export default class UserController {
     });
   }
 
+  /**
+   * Method to delete a specified user
+   * @param{Object} request - Request object
+   * @param{Object} response - Response object
+   * @return{Void} - returns Void
+   */
   static deleteUser(request, response) {
     const id = Number(request.params.id);
     User.destroy({
@@ -162,6 +218,12 @@ export default class UserController {
     });
   }
 
+  /**
+   * Method to get a specified user
+   * @param{Object} request - Request object
+   * @param{Object} response - Response object
+   * @return{Void} - returns Void
+   */
   static getUser(request, response) {
     const id = Number(request.params.id);
     User.findById(id)
@@ -186,7 +248,13 @@ export default class UserController {
     });
   }
 
-  static fetchUsers(request, response) {
+  /**
+   * Method to get all instances of user
+   * @param{Object} request - Request object
+   * @param{Object} response - Response object
+   * @return{Void} - returns Void
+   */
+  static getUsers(request, response) {
     const limit = request.query.limit || '10';
     const offset = request.query.offset || '0';
     const queryBuilder = {

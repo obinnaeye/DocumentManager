@@ -1,7 +1,18 @@
 import ResponseHandler from '../helpers/ResponseHandler';
 import { Document } from '../models';
 
+/**
+ * Class to verify/check Document related requests
+ */
 export default class DocumentMiddleware {
+
+  /**
+   * Method that checks and validates document creation requests
+   * @param {Object} request - Request Object
+   * @param {Object} response - Response Object
+   * @param {Function} next - Function call to continue with next function
+   * @return {Void} - Returns void
+   */
   static validateCreateRequest(request, response, next) {
     const { title, content } = request.body;
     const { userId } = request.decoded;
@@ -42,6 +53,13 @@ export default class DocumentMiddleware {
     });
   }
 
+  /**
+   * Method that checks and validates document get requests
+   * @param {Object} request - Request Object
+   * @param {Object} response - Response Object
+   * @param {Function} next - Function call to continue with next function
+   * @return {undefined}
+   */
   static validateGetRequest(request, response, next) {
     if (request.query && Number(request.query.limit) < 1) {
       ResponseHandler.send400(

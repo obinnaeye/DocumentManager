@@ -2,62 +2,110 @@ import UserController from '../controllers/UserController';
 import UserAuthenticator from '../middlewares/UserAuthenticator';
 
 /**
- *
- *
- * @class UserRoutes
+ * Class that creates a UserRoutes Object
+ * and set express routes associated with a user object
  */
 class UserRoutes {
 
   /**
-   *
-   * @static
-   * @param {function} router
-   * @return {void}
-   * @memberOf UserRoutes
+   * Method that sets all User routes
+   * @param{Object} router - Express router
+   * @returns{Void} - Returns Void
+   * @memberof UserRoutes
    */
   static initializeRoutes(router) {
     UserRoutes.createUser(router);
     UserRoutes.login(router);
+    UserRoutes.logoutUser(router);
     UserRoutes.searchUser(router);
     UserRoutes.updateUser(router);
     UserRoutes.deleteUser(router);
     UserRoutes.getUser(router);
-    UserRoutes.fetchUsers(router);
+    UserRoutes.getUsers(router);
   }
 
   /**
-   *
-   * @static
-   * @param {any} router
-   * @return {void}
-   * @memberOf UserRoutes
+   * Method that sets up route for create a new user requests
+   * @param{Object} router - Express router
+   * @return{Void} - Returns Void
+   * @memberof UserRoutes
    */
   static createUser(router) {
     router.post('/users/', UserController.createUser);
   }
 
+  /**
+   * Method that sets up route for user login requests
+   * @param{Object} router - Express router
+   * @return{Void} - Returns Void
+   * @memberof UserRoutes
+   */
   static login(router) {
     router.post('/users/login', UserController.login);
   }
 
+  /**
+   * Method that sets up route for user logout requests
+   * @param{Object} router - Express router
+   * @return{Void} - Returns Void
+   * @memberof UserRoutes
+   */
+  static logoutUser(router) {
+    router.post(
+      '/users/logout',
+      UserAuthenticator.authenticateUser,
+      UserController.logoutUser
+    );
+  }
+
+  /**
+   * Method that sets up route for searching documents
+   * @param{Object} router - Express router
+   * @return{Void} - Returns Void
+   * @memberof UserRoutes
+   */
   static searchUser(router) {
     router.get('/search/users/', UserController.searchUser);
   }
 
+  /**
+   * Method that sets up route for updating user profiles
+   * @param{Object} router - Express router
+   * @return{Void} - Returns Void
+   * @memberof UserRoutes
+   */
   static updateUser(router) {
     router.put('/users/:id', UserController.updateUser);
   }
 
+  /**
+   * Method that sets up route for delete user requests
+   * @param{Object} router - Express router
+   * @return{Void} - Returns Void
+   * @memberof UserRoutes
+   */
   static deleteUser(router) {
     router.delete('/users/:id', UserController.deleteUser);
   }
 
+  /**
+   * Method that sets up route for getting a specific user
+   * @param{Object} router - Express router
+   * @return{Void} - Returns Void
+   * @memberof UserRoutes
+   */
   static getUser(router) {
     router.get('/users/:id', UserController.getUser);
   }
 
-  static fetchUsers(router) {
-    router.get('/users/', UserController.fetchUsers);
+  /**
+   * Method that sets up route for getting all instances of user
+   * @param{Object} router - Express router
+   * @return{Void} - Returns Void
+   * @memberof UserRoutes
+   */
+  static getUsers(router) {
+    router.get('/users/', UserController.getUsers);
   }
 }
 

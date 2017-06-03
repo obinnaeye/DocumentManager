@@ -2,8 +2,18 @@ import { Document } from '../models';
 import ResponseHandler from '../helpers/ResponseHandler';
 import ErrorHandler from '../helpers/ErrorHandler';
 
+/**
+ * @class DocumentController
+ */
 class DocumentController {
 
+  /**
+   * Method to get document fields from Document object
+   * @param {Object} passedDocument - Document object
+   * @return {Object} - new Document object with document
+   * details for public view
+   * @memberof DocumentController
+   */
   static getDocumentDetails(passedDocument) {
     const { id, title, content, access, createdAt } = passedDocument;
     return {
@@ -15,6 +25,13 @@ class DocumentController {
     };
   }
 
+  /**
+   * Controller method that creates a new Document
+   * @param{Object} request - Request Object
+   * @param{Object} response - Response Object
+   * @return{Void} - returns void
+   * @memberof DocumentController
+   */
   static createDocument(request, response) {
     const newDocument = {
       title: request.body.title,
@@ -35,6 +52,13 @@ class DocumentController {
     });
   }
 
+  /**
+   * Controller method that gets a specific Document
+   * @param{Object} request - Request Object
+   * @param{Object} response - Response Object
+   * @return{Void} - returns void
+   * @memberof DocumentController
+   */
   static getDocument(request, response) {
     const { id } = request.params;
     const { userId } = request.decoded;
@@ -76,6 +100,13 @@ class DocumentController {
     });
   }
 
+  /**
+   * Controller method that gets all documents
+   * @param{Object} request - Request Object
+   * @param{Object} response - Response Object
+   * @return{Void} - returns void
+   * @memberof DocumentController
+   */
   static getDocuments(request, response) {
     const { userId, roleId } = request.decoded;
     const limit = request.query.limit || '10';
@@ -125,6 +156,14 @@ class DocumentController {
     }
   }
 
+  /**
+   * Controller method that searches for all instances of document
+   * @static
+   * @param {Object} request - request object
+   * @param {Object} response - response object
+   * @return{Void} - returns void
+   * @memberof DocumentController
+   */
   static searchDocuments(request, response) {
     if (request.query.q) {
       const like = `%${request.query.q}%`;
@@ -153,6 +192,13 @@ class DocumentController {
     }
   }
 
+  /**
+   * Controller method that updates a Document
+   * @param{Object} request - Request Object
+   * @param{Object} response - Response Object
+   * @return{Void} - returns void
+   * @memberof DocumentController
+   */
   static updateDocument(request, response) {
     const { id } = request.params;
     const { userId } = request.decoded;
@@ -194,6 +240,13 @@ class DocumentController {
     });
   }
 
+  /**
+   * Controller method that deletes a specific Document
+   * @param{Object} request - Request Object
+   * @param{Object} response - Response Object
+   * @return{Void} - returns void
+   * @memberof DocumentController
+   */
   static deleteDocument(request, response) {
     const { id } = request.params;
     const { userId } = request.decoded;

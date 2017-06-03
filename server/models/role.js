@@ -21,7 +21,6 @@ export default (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate(models) {
-        // Associations defined here
         Role.hasMany(models.User, {
           foreignKey: 'roleId'
         });

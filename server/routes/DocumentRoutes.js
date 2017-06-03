@@ -17,6 +17,7 @@ class DocumentRoutes {
     DocumentRoutes.createDocument(router);
     DocumentRoutes.getDocument(router);
     DocumentRoutes.getDocuments(router);
+    DocumentRoutes.getUserDocument(router);
     DocumentRoutes.searchDocuments(router);
     DocumentRoutes.updateDocument(router);
     DocumentRoutes.deleteDocument(router);
@@ -64,6 +65,20 @@ class DocumentRoutes {
       UserAuthenticator.authenticateUser,
       DocumentMiddleware.validateGetRequest,
       DocumentController.getDocuments
+    );
+  }
+
+  /**
+   * Method that sets route for getting all documents belonging to user
+   * @param{Object} router - Express router
+   * @return{Void}  - Returns void
+   * @memberof DocumentRoutes
+   */
+  static getUserDocument(router) {
+    router.get(
+      '/users/:id/documents',
+      UserAuthenticator.authenticateUser,
+      DocumentController.getUserDocument
     );
   }
 

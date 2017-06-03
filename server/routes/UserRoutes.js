@@ -1,5 +1,6 @@
 import UserController from '../controllers/UserController';
 import UserAuthenticator from '../middlewares/UserAuthenticator';
+import UserMiddleware from '../middlewares/UserMiddleware';
 
 /**
  * Class that creates a UserRoutes Object
@@ -31,7 +32,9 @@ class UserRoutes {
    * @memberof UserRoutes
    */
   static createUser(router) {
-    router.post('/users/', UserController.createUser);
+    router.post('/users/',
+    UserMiddleware.validateCreateRequest,
+    UserController.createUser);
   }
 
   /**
@@ -41,7 +44,8 @@ class UserRoutes {
    * @memberof UserRoutes
    */
   static login(router) {
-    router.post('/users/login', UserController.login);
+    router.post('/users/login',
+    UserController.login);
   }
 
   /**
@@ -65,7 +69,9 @@ class UserRoutes {
    * @memberof UserRoutes
    */
   static searchUser(router) {
-    router.get('/search/users/', UserController.searchUser);
+    router.get('/search/users/',
+    UserAuthenticator.authenticateUser,
+    UserController.searchUser);
   }
 
   /**
@@ -75,7 +81,10 @@ class UserRoutes {
    * @memberof UserRoutes
    */
   static updateUser(router) {
-    router.put('/users/:id', UserController.updateUser);
+    router.put('/users/:id',
+    UserAuthenticator.authenticateUser,
+    UserMiddleware.validateUpdateRequest,
+    UserController.updateUser);
   }
 
   /**
@@ -85,7 +94,10 @@ class UserRoutes {
    * @memberof UserRoutes
    */
   static deleteUser(router) {
-    router.delete('/users/:id', UserController.deleteUser);
+    router.delete('/users/:id',
+    UserAuthenticator.authenticateUser,
+    UserMiddleware.validateDeleteRequest,
+    UserController.deleteUser);
   }
 
   /**
@@ -95,7 +107,10 @@ class UserRoutes {
    * @memberof UserRoutes
    */
   static getUser(router) {
-    router.get('/users/:id', UserController.getUser);
+    router.get('/users/:id',
+    UserAuthenticator.authenticateUser,
+    UserMiddleware.validateGetRequest,
+    UserController.getUser);
   }
 
   /**
@@ -105,7 +120,9 @@ class UserRoutes {
    * @memberof UserRoutes
    */
   static getUsers(router) {
-    router.get('/users/', UserController.getUsers);
+    router.get('/users/',
+    UserAuthenticator.authenticateUser,
+    UserController.getUsers);
   }
 }
 

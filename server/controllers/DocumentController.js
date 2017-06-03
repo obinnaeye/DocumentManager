@@ -156,6 +156,12 @@ class DocumentController {
     }
   }
 
+  static getUserDocument(request, response) {
+    const id = Number(request.params.id);
+    const requesterRoleId = request.decoded.roleId;
+    const requesterId = request.decoded.userId;
+  }
+
   /**
    * Controller method that searches for all instances of document
    * @static

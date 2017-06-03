@@ -34,15 +34,7 @@ export default class UserController {
    * @return{Void} - returns void
    */
   static createUser(request, response) {
-    const { email, firstName, lastName, password } = request.body;
-    if (!email || !firstName || !lastName || !password) {
-      ResponseHandler.send400(response,
-      { message: 'Incomplete registration data' });
-    }
-    if (password.length < 8 || password.length > 50) {
-      ResponseHandler.send400(response,
-      { message: 'Password should be between 8 and 50 letters' });
-    }
+    const { email } = request.body;
     User.findOne({ where: { email } })
       .then((user) => {
         if (user) {
@@ -201,9 +193,8 @@ export default class UserController {
    */
   static deleteUser(request, response) {
     const id = Number(request.params.id);
-    User.destroy({
-      where: { id }
-    }).then((deletedUserCount) => {
+    User.destroy({ where: { id } })
+    .then((deletedUserCount) => {
       if (deletedUserCount === 1) {
         ResponseHandler.send200(
           response,

@@ -15,13 +15,14 @@ class DocumentController {
    * @memberof DocumentController
    */
   static getDocumentDetails(passedDocument) {
-    const { id, title, content, access, createdAt } = passedDocument;
+    const { id, title, content, access, createdAt, ownerId } = passedDocument;
     return {
       id,
       title,
       content,
       access,
-      createdAt
+      createdAt,
+      ownerId
     };
   }
 
@@ -157,6 +158,42 @@ class DocumentController {
   }
 
   /**
+   * Controller method that gets all documents belonging a user
+   * @param{Object} request - Request Object
+   * @param{Object} response - Response Object
+   * @return{Void} - returns void
+   * @memberof DocumentController
+   */
+  static getUserDocument(request, response) {
+    const id = Number(request.params.id);
+    const ownerId = request.decoded.userId;
+    if (id !== ownerId) {
+      ResponseHandler.send400(
+        response,
+        { message: 'User ID does not match id in uri params' }
+      );
+    } else {
+      const queryBuilder = {
+        where: { ownerId },
+        order: '"title" DESC'
+      };
+      Document.findAll(queryBuilder)
+        .then((foundDocuments) => {
+          if (foundDocuments) {
+            return ResponseHandler.send200(
+              response,
+              foundDocuments
+            );
+          }
+        })
+        .catch(error => ResponseHandler.send404(
+            response,
+            { message: error }
+          ));
+    }
+  }
+
+  /**
    * Controller method that searches for all instances of document
    * @static
    * @param {Object} request - request object
@@ -173,7 +210,6 @@ class DocumentController {
             $ilike: like
           }
         },
-        attributes: ['id', 'access', 'title', 'createdAt'],
         order: '"createdAt" DESC'
       };
       Document.findAll(queryBuilder)

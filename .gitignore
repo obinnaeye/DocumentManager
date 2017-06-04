@@ -4,3 +4,4 @@
 .DS_Store
 /reports
 npm-debug.log
+client/public/js/bundle.min.js

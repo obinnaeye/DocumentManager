@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
-  entry: path.join(__dirname, '/client/public/js/index.jsx'),
+  entry: path.join(__dirname, '/client/src/js/index.jsx'),
 
   module: {
     loaders: [
@@ -27,10 +27,10 @@ module.exports = {
   },
   target: 'web',
   resolve: {
-    extensions: ['.js']
+    extensions: ['*', '.js', '.jsx'],
   },
   output: {
-    path: path.resolve(__dirname, 'client/src/js'),
+    path: path.resolve(__dirname, 'client/public/js'),
     filename: 'bundle.min.js'
   }
 };

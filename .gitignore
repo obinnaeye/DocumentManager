@@ -5,3 +5,4 @@
 /reports
 npm-debug.log
 client/public/js/bundle.min.js
+bower_components

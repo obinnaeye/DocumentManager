@@ -17,7 +17,8 @@ export default class UserMiddleware {
     const { email, firstName, lastName, password } = request.body;
     if (!email || !firstName || !lastName || !password) {
       ResponseHandler.send400(response,
-      { message: 'Incomplete registration data' });
+      { message: 'Incomplete registration data',
+          data: request.body });
     }
     if (password.length < 8 || password.length > 50) {
       ResponseHandler.send400(response,

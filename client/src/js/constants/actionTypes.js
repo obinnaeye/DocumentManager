@@ -1,0 +1,10 @@
+
+const actionTypes = {
+  // Create User
+  WILL_CREATE_USER: 'WILL_CREATE_USER',
+  CREATE_USER: 'CREATE_USER',
+  CREATE_USER_SUCCESS: 'CREATE_USER_SUCCESS',
+  CREATE_USER_FAILURE: 'CREATE_USER_FAILURE',
+};
+
+export default actionTypes;

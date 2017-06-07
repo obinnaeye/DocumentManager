@@ -1,5 +1,4 @@
 import ResponseHandler from '../helpers/ResponseHandler';
-import Authenticator from './UserAuthenticator';
 
 /**
  * Middleware class to handle verify/check User related
@@ -17,14 +16,12 @@ export default class UserMiddleware {
     const { email, firstName, lastName, password } = request.body;
     if (!email || !firstName || !lastName || !password) {
       ResponseHandler.send400(response,
-      { message: 'Incomplete registration data',
+        { message: 'Incomplete registration data',
           data: request.body });
-    }
-    if (password.length < 8 || password.length > 50) {
+    } else if (password.length < 8 || password.length > 50) {
       ResponseHandler.send400(response,
       { message: 'Password should be between 8 and 50 letters' });
-    }
-    if (request.body.id) {
+    } else if (request.body.id) {
       // Nullify any user id sent in request
       request.body.id = null;
     } else {

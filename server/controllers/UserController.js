@@ -38,9 +38,9 @@ export default class UserController {
     User.findOne({ where: { email } })
       .then((user) => {
         if (user) {
-          response.status(201).json({
-            message: `${email} has been taken, use another email`
-          });
+          ResponseHandler.send409(response,
+            { message: `${email} has been taken, use another email` }
+          );
         } else {
           const newUser = request.body;
           // Restrict creating a new user specified id
@@ -51,10 +51,12 @@ export default class UserController {
               const activeToken = UserAuthenticator.generateToken(createdUser);
               createdUser.update({ activeToken })
               .then(() => {
-                response.status(200).json({
-                  message: 'You have successfully signed up!',
-                  activeToken
-                });
+                ResponseHandler.send200(response,
+                  {
+                    message: 'You have successfully signed up!',
+                    activeToken
+                  }
+                );
               });
             });
         }

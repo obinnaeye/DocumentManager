@@ -22,6 +22,7 @@
   "dependencies": {
     "components-font-awesome": "^4.7.0",
     "materialize": "0.98.2",
-    "jquery": "3.2.1"
+    "jquery": "3.2.1",
+    "jwt-decode": "^2.2.0"
   }
 }

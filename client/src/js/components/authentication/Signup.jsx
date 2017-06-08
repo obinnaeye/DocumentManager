@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import * as SignupActions from '../../actions/SignupActions';
 
 class Signup extends React.Component {
@@ -46,11 +47,13 @@ class Signup extends React.Component {
                 id="firstName"
                 type="text"
                 className="validate"
+                required=""
+                aria-required="true"
               />
               <label
                 htmlFor="firstName"
                 data-error="wrong"
-                data-success="right"
+                data-success="ok"
               >
               First Name
               </label>
@@ -61,8 +64,16 @@ class Signup extends React.Component {
                 id="lastName"
                 type="text"
                 className="validate"
+                required=""
+                aria-required="true"
               />
-              <label htmlFor="lastName">Last Name</label>
+              <label
+                htmlFor="lastName"
+                data-error="wrong"
+                data-success="ok"
+              >
+                Last Name
+              </label>
             </div>
           </div>
           <div className="row">
@@ -72,8 +83,16 @@ class Signup extends React.Component {
                 id="email"
                 type="email"
                 className="validate"
+                required=""
+                aria-required="true"
               />
-              <label htmlFor="email">Email: (user@domain.com)</label>
+              <label
+                htmlFor="email"
+                data-error="wrong"
+                data-success="ok"
+              >
+                Email: (user@domain.com)
+              </label>
             </div>
           </div>
           <div className="row">
@@ -83,6 +102,8 @@ class Signup extends React.Component {
                 id="password"
                 type="password"
                 className="validate"
+                required=""
+                aria-required="true"
               />
               <label htmlFor="password">
                 Password: (Not less than 8 characters)
@@ -95,6 +116,13 @@ class Signup extends React.Component {
               value="Signup"
               type="submit"
             />
+            <Link
+              className="waves-effect waves-light btn"
+              to="/signin"
+            >
+              Signin
+            </Link>
+            If you have already registered.
           </div>
         </form>
       </div>

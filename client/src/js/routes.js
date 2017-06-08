@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import React from 'react';
-import App from './app';
+import Signin from '../js/components/authentication/Signin';
 // import Dashboard from './components/home/DashBoard';
 import NavBar from './components/common/NavBar';
 import Signup from './components/authentication/Signup';
+import UserPage from '../js/components/user/UserPage';
+import PageAccessHelper from '../js/helper/PageAccessHelper';
 
 
 export default (
@@ -12,7 +14,8 @@ export default (
       <div>
         <NavBar />
         <Route exact path="/signup" component={Signup} />
-        <Route exact path="/login" component={App} />
+        <Route exact path="/signin" component={Signin} />
+        <Route exact path="/user/dashboard" component={PageAccessHelper(UserPage)} />
       </div>
     </Switch>
   </Router>

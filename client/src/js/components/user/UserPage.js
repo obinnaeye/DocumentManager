@@ -1,5 +1,11 @@
 import React from 'react';
+import SideNav from '../user/SideNav';
 
-const UserPage = () => <h1> This is User page </h1>;
+const UserPage = () =>
+  (<div>
+    This is User page
+    <SideNav />
+  </div>
+  );
 
 export default UserPage;

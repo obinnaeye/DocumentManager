@@ -15,7 +15,7 @@ export default (
         <NavBar />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Signin} />
-        <Route exact path="/user/dashboard" component={PageAccessHelper(UserPage)} />
+        <Route exact path="/dashboard" component={(UserPage)} />
       </div>
     </Switch>
   </Router>

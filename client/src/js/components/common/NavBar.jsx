@@ -12,6 +12,7 @@ const NavBar = () =>
               <i className="material-icons">menu</i>
             </a>
             <ul className="right hide-on-med-and-down">
+              <li><Link to="dashboard">Dashboard</Link></li>
               <li><Link to="signup">Signup</Link></li>
               <li><Link to="signin">Signin</Link></li>
             </ul>

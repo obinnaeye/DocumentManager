@@ -19,6 +19,7 @@ export const createUser = (user) => {
     // dispatch(SignupActions.willCreateUser());
     ajaxCall.post('/users/', user)
       .then((response) => {
+        localStorage.setItem('xsrf_token', response.data.activeToken);
         dispatch(createUserSuccess(response.data));
         Materialize.toast(
           'Account created! Please login to continue',

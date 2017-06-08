@@ -1,4 +1,4 @@
-/* global Materialize, jwt_decode */
+/* global Materialize */
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -23,7 +23,6 @@ class Signin extends React.Component {
     } else {
       this.props.SigninActions.signinUser(this.state.user)
         .then(() => {
-          // const { firstName } = this.props.user;
           this.props.history.push('user/dashboard');
         });
     }

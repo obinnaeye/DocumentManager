@@ -41,7 +41,6 @@ class DocumentController {
       ownerRoleId: request.decoded.roleId,
       access: request.body.access || 'public'
     };
-    console.log('new in server', newDocument);
     Document.create(newDocument)
     .then((createdDocument) => {
       ResponseHandler.send200(
@@ -165,7 +164,7 @@ class DocumentController {
    * @return{Void} - returns void
    * @memberof DocumentController
    */
-  static getUserDocument(request, response) {
+  static getUserDocuments(request, response) {
     const id = Number(request.params.id);
     const ownerId = request.decoded.userId;
     if (id !== ownerId) {

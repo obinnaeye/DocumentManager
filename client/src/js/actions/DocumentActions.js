@@ -24,25 +24,25 @@ export const createDocument = documentData =>
         Materialize.toast(error.response.data.message, 3000);
       });
 
-export const getAllDocumentsSuccess = documents =>
-  ({ type: actionTypes.GET_ALL_DOCUMENTS_SUCCESS, documents });
+export const getDocumentsSuccess = documents =>
+  ({ type: actionTypes.GET_DOCUMENTS_SUCCESS, documents });
 
-export const getAllDocumentsFailure = () =>
-  ({ type: actionTypes.GET_ALL_DOCUMENTS_FAILURE });
+export const getDocumentsFailure = () =>
+  ({ type: actionTypes.GET_DOCUMENTS_FAILURE });
 
 export const getAllDocuments = (searchData) => {
   const { limit, offset } = searchData;
   return dispatch =>
     ajaxCall.get(`/documents/?limit=${limit}offset=${offset}`)
       .then((response) => {
-        dispatch(createDocumentSuccess(response.data));
+        dispatch(getDocumentsSuccess(response.data));
         Materialize.toast(
           'Document Saved',
           3000
         );
       })
       .catch((error) => {
-        dispatch(createDocumentFailure());
+        dispatch(getDocumentsFailure());
         Materialize.toast(error.response.data.message, 3000);
       });
 };

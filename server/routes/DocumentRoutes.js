@@ -17,7 +17,7 @@ class DocumentRoutes {
     DocumentRoutes.createDocument(router);
     DocumentRoutes.getDocument(router);
     DocumentRoutes.getDocuments(router);
-    DocumentRoutes.getUserDocument(router);
+    DocumentRoutes.getUserDocuments(router);
     DocumentRoutes.searchDocuments(router);
     DocumentRoutes.updateDocument(router);
     DocumentRoutes.deleteDocument(router);
@@ -74,11 +74,11 @@ class DocumentRoutes {
    * @return{Void}  - Returns void
    * @memberof DocumentRoutes
    */
-  static getUserDocument(router) {
+  static getUserDocuments(router) {
     router.get(
       '/users/:id/documents',
       UserAuthenticator.authenticateUser,
-      DocumentController.getUserDocument
+      DocumentController.getUserDocuments
     );
   }
 

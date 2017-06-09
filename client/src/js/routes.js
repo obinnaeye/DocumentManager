@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import React from 'react';
 import Signin from '../js/components/authentication/Signin';
 // import Dashboard from './components/home/DashBoard';
@@ -9,13 +9,13 @@ import PageAccessHelper from '../js/helper/PageAccessHelper';
 
 
 export default (
-  <Router>
+  <Router >
     <Switch>
       <div>
         <NavBar />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Signin} />
-        <Route exact path="/dashboard" component={(UserPage)} />
+        <UserPage />
       </div>
     </Switch>
   </Router>

@@ -41,6 +41,7 @@ class DocumentController {
       ownerRoleId: request.decoded.roleId,
       access: request.body.access || 'public'
     };
+    console.log('new in server', newDocument);
     Document.create(newDocument)
     .then((createdDocument) => {
       ResponseHandler.send200(

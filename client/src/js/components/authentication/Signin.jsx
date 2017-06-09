@@ -23,7 +23,7 @@ class Signin extends React.Component {
     } else {
       this.props.SigninActions.signinUser(this.state.user)
         .then(() => {
-          this.props.history.push('user/dashboard');
+          this.props.history.push('dashboard');
         });
     }
   }

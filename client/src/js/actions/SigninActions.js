@@ -1,6 +1,7 @@
 /* global Materialize, jwt_decode */
 import ajaxCall from 'axios';
 import actionTypes from '../constants/actionTypes';
+import setToken from '../helper/setTokenHelper';
 
 
 export const signinUserSuccess = user => ({
@@ -17,6 +18,8 @@ export const signinUser = user =>
       .then((response) => {
         const { activeToken } = response.data;
         localStorage.setItem('xsrf_token', response.data.activeToken);
+        // set jwt authorization token on request header
+        setToken(activeToken);
           // jwt_decode is a browser libery to decode jwt tokens
           // It's inclued in the script tag of this project index.html file
         const decodedUser = jwt_decode(activeToken);

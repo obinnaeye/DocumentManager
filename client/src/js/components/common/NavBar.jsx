@@ -12,16 +12,17 @@ const NavBar = () =>
               <i className="material-icons">menu</i>
             </a>
             <ul className="right hide-on-med-and-down">
-              <li><Link to="dashboard">Dashboard</Link></li>
-              <li><Link to="signup">Signup</Link></li>
-              <li><Link to="signin">Signin</Link></li>
+              <li><Link to="/dashboard" replace>Dashboard</Link></li>
+              <li><Link to="/signup" replace>Signup</Link></li>
+              <li><Link to="/signin" replace>Signin</Link></li>
             </ul>
           </div>
         </nav>
       </div>
       <ul className="side-nav" id="mobile-demo">
-        <li><Link to="signup">Signup</Link></li>
-        <li><Link to="signin">Signin</Link></li>
+        <li><Link to="/signup" >Signup</Link></li>
+        <li><Link to="/signin" >Signin</Link></li>
+        <li><Link to="/dashboard" >Dashboard</Link></li>
       </ul>
     </header>
   );

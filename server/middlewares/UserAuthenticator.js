@@ -69,6 +69,7 @@ export default class UserAuthenticator {
    */
   static authenticateUser(request, response, next) {
     const token = UserAuthenticator.getRequestToken(request);
+    console.log(request.headers.authorization);
     if (token) {
       const verifiedToken = UserAuthenticator.verifyToken(token);
       if (verifiedToken) {

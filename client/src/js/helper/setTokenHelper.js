@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 const setTokenHelper = (token) => {
-  if (token) {
-    axios.defaults.headers.authorization = token;
-  } else {
-    delete axios.defaults.headers.authorization;
+  if (!token) {
+    token = localStorage.xsrf_token;
   }
+  axios.defaults.headers.authorization = token;
 };
 
 export default setTokenHelper;

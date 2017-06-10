@@ -15,8 +15,8 @@ const documentReducer = (state = initialState, action) => {
   case actionTypes.GET_DOCUMENTS_SUCCESS:
     return { ...state, documents: action.documents };
 
-  case actionTypes.GET_ALL_USER_DOCUMENTS_SUCCESS:
-    return { ...state, userDocuments: action.documents };
+  case actionTypes.GET_USER_DOCUMENTS_SUCCESS:
+    return { ...state, userDocuments: action.userDocuments };
 
   case actionTypes.DELETE_DOCUMENT: {
     const index =

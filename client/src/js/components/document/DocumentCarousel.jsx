@@ -10,7 +10,7 @@ const DocumentCarousel = props =>
         className="btn-floating waves-effect waves-light red"
         onClick={props.viewCarousel}
       >
-        <i classNmae="material-icons">View</i>
+        <i className="material-icons">View</i>
       </a>
     </div>
   );

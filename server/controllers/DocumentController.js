@@ -74,7 +74,7 @@ class DocumentController {
         // or public user if access is public
         if (
           foundDocument.access === 'public'
-          || userId === foundDocument.OwnerId
+          || userId === foundDocument.ownerId
           || userRoleId === 1
           ) {
           ResponseHandler.send200(

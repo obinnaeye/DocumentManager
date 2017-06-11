@@ -31,7 +31,8 @@ class UserDocuments extends React.Component {
   }
 
   viewCarousel(e) {
-    console.log(e.target);
+    const id = e.target.getAttribute('name');
+    this.props.history.push(`/dashboard/documents/${id}`);
   }
 
   render() {
@@ -40,12 +41,11 @@ class UserDocuments extends React.Component {
     if (documents.length > 0) {
       formatedDocuments = documents.map((myDocument) => {
         const { id, title, content } = myDocument;
-        // replace "↵" in content from ckeditor with <br/> and then
         // convert string to html
-        const newContent = content.replace(/↵/g, '<br/>');
-        const formatedContent = <div dangerouslySetInnerHTML={{ __html: newContent }} />;
+        const formatedContent = <div dangerouslySetInnerHTML={{ __html: content }} />;
         return (
           <div key={id} className="myCover" >
+            <button className="btn open-doc" onClick={this.viewCarousel} name={id}>Open</button>
             <h3>{title}</h3>
             {formatedContent}
           </div>

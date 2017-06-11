@@ -33,6 +33,19 @@ export const getDocumentsSuccess = documents =>
 export const getDocumentsFailure = () =>
   ({ type: actionTypes.GET_DOCUMENTS_FAILURE });
 
+export const getDocument = (documentId) => {
+  setToken();
+  return dispatch =>
+    ajaxCall.get(`/documents/${documentId}`)
+      .then((response) => {
+        dispatch(getDocumentsSuccess(response.data));
+        console.log(response.data);
+      })
+      .catch((error) => {
+        dispatch(getDocumentsFailure(error));
+      });
+};
+
 export const getUserDocumentsFailure = () =>
   ({ type: actionTypes.GET_USER_DOCUMENTS_FAILURE });
 

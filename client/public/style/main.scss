@@ -6,9 +6,20 @@ figure {
   padding-left: 20px !important;
   width: 400px !important; 
   background: white !important;
+  height: 350px !important;
+  align-self: stretch !important;
 }
 
 .coverflow__container__1P-xE {
   margin-top: 50px !important;
   background: red !important;
+}
+.open-doc{
+  z-index: 10000;
+  cursor: pointer;
+  pointer-events: auto
+}
+
+.coverflow__cover__25-7e {
+  margin-top: 50px !important;
 }

@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import DocumentCarousel from './DocumentCarousel';
+import Coverflow from 'react-coverflow';
 import * as DocumentActions from '../../actions/DocumentActions';
+import '../../../../public/style/main.scss';
 
 class UserDocuments extends React.Component {
   constructor(props, context) {
@@ -13,7 +14,7 @@ class UserDocuments extends React.Component {
       documents: this.props.userDocuments
     };
 
-    this.viewCarousel = this.viewCarousel;
+    this.viewCarousel = this.viewCarousel.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -34,13 +35,36 @@ class UserDocuments extends React.Component {
   }
 
   render() {
+    const documents = this.props.userDocuments;
+    let formatedDocuments;
+    if (documents.length > 0) {
+      formatedDocuments = documents.map((myDocument) => {
+        const { id, title, content } = myDocument;
+        // replace "↵" in content from ckeditor with <br/> and then
+        // convert string to html
+        const newContent = content.replace(/↵/g, '<br/>');
+        const formatedContent = <div dangerouslySetInnerHTML={{ __html: newContent }} />;
+        return (
+          <div key={id} className="myCover" >
+            <h3>{title}</h3>
+            {formatedContent}
+          </div>
+        );
+      });
+    }
+
     return (
       <div>
-        <DocumentCarousel
-          title={this.state.title}
-          content={this.state.content}
-          viewCarousel={this.openCarousel}
-        />
+        <Coverflow
+          style={{ height: '1000px', color: 'red' }}
+          width={'auto'}
+          height={500}
+          displayQuantityOfSide={3}
+          navigation
+          enableHeading={false}
+        >
+          {formatedDocuments}
+        </Coverflow>)
         <div id="modal1" className="modal modal-fixed-footer">
           <div className="modal-content">
             <h4>Modal Header</h4>

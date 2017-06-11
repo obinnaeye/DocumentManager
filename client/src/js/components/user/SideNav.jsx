@@ -21,7 +21,7 @@ class SideNav extends React.Component {
       <div>
         <ul id="slide-out" className="side-nav">
           <li>
-            <Link to="/dashboard/userdocuments" > My Documents </Link>
+            <Link to="/dashboard/my-documents" > My Documents </Link>
           </li>
           <li>
             <Link to="/dashboard/new-document" > New Document </Link>

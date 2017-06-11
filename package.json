@@ -57,6 +57,7 @@
     "pg": "^6.2.3",
     "pg-hstore": "^2.3.2",
     "react": "^15.5.4",
+    "react-coverflow": "^0.2.3",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",

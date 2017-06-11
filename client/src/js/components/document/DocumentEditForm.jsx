@@ -19,11 +19,11 @@ class DocumentEditForm extends React.Component {
     const content = CKEDITOR.instances.editor.getData();
     const access = $('#access').val();
     if (!title) {
-      alert('The document cannot be save; No Title was supplied!');
+      Materialize.toast('The document cannot be save; No Title was supplied!', 5000, 'red');
     } else if (!content){
-      alert('Can not save a empty document, please add a content!');
+      Materialize.toast('Can not save a empty document, please add a content!', 5000, 'red');
     } else if (!access){
-      alert('The document cannot be save; No access type was supplied!');
+      Materialize.toast('The document cannot be save; No access type was supplied!', 'red');
     } else {
       const documentData = {
         title,
@@ -31,8 +31,8 @@ class DocumentEditForm extends React.Component {
         access
       };
       this.props.DocumentActions.createDocument(documentData)
-        .then((response) => {
-          console.log('newdoc', response);
+        .then(() => {
+          console.log('newdoc');
         });
     }
   }

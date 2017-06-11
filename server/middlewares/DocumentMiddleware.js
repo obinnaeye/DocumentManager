@@ -14,7 +14,6 @@ export default class DocumentMiddleware {
    * @return {Void} - Returns void
    */
   static validateCreateRequest(request, response, next) {
-    console.log(request.body);
     const { title, content } = request.body;
     const { userId } = request.decoded;
     if (request.body.id) {

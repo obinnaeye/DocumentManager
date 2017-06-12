@@ -34,23 +34,35 @@ class DocumentController {
    * @memberof DocumentController
    */
   static createDocument(request, response) {
+    const ownerId = request.decoded.userId;
+    const { title } = request.body;
     const newDocument = {
-      title: request.body.title,
+      title,
       content: request.body.content,
-      ownerId: request.decoded.userId,
+      ownerId,
       ownerRoleId: request.decoded.roleId,
       access: request.body.access || 'public'
     };
-    Document.create(newDocument)
-    .then((createdDocument) => {
-      ResponseHandler.send200(
-        response,
-        DocumentController.getDocumentDetails(createdDocument)
-      );
-    })
-    .catch((error) => {
-      ErrorHandler.handleRequestError(response, error);
-    });
+    Document.findOne({ where: { $and: { ownerId, title } } })
+      .then((foundDocument) => {
+        if (foundDocument) {
+          ResponseHandler.send409(
+            response,
+            { message: `You already ${title}, choose a different title!` }
+          );
+        } else {
+          Document.create(newDocument)
+            .then((createdDocument) => {
+              ResponseHandler.send200(
+                response,
+                DocumentController.getDocumentDetails(createdDocument)
+              );
+            })
+            .catch((error) => {
+              ErrorHandler.handleRequestError(response, error);
+            });
+        }
+      });
   }
 
   /**

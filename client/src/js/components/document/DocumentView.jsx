@@ -11,6 +11,8 @@ class DocumentView extends React.Component {
       title: '',
       content: ''
     };
+
+    this.deleteDocument = this.deleteDocument.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +29,15 @@ class DocumentView extends React.Component {
     });
   }
 
+  deleteDocument(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.DocumentActions.deleteDocument(id)
+      .then(() => {
+        this.props.history.push('/dashboard/my-documents')
+      });
+  }
+
   render() {
     const parsedContent = <div dangerouslySetInnerHTML={{ __html: this.state.content }} />;
     return (
@@ -38,8 +49,8 @@ class DocumentView extends React.Component {
               <div>{parsedContent}</div>
             </div>
             <div className="card-action">
-              <button onClick={this.editDocument}>Edit Document</button>
-              <button onClick={this.deleteDocument}>Delete Document</button>
+              <button onClick={this.editDocument} name={this.state.id} >Edit Document</button>
+              <button onClick={this.deleteDocument} name={this.state.id} >Delete Document</button>
             </div>
           </div>
         </div>

@@ -18,12 +18,13 @@ const documentReducer = (state = initialState, action) => {
   case actionTypes.GET_USER_DOCUMENTS_SUCCESS:
     return { ...state, userDocuments: action.userDocuments };
 
-  case actionTypes.DELETE_DOCUMENT: {
+  case actionTypes.DELETE_DOCUMENT_SUCCESS: {
     const index =
       findIndex(state[0].userDocuments, { id: action.documentId });
     const stateUserDocuments = state.userDocuments;
     stateUserDocuments.splice(index, 1);
     return { ...state, userDocuments: stateUserDocuments };
+    // remove the document also from state's documents ....
   }
   default:
     return state;

@@ -6,6 +6,11 @@ import * as DocumentActions from '../../actions/DocumentActions';
 class DocumentEditForm extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      title: '',
+      content: '',
+      access: ''
+    };
     this.save = this.save.bind(this);
   }
 
@@ -15,25 +20,25 @@ class DocumentEditForm extends React.Component {
   }
 
   save() {
-    const title = $('#documentTitle').val();
-    const content = CKEDITOR.instances.editor.getData();
-    const access = $('#access').val();
+    // if (this.state.update) {
+    //   return this.props.DocumentActions.updateDocument(data);
+    // }
+    const title = $('#documentTitle').val() || this.state.title;
+    const content = CKEDITOR.instances.editor.getData() || this.state.content;
+    const access = $('#access').val() || this.state.access;
     if (!title) {
       Materialize.toast('The document cannot be save; No Title was supplied!', 5000, 'red');
     } else if (!content){
-      Materialize.toast('Can not save a empty document, please add a content!', 5000, 'red');
+      Materialize.toast('Can not save an empty document, please add a content!', 5000, 'red');
     } else if (!access){
-      Materialize.toast('The document cannot be save; No access type was supplied!', 'red');
+      Materialize.toast('The document cannot be save; No access type was supplied!', 5000, 'red');
     } else {
       const documentData = {
         title,
         content,
         access
       };
-      this.props.DocumentActions.createDocument(documentData)
-        .then(() => {
-          console.log('newdoc');
-        });
+      this.props.DocumentActions.createDocument(documentData);
     }
   }
 

@@ -18,16 +18,17 @@ export const createDocument = (documentData) => {
         dispatch(createDocumentSuccess(response.data));
         Materialize.toast(
           'Document Saved',
-          3000
+          3000,
+          'green'
         );
       })
       .catch((error) => {
         dispatch(createDocumentFailure());
         console.log(error.message);
         if (error.message === 'Request failed with status code 409') {
-           Materialize.toast(`You already have a document with ${documentData.title}, please choose a different title!`, 5000, 'red');
+          Materialize.toast(`You already have a document with ${documentData.title}, please choose a different title!`, 5000, 'red');
         } else {
-           Materialize.toast(error.message, 3000);
+          Materialize.toast(error.message, 3000, 'red');
         }
       });
 };
@@ -101,4 +102,25 @@ export const deleteDocument = (documentId) => {
         Materialize.toast(error.message, 3000);
       });
 };
+
+export const updateSuccess = updatedDocument =>
+  ({ type: actionTypes.UPDATE_DOCUMENT_SUCCESS, updatedDocument });
+
+export const updateDocument = (documentData, id) => {
+  setToken();
+  return dispatch =>
+    ajaxCall.put(`/documents/${id}`, documentData)
+      .then((response) => {
+        dispatch(updateSuccess(response.data));
+        Materialize.toast('Document Saved', 3000, 'green');
+      })
+      .catch((error) => {
+        if (error.message === 'Request failed with status code 404') {
+          Materialize.toast(`Cannot find document with the id ${id}`);
+        } else {
+          Materialize.toast(error.message, 3000, 'red');
+        }
+      });
+};
+
 

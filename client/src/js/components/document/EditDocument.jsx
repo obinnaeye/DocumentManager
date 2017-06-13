@@ -24,16 +24,25 @@ class EditDocument extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { title, content, access } = nextProps.document;
-    const sentenceCaseAccess = access.substr(0, 1).toUpperCase() + access.substr(1);
-    CKEDITOR.instances['editor'].setData(content);
-    $('#documentTitle').val(title);
-    document.getElementById('documentTitle').focus();
-    this.setState({
-      title,
-      content,
-      access: sentenceCaseAccess
-    });
+    if (!nextProps.fetchingDocument) {
+      const { editID } = this.state;
+      Materialize.toast(`Could not find any document with the id ${editID}, redirecting...`, 5000, 'red');
+      setTimeout(() => {
+        this.props.history.push('/dashboard/my-documents');
+      }, 5000);
+    } else {
+      console.log(nextProps.document)
+      const { title, content, access } = nextProps.document;
+      const sentenceCaseAccess = access.substr(0, 1).toUpperCase() + access.substr(1);
+      CKEDITOR.instances['editor'].setData(content);
+      $('#documentTitle').val(title);
+      document.getElementById('documentTitle').focus();
+      this.setState({
+        title,
+        content,
+        access: sentenceCaseAccess
+      });
+    } 
   }
 
   handleChange(e) {
@@ -66,11 +75,11 @@ class EditDocument extends React.Component {
 
   saveExit() {
     this.save();
-    window.history.back();
+    this.props.history.push('/dashboard/my-documents');
   }
 
   exit() {
-    window.history.back();
+    this.props.history.push('/dashboard/my-documents');
   }
 
   render() {
@@ -106,7 +115,8 @@ class EditDocument extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  document: state.documentReducer.documents
+  document: state.documentReducer.documents,
+  fetchingDocument: state.documentReducer.fetchingDocument
 });
 
 

@@ -96,7 +96,7 @@ class EditDocument extends React.Component {
           <textarea name="editor" id="editor" />
         </div>
         <div>
-          <button className="waves-effect waves-light light-green darken-4" onClick={this.save}>Save</button><br />
+          <button className="btn waves-effect waves-light light-green darken-4" onClick={this.save}>Save</button><br />
           <button className="btn waves-effect waves-light light-green darken-4" onClick={this.saveExit}>Save and Exit</button><br />
           <button className="btn waves-effect waves-light red darken-4" onClick={this.exit}>Cancel</button>
         </div>

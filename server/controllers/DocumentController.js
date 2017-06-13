@@ -260,11 +260,24 @@ class DocumentController {
           userId === foundDocument.ownerId
           || userRoleId === 1
           ) {
-          foundDocument.update(request.body)
+          foundDocument.update({
+            title: request.body.title,
+            content: request.body.content,
+            userId,
+            roleId: userRoleId,
+            access: request.body.access
+          })
           .then((updatedDocument) => {
             ResponseHandler.send200(
               response,
               updatedDocument
+            );
+          })
+          .catch((error) => {
+            console.log('reore', request.body);
+            ErrorHandler.handleRequestError(
+              response,
+              error
             );
           });
         } else {

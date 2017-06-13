@@ -13,11 +13,12 @@ class DocumentView extends React.Component {
     };
 
     this.deleteDocument = this.deleteDocument.bind(this);
+    this.editDocument = this.editDocument.bind(this);
   }
 
   componentDidMount() {
-    const match = this.props.match.params.id;
-    this.props.DocumentActions.getDocument(match);
+    const { id } = this.props.match.params;
+    this.props.DocumentActions.getDocument(id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -27,6 +28,12 @@ class DocumentView extends React.Component {
       id,
       content
     });
+  }
+
+  editDocument(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.history.push(`/dashboard/edit-document/${id}`);
   }
 
   deleteDocument(e) {

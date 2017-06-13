@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as DocumentActions from '../../actions/DocumentActions';
 
-class DocumentEditForm extends React.Component {
+class NewDocument extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      title: '',
-      content: '',
-      access: ''
+      editMode: false,
+      editID: null
     };
     this.save = this.save.bind(this);
   }
@@ -19,10 +18,14 @@ class DocumentEditForm extends React.Component {
     $('select').material_select();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { editID } = nextProps;
+    this.setState({
+      editID
+    });
+  }
+
   save() {
-    // if (this.state.update) {
-    //   return this.props.DocumentActions.updateDocument(data);
-    // }
     const title = $('#documentTitle').val() || this.state.title;
     const content = CKEDITOR.instances.editor.getData() || this.state.content;
     const access = $('#access').val() || this.state.access;
@@ -38,7 +41,17 @@ class DocumentEditForm extends React.Component {
         content,
         access
       };
-      this.props.DocumentActions.createDocument(documentData);
+      if (this.state.editMode) {
+        this.props.DocumentActions.updateDocument(documentData, this.state.editID);
+      } else {
+        this.props.DocumentActions.createDocument(documentData)
+          .then(() => {
+            this.setState({
+              editMode: true
+            });
+          }
+        );
+      }
     }
   }
 
@@ -69,7 +82,7 @@ class DocumentEditForm extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.signInReducer.user
+  editID: state.documentReducer.editID || null
 });
 
 
@@ -78,4 +91,4 @@ const mapDispatchToProps = dispatch => ({
   DocumentActions: bindActionCreators(DocumentActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentEditForm);
+export default connect(mapStateToProps, mapDispatchToProps)(NewDocument);

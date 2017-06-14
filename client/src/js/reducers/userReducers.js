@@ -16,6 +16,15 @@ const userReducers = (state = initialState, action) => {
   case actionTypes.UPDATE_USER_FAILURE:
     return ({ ...state, updatingUser: false });
 
+  case actionTypes.VALIDATE_USER_SUCCESS:
+    return ({ ...state, authenticated: true });
+
+  case actionTypes.VALIDATE_USER_FAILURE:
+    return ({ ...state, authenticated: false });
+
+  case actionTypes.LOGOUT_SUCCESS:
+    return {};
+
   default:
     return state;
   }

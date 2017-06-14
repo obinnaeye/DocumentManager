@@ -142,7 +142,7 @@ export default class UserController {
         order: '"email" DESC'
       })
        .then((foundUsers) => {
-         if (foundUsers) {
+         if (foundUsers.length) {
            const formatedUsers = foundUsers.map(foundUser =>
              UserController.getUserDetails(foundUser)
            );
@@ -151,6 +151,7 @@ export default class UserController {
              formatedUsers
             );
          }
+         return ResponseHandler.send404(response);
        }).catch(error => ResponseHandler.send500(
            response,
            { message: error }

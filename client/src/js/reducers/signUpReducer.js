@@ -11,9 +11,6 @@ const initialState = { createUser: false, user: {} };
 
 const signUpReducer = (state = initialState, action) => {
   switch (action.type) {
-  case actionTypes.WILL_CREATE_USER:
-    return { ...state, createuser: true };
-
   case actionTypes.CREATE_USER_SUCCESS:
     return { ...state, createUser: false, user: action.user };
 

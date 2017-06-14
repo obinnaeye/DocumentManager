@@ -11,13 +11,16 @@ class SearchPage extends React.Component {
       searchIn: '',
       searchQuery: '',
       documents: [],
-      fetchingDocument: false,
-      fetchingUser: false,
+      user: [],
+      fetchingDocuments: false,
+      fetchingUsers: false,
       searching: false
     };
 
-    this.renderedDocument = this.renderedDocument.bind(this);
-    this.searchDocument = this.searchDocument.bind(this);
+    this.renderedDocuments = this.renderedDocuments.bind(this);
+    this.combinedRendered = this.combinedRendered.bind(this);
+    this.renderedUsers = this.renderedUsers.bind(this);
+    this.search = this.search.bind(this);
   }
 
   componentDidMount() {
@@ -25,15 +28,17 @@ class SearchPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('red', nextProps.documents)
+    const { documents, users, fetchingDocuments, fetchingUsers } = nextProps;
     this.setState({
-      documents: nextProps.documents,
-      fetchingDocument: nextProps.fetchingDocument
-    })
+      documents,
+      users,
+      fetchingDocuments,
+      fetchingUsers
+    });
   }
 
-  renderedDocument() {
-    if (this.state.fetchingDocument && this.state.searching) {
+  renderedDocuments() {
+    if (this.state.fetchingDocuments && this.state.searching) {
       const documents = this.state.documents;
       const render = documents.map((document) => {
         const { id, title, content, createdAt, updatedAt } = document;
@@ -51,13 +56,44 @@ class SearchPage extends React.Component {
       });
       return render;
     }
-
     if (this.state.searching) {
       return <p> No Document found matching your search!</p>;
     }
   }
 
-  searchDocument() {
+  combinedRendered() {
+    if (this.state.searchIn === 'documents') {
+      return this.renderedDocuments();
+    }
+    return this.renderedUsers();
+  }
+
+  renderedUsers() {
+    if (this.state.fetchingUsers && this.state.searching) {
+      const users = this.state.users;
+      const render = users.map((user) => {
+        const { firstName, lastName, email, id } = user;
+        return (
+          <li key={id}>
+            <div className="collapsible-header">
+              <i className="material-icons">filter_drama</i>
+              <b className="red">{firstName}</b>
+            </div>
+            <div className="collapsible-body">
+              <span> <b>FirstName:</b> {firstName} </span><br />
+              <span> <b>LastName:</b> {lastName} </span><br />
+              <span> <b>Email:</b> {email} </span><br />
+            </div>
+          </li>);
+      });
+      return render;
+    }
+    if (this.state.searching) {
+      return <p className="centered"> No User found matching your search!</p>;
+    }
+  }
+
+  search() {
     const search = $('#search').val();
     const searchIn = $('#searchSelect').val();
     const limit = $('#limit').val();
@@ -67,7 +103,6 @@ class SearchPage extends React.Component {
       limit,
       offset
     };
-
     if (!search) {
       this.setState({
         searching: false
@@ -77,7 +112,14 @@ class SearchPage extends React.Component {
     if (searchIn === 'documents') {
       this.props.DocumentActions.searchDocuments(searchData);
       this.setState({
-        searching: true
+        searching: true,
+        searchIn: 'documents'
+      });
+    } else {
+      this.props.UserActions.searchUsers(searchData);
+      this.setState({
+        searching: true,
+        searchIn: 'users'
       });
     }
   }
@@ -88,7 +130,7 @@ class SearchPage extends React.Component {
         <div className="my-centered" >
           <div className="row">
             <h5 className="col s2"> Search for: </h5>
-            <select id="searchSelect" defaultValue="document" className="col s3">
+            <select id="searchSelect" defaultValue="document" className="col s3" onChange={this.changeSearch}>
               <option value="documents">Document</option>
               <option value="users">User</option>
             </select>
@@ -109,11 +151,11 @@ class SearchPage extends React.Component {
           </div>
         </div>
         <div className="row">
-          <button id="searchButton" className="btn" onClick={this.searchDocument}> Search </button>
+          <button id="searchButton" className="btn" onClick={this.search}> Search </button>
         </div>
         <div className=" row my-centered col s12">
           <ul className="collapsible" data-collapsible="accordion">
-            {this.renderedDocument()}
+            {this.combinedRendered()}
           </ul>
         </div>
       </div>
@@ -123,12 +165,14 @@ class SearchPage extends React.Component {
 
 const mapStateToProps = state => ({
   documents: state.documentReducer.documents,
-  fetchingDocument: state.documentReducer.fetchingDocument,
-  fetchingUser: state.signUpReducer.fetchingUser
+  users: state.userReducers.users,
+  fetchingDocuments: state.documentReducer.fetchingDocuments,
+  fetchingUsers: state.userReducers.fetchingUsers
 });
 
 const mapDispatchToProps = dispatch => ({
-  DocumentActions: bindActionCreators(DocumentActions, dispatch)
+  DocumentActions: bindActionCreators(DocumentActions, dispatch),
+  UserActions: bindActionCreators(UserActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchPage);

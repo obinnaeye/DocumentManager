@@ -99,6 +99,7 @@ export const searchDocuments = (searchData) => {
   return dispatch =>
     ajaxCall.get(`/search/documents?q=${q}&limit=${limit}&offset=${offset}`)
       .then((response) => {
+        console.log(response.data);
         dispatch(getDocumentsSuccess(response.data));
       })
       .catch((error) => {

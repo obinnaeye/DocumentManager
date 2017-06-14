@@ -41,3 +41,40 @@ export const updateUser = (updateInfo) => {
         dispatch(updateUserFailure(error));
       });
 };
+
+export const validateUserSuccess = validatedUser =>
+  ({ type: actionTypes.VALIDATE_USER_SUCCESS, validatedUser });
+
+export const validateUserFailure = () =>
+  ({ type: actionTypes.VALIDATE_USER_FAILURE });
+
+export const validateUser = (userId) => {
+  setToken();
+  return dispatch =>
+    ajaxCall.get(`/users/${userId}`)
+      .then((response) => {
+        dispatch(validateUserSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(validateUserFailure(error));
+      });
+};
+
+export const logoutSuccess = message =>
+  ({ type: actionTypes.LOGOUT_SUCCESS, message });
+
+export const logoutFailure = () =>
+  ({ type: actionTypes.LOGOUT_FAILURE });
+
+export const logout = () => {
+  setToken();
+  return dispatch =>
+    ajaxCall.post('/users/logout')
+      .then((response) => {
+        console.log(response.data);
+        dispatch(logoutSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(logoutFailure(error));
+      });
+};

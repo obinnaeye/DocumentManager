@@ -20,9 +20,8 @@ export const signinUser = user =>
         localStorage.setItem('xsrf_token', response.data.activeToken);
         // set jwt authorization token on request header
         setToken(activeToken);
-          // jwt_decode is a browser libery to decode jwt tokens
-          // It's inclued in the script tag of this project index.html file
         const decodedUser = jwt_decode(activeToken);
+        localStorage.setItem('user_profile', JSON.stringify(decodedUser));
         dispatch(signinUserSuccess(decodedUser));
         Materialize.toast(
           'You have successfully signed in! Welcome!',

@@ -29,6 +29,9 @@ class SideNav extends React.Component {
           <li>
             <Link to="/dashboard/search" > Search Documents </Link>
           </li>
+          <li>
+            <Link to="/dashboard/edit-profile" > Edit Profile </Link>
+          </li>
         </ul>
         <a href="#" data-activates="slide-out" className="button-collapse">
           <i className="material-icons">menu</i>

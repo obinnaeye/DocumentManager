@@ -17,7 +17,7 @@ export default class UserController {
    */
   static getUserDetails(user, activeToken) {
     return {
-      id: user.id,
+      userId: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -176,7 +176,7 @@ export default class UserController {
         .then((updatedUser) => {
           ResponseHandler.send200(
             response,
-            updatedUser
+            UserController.getUserDetails(updatedUser)
           );
         })
         .catch((error) => {

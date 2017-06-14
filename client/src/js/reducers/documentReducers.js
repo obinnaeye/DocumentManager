@@ -15,10 +15,10 @@ const documentReducer = (state = initialState, action) => {
   }
   // This handles any action that gets documents, aside user documents
   case actionTypes.GET_DOCUMENTS_SUCCESS:
-    return { ...state, documents: action.documents, fetchingDocument: true };
+    return { ...state, documents: action.documents, fetchingDocuments: true };
 
   case actionTypes.GET_DOCUMENTS_FAILURE:
-    return { ...state, fetchingDocument: false };
+    return { ...state, fetchingDocuments: false };
 
   case actionTypes.GET_USER_DOCUMENTS_SUCCESS:
     return { ...state, userDocuments: action.userDocuments };

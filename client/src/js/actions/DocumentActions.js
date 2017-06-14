@@ -69,10 +69,10 @@ export const getUserDocuments = () => {
       });
 };
 
-export const getAllDocuments = (searchData) => {
-  const { limit, offset } = searchData;
-  return dispatch =>
-    ajaxCall.get(`/documents/?limit=${limit}offset=${offset}`)
+export const getAllDocuments = () =>
+  setToken();
+  dispatch =>
+    ajaxCall.get('/documents/')
       .then((response) => {
         dispatch(getDocumentsSuccess(response.data));
         Materialize.toast(
@@ -83,6 +83,26 @@ export const getAllDocuments = (searchData) => {
       .catch((error) => {
         dispatch(getDocumentsFailure());
         Materialize.toast(error.message, 3000);
+      });
+
+export const searchDocuments = (searchData) => {
+  setToken();
+  let limit = 10,
+    offset = 0,
+    q = '';
+
+  if (searchData) {
+    limit = searchData.limit || limit;
+    offset = searchData.offset || offset;
+    q = searchData.q;
+  }
+  return dispatch =>
+    ajaxCall.get(`/search/documents?q=${q}&limit=${limit}&offset=${offset}`)
+      .then((response) => {
+        dispatch(getDocumentsSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(getDocumentsFailure());
       });
 };
 

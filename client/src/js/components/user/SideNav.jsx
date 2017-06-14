@@ -27,7 +27,7 @@ class SideNav extends React.Component {
             <Link to="/dashboard/new-document" > New Document </Link>
           </li>
           <li>
-            <Link to="/dashboard/userdocuments" > Search Documents </Link>
+            <Link to="/dashboard/search" > Search Documents </Link>
           </li>
         </ul>
         <a href="#" data-activates="slide-out" className="button-collapse">

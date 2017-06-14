@@ -132,10 +132,10 @@ class DocumentController {
     if (roleId === 1) {
       Document.findAndCountAll(queryBuilder)
       .then((foundDocuments) => {
-        if (foundDocuments) {
+        if (foundDocuments.count !== 0) {
           ResponseHandler.send200(
             response,
-            foundDocuments
+            foundDocuments.rows
           );
         } else {
           ResponseHandler.send404(response);
@@ -154,10 +154,10 @@ class DocumentController {
         queryBuilder
       })
       .then((foundDocuments) => {
-        if (foundDocuments) {
+        if (foundDocuments.count !== 0) {
           ResponseHandler.send200(
             response,
-            foundDocuments
+            foundDocuments.rows
           );
         } else {
           ResponseHandler.send404(response);
@@ -214,29 +214,68 @@ class DocumentController {
    * @memberof DocumentController
    */
   static searchDocuments(request, response) {
-    if (request.query.q) {
-      const like = `%${request.query.q}%`;
+    const { userId, roleId } = request.decoded;
+    const limit = request.query.limit || '10';
+    const offset = request.query.offset || '0';
+    const like = `%${request.query.q}%`;
+
+    console.log('rea',request.query);
+    if (!request.query.q) {
+      ResponseHandler.send404(response);
+    } else if (roleId === 1) {
       const queryBuilder = {
         where: {
           title: {
             $ilike: like
           }
         },
+        limit,
+        offset,
         order: '"createdAt" DESC'
       };
-      Document.findAll(queryBuilder)
-       .then((foundDocuments) => {
-         if (foundDocuments) {
-           return ResponseHandler.send200(
-             response,
-             foundDocuments
+      Document.findAndCountAll(queryBuilder)
+      .then((foundDocuments) => {
+        if (foundDocuments.count !== 0) {
+          ResponseHandler.send200(
+            response,
+            foundDocuments
+          );
+        } else {
+          ResponseHandler.send404(response);
+        }
+      })
+      .catch((error) => {
+        ErrorHandler.handleRequestError(response, error);
+      });
+    } else {
+      const queryBuilder = {
+        where: {
+          title: {
+            $ilike: like
+          },
+          $or: [
+            { ownerId: userId },
+            { access: 'public' }
+          ],
+        },
+        limit,
+        offset,
+        order: '"createdAt" DESC'
+      };
+      Document.findAndCountAll(queryBuilder)
+        .then((foundDocuments) => {
+          if (foundDocuments.count !== 0) {
+            ResponseHandler.send200(
+              response,
+              foundDocuments.rows
             );
-         }
-       })
-       .catch(error => ResponseHandler.send404(
-           response,
-           { message: error }
-         ));
+          } else {
+            ResponseHandler.send404(response);
+          }
+        })
+        .catch((error) => {
+          ErrorHandler.handleRequestError(response, error);
+        });
     }
   }
 
@@ -274,7 +313,6 @@ class DocumentController {
             );
           })
           .catch((error) => {
-            console.log('reore', request.body);
             ErrorHandler.handleRequestError(
               response,
               error

@@ -5,6 +5,7 @@ import NewDocument from '../document/NewDocument';
 import UserDocuments from '../document/UserDocuments';
 import DocumentView from '../document/DocumentView'; // remove
 import EditDocument from '../document/EditDocument';
+import SearchPage from './SearchPage';
 
 const UserPage = () =>
   (
@@ -14,6 +15,7 @@ const UserPage = () =>
       <Route exact path="/dashboard/my-documents" component={UserDocuments} />
       <Route exact path="/dashboard/documents/:id" component={DocumentView} />
       <Route exact path="/dashboard/edit-document/:id" component={EditDocument} />
+      <Route exact path="/dashboard/search" component={SearchPage} />
     </div>
   );
 

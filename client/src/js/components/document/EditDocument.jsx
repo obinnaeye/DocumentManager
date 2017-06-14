@@ -116,7 +116,7 @@ class EditDocument extends React.Component {
 
 const mapStateToProps = state => ({
   document: state.documentReducer.documents,
-  fetchingDocument: state.documentReducer.fetchingDocument
+  fetchingDocument: state.documentReducer.fetchingDocuments
 });
 
 

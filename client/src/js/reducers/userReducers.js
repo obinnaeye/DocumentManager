@@ -10,6 +10,12 @@ const userReducers = (state = initialState, action) => {
   case actionTypes.SEARCH_USERS_FAILURE:
     return ({ ...state, fetchingUsers: false });
 
+  case actionTypes.UPDATE_USER_SUCCESS:
+    return ({ ...state, user: action.updatedUser, updatingUser: true });
+
+  case actionTypes.UPDATE_USER_FAILURE:
+    return ({ ...state, updatingUser: false });
+
   default:
     return state;
   }

@@ -1,4 +1,3 @@
-import findIndex from 'lodash/findIndex';
 import actionTypes from '../constants/actionTypes';
 
 const initialState = { documents: [], userDocuments: [] };

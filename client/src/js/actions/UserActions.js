@@ -21,3 +21,23 @@ export const searchUsers = (searchData) => {
         dispatch(searchUserFailure(error));
       });
 };
+
+export const updateUserSuccess = updatedUser =>
+  ({ type: actionTypes.UPDATE_USER_SUCCESS, updatedUser });
+
+export const updateUserFailure = () =>
+  ({ type: actionTypes.UPDATE_USER_SUCCESS });
+
+export const updateUser = (updateInfo) => {
+  const { userId } = updateInfo;
+  setToken();
+  return dispatch =>
+    ajaxCall.put(`/users/${userId}`, updateInfo)
+      .then((response) => {
+        localStorage.setItem('user_profile', JSON.stringify(response.data));
+        dispatch(updateUserSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(updateUserFailure(error));
+      });
+};

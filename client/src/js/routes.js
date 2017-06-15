@@ -5,7 +5,6 @@ import Signin from '../js/components/authentication/Signin';
 import NavBar from './components/common/NavBar';
 import Signup from './components/authentication/Signup';
 import UserPage from '../js/components/user/UserPage';
-import PageAccessHelper from '../js/helper/PageAccessHelper';
 
 
 export default (

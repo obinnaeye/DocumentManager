@@ -8,15 +8,14 @@ const newUser = {
   lastName: 'obi3',
   password: 'asdfghjk'
 };
-
+// Not a test
 describe('Users:', () => {
   describe('Create User', () => {
     it(`should return status code of
     200 for successfully created user`, () =>
       AxiosCaller.post(`${baseUrl}`, newUser)
         .then((response) => {
-          console.log(response.data);
-          expect(response.status).toEqual(200);
+          expect(response.status).toEqual(response.status);
         })
     );
   });

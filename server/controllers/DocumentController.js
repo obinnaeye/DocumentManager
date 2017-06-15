@@ -219,7 +219,6 @@ class DocumentController {
     const offset = request.query.offset || '0';
     const like = `%${request.query.q}%`;
 
-    console.log('rea',request.query);
     if (!request.query.q) {
       ResponseHandler.send404(response);
     } else if (roleId === 1) {

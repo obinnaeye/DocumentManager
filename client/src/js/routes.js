@@ -6,7 +6,7 @@ import NavBar from './components/common/NavBar';
 import Signup from './components/authentication/Signup';
 import UserPage from '../js/components/user/UserPage';
 
-
+// user PageAccessHelper here on UserPage and remove from other components
 export default (
   <Router >
     <Switch>

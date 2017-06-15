@@ -10,14 +10,15 @@ const newUser = {
 };
 // Not a test
 describe('Users:', () => {
-  describe('Create User', (done) => {
+  describe('Create User', () => {
     it(`should return status code of
-    200 for successfully created user`, () =>
+    200 for successfully created user`, (done) => {
       AxiosCaller.post(`${baseUrl}`, newUser)
         .then((response) => {
           expect(response.status).toEqual(response.status);
-          done();
-        })
+        });
+      done();
+    }
     );
   });
 });

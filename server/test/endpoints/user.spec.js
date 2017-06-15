@@ -15,8 +15,9 @@ describe('Users:', () => {
     200 for successfully created user`, (done) => {
       AxiosCaller.post(`${baseUrl}`, newUser)
         .then((response) => {
-          expect(response.status).toEqual(response.status);
+          expect(response.status).toEqual(400);
         });
+        console.log('here');
       done();
     }
     );

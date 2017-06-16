@@ -1,11 +1,19 @@
 /* global Materialize */
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import * as SignupActions from '../../actions/SignupActions';
 
+/**
+ * @class Signup
+ * @extends {React.Component}
+ */
 class Signup extends React.Component {
+  /**
+   * Creates an instance of Signup.
+   * @memberOf Signup
+   */
   constructor() {
     super();
     this.state = {
@@ -15,16 +23,12 @@ class Signup extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  submit() {
-    const user = this.state.user;
-    const { firstName, lastName, password, email } = user;
-    if (!firstName || !lastName || !password || !email) {
-      Materialize.toast('Please fill on all form fields!', 5000, 'red');
-    } else {
-      this.props.SignupActions.createUser(this.state.user);
-    }
-  }
-
+  /**
+   * @desc Handles change events on form input fields
+   * @param {object} e
+   * @returns {void}
+   * @memberOf Signup
+   */
   onChange(e) {
     const ref = e.target;
     const inputId = ref.id;
@@ -35,6 +39,27 @@ class Signup extends React.Component {
       user
     });
   }
+
+  /**
+   * @desc Sends user data to server for signup
+   * @returns {void}
+   * @memberOf Signup
+   */
+  submit() {
+    const user = this.state.user;
+    const { firstName, lastName, password, email } = user;
+    if (!firstName || !lastName || !password || !email) {
+      Materialize.toast('Please fill on all form fields!', 5000, 'red');
+    } else {
+      this.props.SignupActions.createUser(this.state.user);
+    }
+  }
+
+  /**
+   * @desc renders component on the DOM
+   * @returns {element} - DOM element - div
+   * @memberOf Signup
+   */
   render() {
     return (<div className="container">
       <div className="row">
@@ -130,11 +155,13 @@ class Signup extends React.Component {
   }
 }
 
+Signup.propTypes = {
+  SignupActions: PropTypes.object.isRequired,
+};
+
 const mapStateToProps = state => ({
   user: state.user
 });
-
-
 
 const mapDispatchToProps = dispatch => ({
   SignupActions: bindActionCreators(SignupActions, dispatch)

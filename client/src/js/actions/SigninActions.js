@@ -33,6 +33,3 @@ export const signinUser = user =>
         Materialize.toast(error.response.data.message, 5000);
       });
 
-// export const setUserDetails = userDetails => ({
-//   type: actionTypes.SET_USER_DETAILS, userDetails
-// });

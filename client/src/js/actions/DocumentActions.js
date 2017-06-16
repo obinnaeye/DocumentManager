@@ -24,9 +24,10 @@ export const createDocument = (documentData) => {
       })
       .catch((error) => {
         dispatch(createDocumentFailure());
-        console.log(error.message);
         if (error.message === 'Request failed with status code 409') {
-          Materialize.toast(`You already have a document with ${documentData.title}, please choose a different title!`, 5000, 'red');
+          Materialize.toast(
+            `You already have a document with ${documentData.title},
+            please choose a different title!`, 5000, 'red');
         } else {
           Materialize.toast(error.message, 3000, 'red');
         }
@@ -69,9 +70,9 @@ export const getUserDocuments = (userId) => {
       });
 };
 
-export const getAllDocuments = () =>
+export const getAllDocuments = () => {
   setToken();
-  dispatch =>
+  return dispatch =>
     ajaxCall.get('/documents/')
       .then((response) => {
         dispatch(getDocumentsSuccess(response.data));
@@ -84,6 +85,7 @@ export const getAllDocuments = () =>
         dispatch(getDocumentsFailure());
         Materialize.toast(error.message, 3000);
       });
+};
 
 export const searchDocuments = (searchData) => {
   setToken();
@@ -99,11 +101,10 @@ export const searchDocuments = (searchData) => {
   return dispatch =>
     ajaxCall.get(`/search/documents?q=${q}&limit=${limit}&offset=${offset}`)
       .then((response) => {
-        console.log(response.data);
         dispatch(getDocumentsSuccess(response.data));
       })
       .catch((error) => {
-        dispatch(getDocumentsFailure());
+        dispatch(getDocumentsFailure(error));
       });
 };
 
@@ -143,5 +144,4 @@ export const updateDocument = (documentData, id) => {
         }
       });
 };
-
 

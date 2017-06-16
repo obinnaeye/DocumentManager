@@ -1,4 +1,3 @@
-/* global Materialize */
 import ajaxCall from 'axios';
 import actionTypes from '../constants/actionTypes';
 import setToken from '../helper/setTokenHelper';
@@ -71,7 +70,6 @@ export const logout = () => {
   return dispatch =>
     ajaxCall.post('/users/logout')
       .then((response) => {
-        console.log(response.data);
         dispatch(logoutSuccess(response.data));
       })
       .catch((error) => {

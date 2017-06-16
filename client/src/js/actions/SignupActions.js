@@ -1,4 +1,4 @@
-/* global Materialize */
+/* global Materialize jwt_decode */
 import ajaxCall from 'axios';
 import actionTypes from '../constants/actionTypes';
 
@@ -14,9 +14,8 @@ export const createUserFailure = () => ({
   type: actionTypes.CREATE_USER_FAILURE
 });
 
-export const createUser = (user) => {
-  return (dispatch) => {
-    // dispatch(SignupActions.willCreateUser());
+export const createUser = user =>
+   dispatch =>
     ajaxCall.post('/users/', user)
       .then((response) => {
         const { activeToken } = response.data;
@@ -32,5 +31,3 @@ export const createUser = (user) => {
         dispatch(createUserFailure());
         Materialize.toast(error.response.data.message, 5000);
       });
-  };
-};

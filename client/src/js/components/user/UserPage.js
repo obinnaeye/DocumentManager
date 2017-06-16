@@ -13,12 +13,36 @@ const UserPage = () =>
   (
     <div>
       <Route path="/dashboard" component={(SideNav)} />
-      <Route exact path="/dashboard/:new-document" component={(NewDocument)} />
-      <Route exact path="/dashboard/my-documents" component={(UserDocuments)} />
-      <Route exact path="/dashboard/documents/:id" component={(DocumentView)} />
-      <Route exact path="/dashboard/edit-document/:id" component={(EditDocument)} />
-      <Route exact path="/dashboard/search" component={(SearchPage)} />
-      <Route exact path="/dashboard/edit-profile" component={(EditProfile)} />
+      <Route
+        exact
+        path="/dashboard/:new-document"
+        component={PageAccessHelper(NewDocument)}
+      />
+      <Route
+        exact
+        path="/dashboard/my-documents"
+        component={PageAccessHelper(UserDocuments)}
+      />
+      <Route
+        exact
+        path="/dashboard/documents/:id"
+        component={PageAccessHelper(DocumentView)}
+      />
+      <Route
+        exact
+        path="/dashboard/edit-document/:id"
+        component={PageAccessHelper(EditDocument)}
+      />
+      <Route
+        exact
+        path="/dashboard/search"
+        component={PageAccessHelper(SearchPage)}
+      />
+      <Route
+        exact
+        path="/dashboard/edit-profile"
+        component={PageAccessHelper(EditProfile)}
+      />
     </div>
   );
 

@@ -4,7 +4,7 @@
   "description": "A simple document management application",
   "main": "server.js",
   "scripts": {
-    "start": "./node_modules/.bin/babel-node server.js",
+    "start": "babel-node server.js",
     "start:dev": "nodemon server.js --exec babel-node",
     "build": "./node_modules/.bin/webpack",
     "build:dev": "./node_modules/.bin/webpack -w",
@@ -35,7 +35,6 @@
   "homepage": "https://github.com/andela-onnenanya/Document-Manager#readme",
   "dependencies": {
     "axios": "^0.16.1",
-    "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-istanbul": "^0.12.2",

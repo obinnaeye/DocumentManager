@@ -57,10 +57,10 @@ export const getUserDocumentsFailure = () =>
 export const getUserDocumentsSuccess = userDocuments =>
   ({ type: actionTypes.GET_USER_DOCUMENTS_SUCCESS, userDocuments });
 
-export const getUserDocuments = () => {
+export const getUserDocuments = (userId) => {
   setToken();
   return dispatch =>
-    ajaxCall.get('/users/6/documents')
+    ajaxCall.get(`/users/${userId}/documents`)
       .then((response) => {
         dispatch(getUserDocumentsSuccess(response.data));
       })

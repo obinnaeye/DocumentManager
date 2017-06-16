@@ -27,7 +27,8 @@ class UserDocuments extends React.Component {
   }
 
   componentDidMount() {
-    this.props.DocumentActions.getUserDocuments();
+    const { userId } = jwt_decode(localStorage.xsrf_token);
+    this.props.DocumentActions.getUserDocuments(userId);
   }
 
   viewCarousel(e) {

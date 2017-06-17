@@ -1,11 +1,21 @@
 /* global Materialize */
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import * as SigninActions from '../../actions/SigninActions';
 
+/**
+ *
+ * @class Signin
+ * @extends {React.Component}
+ */
 class Signin extends React.Component {
+  /**
+   * Creates an instance of Signin.
+   * @param {object} props
+   * @memberOf Signin
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +24,26 @@ class Signin extends React.Component {
     this.submit = this.submit.bind(this);
     this.onChange = this.onChange.bind(this);
   }
-
+  /**
+   *
+   * @param {object} e
+   * @memberOf Signin
+   * @returns {void}
+   */
+  onChange(e) {
+    const ref = e.target;
+    const inputId = ref.id;
+    const value = ref.value;
+    const user = this.state.user;
+    user[inputId] = value;
+    this.setState({
+      user
+    });
+  }
+  /**
+   * @memberOf Signin
+   * @return {void}
+   */
   submit() {
     const user = this.state.user;
     const { password, email } = user;
@@ -27,17 +56,10 @@ class Signin extends React.Component {
         });
     }
   }
-
-  onChange(e) {
-    const ref = e.target;
-    const inputId = ref.id;
-    const value = ref.value;
-    const user = this.state.user;
-    user[inputId] = value;
-    this.setState({
-      user
-    });
-  }
+  /**
+   * @returns {element} - DOM element - div
+   * @memberOf Signin
+   */
   render() {
     return (<div className="container">
       <div className="row">
@@ -97,16 +119,17 @@ class Signin extends React.Component {
   }
 }
 
+Signin.propTypes = {
+  SigninActions: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+};
+
 const mapStateToProps = state => ({
   user: state.signInReducer.user
 });
-
-
 
 const mapDispatchToProps = dispatch => ({
   SigninActions: bindActionCreators(SigninActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signin);
-
-// export default Signup;

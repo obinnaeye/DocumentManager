@@ -1,11 +1,23 @@
-import React from 'react';
+/* global jwt_decode */
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../../actions/UserActions';
 import '../../../../public/style/main.scss';
 
+/**
+ * @class NavBar
+ * @extends {React.Component}
+ */
 class NavBar extends React.Component {
+
+  /**
+   * Creates an instance of NavBar.
+   * @param {object} props
+   * @param {object} context
+   * @memberOf NavBar
+   */
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -15,22 +27,37 @@ class NavBar extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
+  /**
+   * @returns {void}
+   * @memberOf NavBar
+   */
   componentDidMount() {
     const { userId } = jwt_decode(localStorage.xsrf_token);
     this.props.UserActions.validateUser(userId);
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.authenticated);
-  }
+  // /**
+  //  * @param {object} nextProps
+  //  * @memberOf NavBar
+  //  * @returns {void}
+  //  */
+  // componentWillReceiveProps(nextProps) {
+  //   console.log(nextProps.authenticated);
+  // }
 
+  /**
+   * @desc Creates nav buttons depending on user logged in or not
+   * @returns {object} - DOM eleement
+   * @memberOf NavBar
+   */
   navigationButtons() {
     const authenticated = this.props.authenticated;
     const signingIn = this.props.signingIn;
     if (authenticated || signingIn) {
       return (
       [
-        <li key="dashboard"><Link to="/dashboard/my-documents" >Dashboard</Link></li>,
+        <li key="dashboard"><Link to="/dashboard/my-documents">
+        Dashboard</Link></li>,
         <li key="auth"><Link to="/" onClick={this.logout}>Logout</Link></li>
       ]
       );
@@ -43,6 +70,11 @@ class NavBar extends React.Component {
     );
   }
 
+  /**
+   * @desc Sends a logout call to server and redirects to home
+   * @memberOf NavBar
+   * @returns {void}
+   */
   logout() {
     this.props.UserActions.logout()
       .then(() => {
@@ -50,6 +82,11 @@ class NavBar extends React.Component {
       });
   }
 
+  /**
+   * @desc Renders a component on the DOM
+   * @returns {element} -DOM element - header
+   * @memberOf NavBar
+   */
   render() {
     return (
       <header>
@@ -72,6 +109,17 @@ class NavBar extends React.Component {
     );
   }
 }
+
+NavBar.defaultProps = {
+  authenticated: false
+};
+
+NavBar.propTypes = {
+  UserActions: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  authenticated: PropTypes.bool,
+  signingIn: PropTypes.bool.isRequired
+};
 
 const mapStateToProps = state => ({
   authenticated: state.userReducers.authenticated,

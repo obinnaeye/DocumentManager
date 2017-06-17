@@ -1,10 +1,21 @@
-import React from 'react';
+/* global $ Materialize */
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as DocumentActions from '../../actions/DocumentActions';
 import * as UserActions from '../../actions/UserActions';
 
+/**
+ * @class SearchPage
+ * @extends {React.Component}
+ */
 class SearchPage extends React.Component {
+  /**
+   * Creates an instance of SearchPage.
+   * @param {object} props
+   * @param {object} context
+   * @memberOf SearchPage
+   */
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -23,10 +34,19 @@ class SearchPage extends React.Component {
     this.search = this.search.bind(this);
   }
 
+  /**
+   * @memberOf SearchPage
+   * @returns {void}
+   */
   componentDidMount() {
     $('select').material_select();
   }
 
+  /**
+   * @param {object} nextProps
+   * @memberOf SearchPage
+   * @returns {void}
+   */
   componentWillReceiveProps(nextProps) {
     const { documents, users, fetchingDocuments, fetchingUsers } = nextProps;
     this.setState({
@@ -37,12 +57,67 @@ class SearchPage extends React.Component {
     });
   }
 
+  /**
+   * Performs a search for user or document
+   * @returns {void}
+   * @memberOf SearchPage
+   */
+  search() {
+    const search = $('#search').val();
+    const searchIn = $('#searchSelect').val();
+    const limit = $('#limit').val();
+    const offset = $('#offset').val();
+    const searchData = {
+      q: search,
+      limit,
+      offset
+    };
+    if (!search) {
+      this.setState({
+        searching: false
+      });
+      Materialize.toast('You have not entered any search word!', 3000, 'red');
+      return;
+    }
+    if (searchIn === 'documents') {
+      this.props.DocumentActions.searchDocuments(searchData);
+      this.setState({
+        searching: true,
+        searchIn: 'documents'
+      });
+    } else {
+      this.props.UserActions.searchUsers(searchData);
+      this.setState({
+        searching: true,
+        searchIn: 'users'
+      });
+    }
+  }
+
+  /**
+   * Returns render for user or document
+   * @returns {element} DOM element
+   * @memberOf SearchPage
+   */
+  combinedRendered() {
+    if (this.state.searchIn === 'documents') {
+      return this.renderedDocuments();
+    }
+    return this.renderedUsers();
+  }
+
+  /**
+   * Formats document for rendering
+   * @returns {element} DOM element
+   * @memberOf SearchPage
+   */
   renderedDocuments() {
     if (this.state.fetchingDocuments && this.state.searching) {
       const documents = this.state.documents;
       const render = documents.map((document) => {
         const { id, title, content, createdAt, updatedAt } = document;
-        const parsedContent = <span dangerouslySetInnerHTML={{ __html: content }} />;
+        const parsedContent =
+          <span dangerouslySetInnerHTML={{ __html: content }} />;
         return (
           <li key={id}>
             <div className="collapsible-header">
@@ -61,13 +136,11 @@ class SearchPage extends React.Component {
     }
   }
 
-  combinedRendered() {
-    if (this.state.searchIn === 'documents') {
-      return this.renderedDocuments();
-    }
-    return this.renderedUsers();
-  }
-
+  /**
+   * Formats user for rendering
+   * @returns {element} DOM element
+   * @memberOf SearchPage
+   */
   renderedUsers() {
     if (this.state.fetchingUsers && this.state.searching) {
       const users = this.state.users;
@@ -93,44 +166,22 @@ class SearchPage extends React.Component {
     }
   }
 
-  search() {
-    const search = $('#search').val();
-    const searchIn = $('#searchSelect').val();
-    const limit = $('#limit').val();
-    const offset = $('#offset').val();
-    const searchData = {
-      q: search,
-      limit,
-      offset
-    };
-    if (!search) {
-      this.setState({
-        searching: false
-      });
-      return Materialize.toast('You have not entered any search word!', 3000, 'red')
-    }
-    if (searchIn === 'documents') {
-      this.props.DocumentActions.searchDocuments(searchData);
-      this.setState({
-        searching: true,
-        searchIn: 'documents'
-      });
-    } else {
-      this.props.UserActions.searchUsers(searchData);
-      this.setState({
-        searching: true,
-        searchIn: 'users'
-      });
-    }
-  }
-
+  /**
+   * @returns {element} DOM element - div
+   * @memberOf SearchPage
+   */
   render() {
     return (
       <div className="container">
         <div className="my-centered" >
           <div className="row">
             <h5 className="col s2"> Search for: </h5>
-            <select id="searchSelect" defaultValue="document" className="col s3" onChange={this.changeSearch}>
+            <select
+              id="searchSelect"
+              defaultValue="document"
+              className="col s3"
+              onChange={this.changeSearch}
+            >
               <option value="documents">Document</option>
               <option value="users">User</option>
             </select>
@@ -151,7 +202,8 @@ class SearchPage extends React.Component {
           </div>
         </div>
         <div className="row">
-          <button id="searchButton" className="btn" onClick={this.search}> Search </button>
+          <button id="searchButton" className="btn" onClick={this.search}>
+           Search </button>
         </div>
         <div className=" row my-centered col s12">
           <ul className="collapsible" data-collapsible="accordion">
@@ -162,6 +214,22 @@ class SearchPage extends React.Component {
     );
   }
 }
+
+SearchPage.defaultProps = {
+  documents: [],
+  users: [],
+  fetchingDocuments: false,
+  fetchingUsers: false
+};
+
+SearchPage.propTypes = {
+  documents: PropTypes.array,
+  fetchingDocuments: PropTypes.bool,
+  DocumentActions: PropTypes.object.isRequired,
+  fetchingUsers: PropTypes.bool,
+  UserActions: PropTypes.object.isRequired,
+  users: PropTypes.array
+};
 
 const mapStateToProps = state => ({
   documents: state.documentReducer.documents,

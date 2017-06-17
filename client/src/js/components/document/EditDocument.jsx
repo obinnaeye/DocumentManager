@@ -21,7 +21,9 @@ class EditDocument extends React.Component {
     super(props, context);
     this.state = {
       editID: props.match.params.id,
-      access: 'Select Document Access Types'
+      access: 'Select Document Access Types',
+      callcount: 0,
+      userProfile: JSON.parse(localStorage.user_profile)
     };
     this.save = this.save.bind(this);
     this.saveExit = this.saveExit.bind(this);
@@ -45,10 +47,38 @@ class EditDocument extends React.Component {
    * @returns {void}
    */
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.fetchingDocument) {
-      const { editID } = this.state;
+    this.checkProps(nextProps);
+  }
+
+  /**
+   * @desc Checks nextProps and redirects if no user-editable document
+   * @param {objcet} nextProps
+   * @returns {void}
+   * @memberOf EditDocument
+   */
+  checkProps(nextProps) {
+    const { editID } = this.state;
+    // check if document has been fetched
+    // first prop recieved may not have updated AJAX call in componentDidMount
+    // callcount is used to make sure props must have updated AJAX call
+    // then if fetchingDocument is still falls, then redirect to user documents
+    if (!nextProps.fetchingDocument && this.state.callcount > 0) {
       Materialize.toast(
         `Could not find any document with the id ${editID},
+        redirecting...`, 5000, 'red');
+      setTimeout(() => {
+        this.props.history.push('/dashboard/my-documents');
+      }, 5000);
+    } else if (!nextProps.fetchingDocument && this.state.callcount === 0) {
+      this.props.DocumentActions.getDocument(this.state.editID);
+      this.setState({
+        callcount: this.state.callcount + 1
+      });
+    } else if (nextProps.document.ownerId !== this.state.userProfile.userId
+      && this.state.userProfile.roleId !== 1) {
+      Materialize.toast(
+        `You don't have the required access to edit
+        document with the id ${editID},
         redirecting...`, 5000, 'red');
       setTimeout(() => {
         this.props.history.push('/dashboard/my-documents');
@@ -67,7 +97,6 @@ class EditDocument extends React.Component {
       });
     }
   }
-
   /**
    * @desc Handles change event on form input fields
    * @param {object} e
@@ -181,9 +210,7 @@ class EditDocument extends React.Component {
 EditDocument.propTypes = {
   match: PropTypes.object.isRequired,
   DocumentActions: PropTypes.object.isRequired,
-  fetchingDocument: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
-  document: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

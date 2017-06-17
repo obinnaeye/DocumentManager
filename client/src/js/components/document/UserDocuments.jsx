@@ -60,6 +60,7 @@ class UserDocuments extends React.Component {
    * @memberOf UserDocuments
    */
   viewCarousel(e) {
+    e.preventDefault();
     const id = e.target.getAttribute('name');
     this.props.history.push(`/dashboard/documents/${id}`);
   }

@@ -44,7 +44,7 @@ export default (ComposedConmponent) => {
      */
     render() {
       return (
-        <ComposedConmponent />
+        <ComposedConmponent {...this.props} />
       );
     }
   }

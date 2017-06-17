@@ -10,6 +10,18 @@ export default (ComposedConmponent) => {
    * @extends {React.Component}
    */
   class Authenticate extends React.Component {
+    /**
+     * Creates an instance of Authenticate.
+     * @param {any} props
+     * @param {any} context
+     * @memberOf Authenticate
+     */
+    constructor(props, context) {
+      super(props, context);
+      this.state = {
+        callcount: 0
+      };
+    }
 
     /**
      * @memberOf Authenticate
@@ -18,12 +30,7 @@ export default (ComposedConmponent) => {
     componentWillMount() {
       if (!this.props.authenticated && !this.props.signingIn) {
         const { userId } = jwt_decode(localStorage.xsrf_token);
-        this.props.UserActions.validateUser(userId)
-          .then(() => {
-          })
-          .catch(() => {
-            this.context.router.history.push('/');
-          });
+        this.props.UserActions.validateUser(userId);
       }
     }
 
@@ -34,7 +41,15 @@ export default (ComposedConmponent) => {
      */
     componentWillReceiveProps(nextProps) {
       if (!nextProps.authenticated && !nextProps.signingIn) {
-        this.context.router.history.push('/');
+        if (this.state.callcount > 0) {
+          this.context.router.history.push('/');
+        } else {
+          const { userId } = jwt_decode(localStorage.xsrf_token);
+          this.props.UserActions.validateUser(userId);
+          this.setState({
+            callcount: this.state.callcount + 1
+          });
+        }
       }
     }
 

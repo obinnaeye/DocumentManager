@@ -29,6 +29,7 @@ class EditDocument extends React.Component {
     this.saveExit = this.saveExit.bind(this);
     this.exit = this.exit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.checkProps = this.checkProps.bind(this);
   }
 
   /**
@@ -36,7 +37,9 @@ class EditDocument extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    CKEDITOR.replace('editor');
+    CKEDITOR.replace('editor', {
+      uiColor: '#ffa726'
+    });
     $('select').material_select();
     this.props.DocumentActions.getDocument(this.state.editID);
   }
@@ -169,7 +172,7 @@ class EditDocument extends React.Component {
    */
   render() {
     return (
-      <div className="row center-align">
+      <div className="row center-align edit-document-container">
         <div className="row center-align">
           <div className="input-field col s5">
             <input id="documentTitle" type="text" className="validate" />
@@ -185,22 +188,24 @@ class EditDocument extends React.Component {
             />
           </div>
         </div>
-        <div className="col s10 center-align" >
-          <textarea name="editor" id="editor" />
-        </div>
-        <div>
-          <button
-            className="btn waves-effect waves-light light-green darken-4"
-            onClick={this.save}
-          >Save</button><br />
-          <button
-            className="btn waves-effect waves-light light-green darken-4"
-            onClick={this.saveExit}
-          >Save and Exit</button><br />
-          <button
-            className="btn waves-effect waves-light red darken-4"
-            onClick={this.exit}
-          >Cancel</button>
+        <div className="row">
+          <div className="col s12 m10 center" >
+            <textarea name="editor" id="editor" value={this.state.content} />
+          </div>
+          <div className="col s12 m2 edit-document-buttons">
+            <button
+              className="btn waves-effect waves-light orange accent-3"
+              onClick={this.save}
+            >Save</button><br />
+            <button
+              className="btn waves-effect waves-light orange accent-3"
+              onClick={this.saveExit}
+            >Save and Exit</button><br />
+            <button
+              className="btn waves-effect waves-light red lighten-2"
+              onClick={this.exit}
+            >Cancel</button>
+          </div>
         </div>
       </div>
     );

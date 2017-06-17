@@ -45,12 +45,14 @@ class UserDocuments extends React.Component {
    * @memberOf UserDocuments
    */
   componentWillReceiveProps(nextProps) {
-    const { title, content } = nextProps.userDocuments[0];
-    this.setState({
-      title,
-      content,
-      documents: nextProps.userDocuments
-    });
+    if (nextProps.userDocuments.length > 0) {
+      const { title, content } = nextProps.userDocuments[0];
+      this.setState({
+        title,
+        content,
+        documents: nextProps.userDocuments
+      });
+    }
   }
 
   /**

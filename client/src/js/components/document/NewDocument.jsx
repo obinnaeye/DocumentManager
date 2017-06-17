@@ -30,7 +30,9 @@ class NewDocument extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    CKEDITOR.replace('editor');
+    CKEDITOR.replace('editor', {
+      uiColor: '#ffa726'
+    });
     $('select').material_select();
   }
 

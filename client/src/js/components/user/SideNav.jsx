@@ -20,6 +20,12 @@ class SideNav extends React.Component {
       draggable: true
     }
     );
+
+    $('#pushpin').pushpin({
+      top: 150,
+      bottom: 1000,
+      offset: 70
+    });
   }
 
   /**
@@ -46,7 +52,9 @@ class SideNav extends React.Component {
         <a
           href="#slide-out"
           data-activates="slide-out"
-          className="button-collapse"
+          className="button-collapse btn-floating pulse  orange accent-3"
+          data-target="slide-out"
+          id="pushpin"
         >
           <i className="material-icons">menu</i>
         </a>

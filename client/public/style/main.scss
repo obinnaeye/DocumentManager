@@ -31,3 +31,17 @@ figure {
 .my-top-border {
   border-top: 3px solid red;
 }
+
+.pin-top {
+    position: relative;
+  }
+
+  // Class for when element is below threshold
+  .pin-bottom {
+    position: relative;
+  }
+
+  // Class for when element is pinned
+  .pinned {
+    position: fixed !important;
+  }

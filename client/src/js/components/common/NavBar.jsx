@@ -89,10 +89,11 @@ class NavBar extends React.Component {
    */
   render() {
     return (
-      <header>
-        <div className="navbar-fixed">
-          <nav>
-            <div className="nav-wrapper"><a className="brand-logo">okDocs</a>
+      <header id="header">
+        <div className="navbar-fixed black">
+          <nav className="grey darken-4">
+            <div className="nav-wrapper"><a className="brand-logo">
+              <i className="fa fa-thumbs-up" aria-hidden="true" />okDocs</a>
               <a data-activates="mobile-demo" className="button-collapse">
                 <i className="material-icons">menu</i>
               </a>

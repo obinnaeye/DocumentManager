@@ -4,10 +4,11 @@
 
 figure {
   padding-left: 20px !important;
-  width: 400px !important; 
+  //width: 400px !important; 
   background: white !important;
   height: 350px !important;
   align-self: stretch !important;
+  word-wrap: break-word;
 }
 
 .coverflow__container__1P-xE {
@@ -56,4 +57,8 @@ figure {
 
   .width-85 {
     width: 100% !important;
+  }
+
+  .button-margin {
+    margin: 0 10px
   }

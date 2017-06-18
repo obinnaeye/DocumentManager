@@ -101,13 +101,15 @@ class Signin extends React.Component {
           </div>
           <div className="row">
             <input
-              className="waves-effect waves-light btn"
+              className={`col s12 m3 waves-effect
+                waves-light btn orange button-margin`}
               value="Signin"
               type="submit"
             />
             New User?
             <Link
-              className="waves-effect waves-light btn"
+              className={`col s12 m3 waves-effect
+              waves-light btn orange button-margin`}
               to="/signup"
             >
               Signup

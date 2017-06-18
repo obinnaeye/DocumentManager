@@ -87,7 +87,7 @@ class UserDocuments extends React.Component {
               onClick={this.viewCarousel}
               name={id}
             ><i className="material-icons" name={id}>pageview</i></button>
-            <h3>{title}</h3>
+            <h5>{title}</h5>
             {formatedContent}
           </div>
         );
@@ -96,16 +96,20 @@ class UserDocuments extends React.Component {
 
     return (
       <div className="container width-85">
-        <Coverflow
-          style={{ height: '1000px', color: '' }}
-          width={'auto'}
-          height={500}
-          displayQuantityOfSide={1}
-          navigation
-          enableHeading={false}
-        >
-          {formatedDocuments}
-        </Coverflow>
+        <div className="row">
+          <div className="col s12">
+            <Coverflow
+              style={{ height: '1000px', color: '' }}
+              width={'auto'}
+              height={500}
+              displayQuantityOfSide={1}
+              navigation
+              enableHeading={false}
+            >
+              {formatedDocuments}
+            </Coverflow>
+          </div>
+        </div>
       </div>
     );
   }

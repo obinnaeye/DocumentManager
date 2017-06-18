@@ -1,4 +1,4 @@
-/* global jwt_decode */
+/* global jwt_decode $ */
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -36,15 +36,6 @@ class NavBar extends React.Component {
     this.props.UserActions.validateUser(userId);
   }
 
-  // /**
-  //  * @param {object} nextProps
-  //  * @memberOf NavBar
-  //  * @returns {void}
-  //  */
-  // componentWillReceiveProps(nextProps) {
-  //   console.log(nextProps.authenticated);
-  // }
-
   /**
    * @desc Creates nav buttons depending on user logged in or not
    * @returns {object} - DOM eleement
@@ -62,6 +53,14 @@ class NavBar extends React.Component {
       ]
       );
     }
+    // initialize collapse button here, so it does not conflict with
+    // sidenav of dashboard when authenticated
+    $('.button-collapse').sideNav({
+      menuWidth: 'auto',
+      edge: 'left',
+      closeOnClick: true,
+      draggable: true
+    });
     return (
     [
       <li key="dashboard"><Link to="/signin">Signin</Link></li>,
@@ -94,7 +93,7 @@ class NavBar extends React.Component {
           <nav className="grey darken-4">
             <div className="nav-wrapper"><a className="brand-logo">
               <i className="fa fa-thumbs-up" aria-hidden="true" />okDocs</a>
-              <a data-activates="mobile-demo" className="button-collapse">
+              <a data-activates="mobile-demo" className="button-collapse right">
                 <i className="material-icons">menu</i>
               </a>
               <ul className="right hide-on-med-and-down">

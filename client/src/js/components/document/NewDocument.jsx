@@ -23,6 +23,8 @@ class NewDocument extends React.Component {
       editID: null
     };
     this.save = this.save.bind(this);
+    this.saveExit = this.saveExit.bind(this);
+    this.exit = this.exit.bind(this);
   }
 
   /**
@@ -30,7 +32,9 @@ class NewDocument extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    CKEDITOR.replace('editor');
+    CKEDITOR.replace('editor', {
+      uiColor: '#ffa726'
+    });
     $('select').material_select();
   }
 
@@ -87,6 +91,25 @@ class NewDocument extends React.Component {
   }
 
   /**
+   * @desc Saves a document and redirects to dashboard
+   * @returns {void}
+   * @memberOf EditDocument
+   */
+  saveExit() {
+    this.save();
+    this.exit();
+  }
+
+  /**
+   * @desc Redirects to dashboard
+   * @returns {void}
+   * @memberOf EditDocument
+   */
+  exit() {
+    this.props.history.push('/dashboard/my-documents');
+  }
+
+  /**
    * @returns {element} DOM element
    * @memberOf NewDocument
    */
@@ -94,11 +117,11 @@ class NewDocument extends React.Component {
     return (
       <div className="row center-align">
         <div className="row center-align">
-          <div className="input-field col s5">
+          <div className="input-field col m5 s6">
             <input id="documentTitle" type="text" className="validate" />
             <label htmlFor="documentTitle">Title: Unique Title</label>
           </div>
-          <div className="input-field col s5 center-align">
+          <div className="input-field col m5 s6 center-align">
             <select id="access">
               <option value="" disabled selected>Choose Access Type</option>
               <option value="private">Private</option>
@@ -107,10 +130,25 @@ class NewDocument extends React.Component {
             </select>
           </div>
         </div>
-        <div className="col s10 center-align" >
-          <textarea name="editor" id="editor" />
+        <div className="row">
+          <div className="col s12 m10 center" >
+            <textarea name="editor" id="editor" />
+          </div>
+          <div className="col s12 m2 edit-document-buttons">
+            <button
+              className="btn waves-effect waves-light orange accent-3"
+              onClick={this.save}
+            >Save</button><br />
+            <button
+              className="btn waves-effect waves-light orange accent-3"
+              onClick={this.saveExit}
+            >Save and Exit</button><br />
+            <button
+              className="btn waves-effect waves-light red lighten-2"
+              onClick={this.exit}
+            >Cancel</button>
+          </div>
         </div>
-        <button onClick={this.save}>Save</button>
       </div>
     );
   }
@@ -123,6 +161,7 @@ NewDocument.defaultProps = {
 NewDocument.propTypes = {
   editID: PropTypes.string,
   DocumentActions: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

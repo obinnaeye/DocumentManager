@@ -21,12 +21,16 @@ class EditDocument extends React.Component {
     super(props, context);
     this.state = {
       editID: props.match.params.id,
-      access: 'Select Document Access Types'
+      access: this.props.document.access,
+      callcount: this.props.count,
+      userProfile: JSON.parse(localStorage.user_profile),
+      content: this.props.document.content
     };
     this.save = this.save.bind(this);
     this.saveExit = this.saveExit.bind(this);
     this.exit = this.exit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.checkProps = this.checkProps.bind(this);
   }
 
   /**
@@ -34,7 +38,9 @@ class EditDocument extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    CKEDITOR.replace('editor');
+    CKEDITOR.replace('editor', {
+      uiColor: '#ffa726'
+    });
     $('select').material_select();
     this.props.DocumentActions.getDocument(this.state.editID);
   }
@@ -45,10 +51,38 @@ class EditDocument extends React.Component {
    * @returns {void}
    */
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.fetchingDocument) {
-      const { editID } = this.state;
+    this.checkProps(nextProps);
+  }
+
+  /**
+   * @desc Checks nextProps and redirects if no user-editable document
+   * @param {objcet} nextProps
+   * @returns {void}
+   * @memberOf EditDocument
+   */
+  checkProps(nextProps) {
+    const { editID } = this.state;
+    // check if document has been fetched
+    // first prop recieved may not have updated AJAX call in componentDidMount
+    // callcount is used to make sure props must have updated AJAX call
+    // then if fetchingDocument is still falls, then redirect to user documents
+    if (!nextProps.fetchingDocument && this.state.callcount > 0) {
       Materialize.toast(
         `Could not find any document with the id ${editID},
+        redirecting...`, 5000, 'red');
+      setTimeout(() => {
+        this.props.history.push('/dashboard/my-documents');
+      }, 5000);
+    } else if (!nextProps.fetchingDocument && this.state.callcount === 0) {
+      this.props.DocumentActions.getDocument(this.state.editID);
+      this.setState({
+        callcount: this.state.callcount + 1
+      });
+    } else if (nextProps.document.ownerId !== this.state.userProfile.userId
+      && this.state.userProfile.roleId !== 1) {
+      Materialize.toast(
+        `You don't have the required access to edit
+        document with the id ${editID},
         redirecting...`, 5000, 'red');
       setTimeout(() => {
         this.props.history.push('/dashboard/my-documents');
@@ -67,7 +101,6 @@ class EditDocument extends React.Component {
       });
     }
   }
-
   /**
    * @desc Handles change event on form input fields
    * @param {object} e
@@ -140,7 +173,7 @@ class EditDocument extends React.Component {
    */
   render() {
     return (
-      <div className="row center-align">
+      <div className="row center-align edit-document-container">
         <div className="row center-align">
           <div className="input-field col s5">
             <input id="documentTitle" type="text" className="validate" />
@@ -156,39 +189,47 @@ class EditDocument extends React.Component {
             />
           </div>
         </div>
-        <div className="col s10 center-align" >
-          <textarea name="editor" id="editor" />
-        </div>
-        <div>
-          <button
-            className="btn waves-effect waves-light light-green darken-4"
-            onClick={this.save}
-          >Save</button><br />
-          <button
-            className="btn waves-effect waves-light light-green darken-4"
-            onClick={this.saveExit}
-          >Save and Exit</button><br />
-          <button
-            className="btn waves-effect waves-light red darken-4"
-            onClick={this.exit}
-          >Cancel</button>
+        <div className="row">
+          <div className="col s12 m10 center" >
+            <textarea name="editor" id="editor" value={this.state.content} />
+          </div>
+          <div className="col s12 m2 edit-document-buttons">
+            <button
+              className="btn waves-effect waves-light orange accent-3"
+              onClick={this.save}
+            >Save</button><br />
+            <button
+              className="btn waves-effect waves-light orange accent-3"
+              onClick={this.saveExit}
+            >Save and Exit</button><br />
+            <button
+              className="btn waves-effect waves-light red lighten-2"
+              onClick={this.exit}
+            >Cancel</button>
+          </div>
         </div>
       </div>
     );
   }
 }
 
+EditDocument.defaultProps = {
+  document: {},
+  count: 0
+};
+
 EditDocument.propTypes = {
   match: PropTypes.object.isRequired,
   DocumentActions: PropTypes.object.isRequired,
-  fetchingDocument: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
-  document: PropTypes.object.isRequired
+  document: PropTypes.object,
+  count: PropTypes.number
 };
 
 const mapStateToProps = state => ({
   document: state.documentReducer.documents,
-  fetchingDocument: state.documentReducer.fetchingDocuments
+  fetchingDocument: state.documentReducer.fetchingDocuments,
+  count: state.documentReducer.count
 });
 
 const mapDispatchToProps = dispatch => ({

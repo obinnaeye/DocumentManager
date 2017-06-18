@@ -45,12 +45,14 @@ class UserDocuments extends React.Component {
    * @memberOf UserDocuments
    */
   componentWillReceiveProps(nextProps) {
-    const { title, content } = nextProps.userDocuments[0];
-    this.setState({
-      title,
-      content,
-      documents: nextProps.userDocuments
-    });
+    if (nextProps.userDocuments.length > 0) {
+      const { title, content } = nextProps.userDocuments[0];
+      this.setState({
+        title,
+        content,
+        documents: nextProps.userDocuments
+      });
+    }
   }
 
   /**
@@ -60,6 +62,7 @@ class UserDocuments extends React.Component {
    * @memberOf UserDocuments
    */
   viewCarousel(e) {
+    e.preventDefault();
     const id = e.target.getAttribute('name');
     this.props.history.push(`/dashboard/documents/${id}`);
   }
@@ -80,11 +83,11 @@ class UserDocuments extends React.Component {
         return (
           <div key={id} className="myCover" >
             <button
-              className="btn open-doc"
+              className="btn-floating waves-effect waves-light orange"
               onClick={this.viewCarousel}
               name={id}
-            >Open</button>
-            <h3>{title}</h3>
+            ><i className="material-icons" name={id}>pageview</i></button>
+            <h5>{title}</h5>
             {formatedContent}
           </div>
         );
@@ -92,16 +95,22 @@ class UserDocuments extends React.Component {
     }
 
     return (
-      <Coverflow
-        style={{ height: '1000px', color: 'red' }}
-        width={'auto'}
-        height={500}
-        displayQuantityOfSide={3}
-        navigation
-        enableHeading={false}
-      >
-        {formatedDocuments}
-      </Coverflow>
+      <div className="container width-85">
+        <div className="row">
+          <div className="col s12">
+            <Coverflow
+              style={{ height: '1000px', color: '' }}
+              width={'auto'}
+              height={500}
+              displayQuantityOfSide={1}
+              navigation
+              enableHeading={false}
+            >
+              {formatedDocuments}
+            </Coverflow>
+          </div>
+        </div>
+      </div>
     );
   }
 }

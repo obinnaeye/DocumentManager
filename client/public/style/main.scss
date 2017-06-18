@@ -4,15 +4,16 @@
 
 figure {
   padding-left: 20px !important;
-  width: 400px !important; 
+  //width: 400px !important; 
   background: white !important;
   height: 350px !important;
   align-self: stretch !important;
+  word-wrap: break-word;
 }
 
 .coverflow__container__1P-xE {
   margin-top: 50px !important;
-  background: red !important;
+  background: orange !important;
 }
 .open-doc{
   z-index: 10000;
@@ -25,9 +26,39 @@ figure {
 }
 
 .my-centered {
-  margin: 0 auto;
+  margin: 15px auto;
 }
 
 .my-top-border {
-  border-top: 3px solid red;
+  border-top: 3px solid orange;
 }
+
+.pin-top {
+    position: relative;
+  }
+
+  // Class for when element is below threshold
+  .pin-bottom {
+    position: relative;
+  }
+
+  // Class for when element is pinned
+  .pinned {
+    position: fixed !important;
+  }
+
+  .edit-document-container {
+    margin-top: 25px
+  }
+  .edit-document-buttons button {
+    margin-top: 15px;
+    width: 80%
+  }
+
+  .width-85 {
+    width: 100% !important;
+  }
+
+  .button-margin {
+    margin: 0 10px
+  }

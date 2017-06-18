@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../actions/UserActions';
+import Signin from '../components/authentication/Signin';
 
 export default (ComposedConmponent) => {
   /**
@@ -10,31 +11,14 @@ export default (ComposedConmponent) => {
    * @extends {React.Component}
    */
   class Authenticate extends React.Component {
-
     /**
      * @memberOf Authenticate
      * @returns {void}
      */
-    componentWillMount() {
+    componentDidMount() {
       if (!this.props.authenticated && !this.props.signingIn) {
         const { userId } = jwt_decode(localStorage.xsrf_token);
-        this.props.UserActions.validateUser(userId)
-          .then(() => {
-          })
-          .catch(() => {
-            this.context.router.history.push('/');
-          });
-      }
-    }
-
-    /**
-     * @param {object} nextProps
-     * @returns {void}
-     * @memberOf Authenticate
-     */
-    componentWillReceiveProps(nextProps) {
-      if (!nextProps.authenticated && !nextProps.signingIn) {
-        this.context.router.history.push('/');
+        this.props.UserActions.validateUser(userId);
       }
     }
 
@@ -44,7 +28,10 @@ export default (ComposedConmponent) => {
      */
     render() {
       return (
-        <ComposedConmponent />
+        <span>
+          { this.props.authenticated || this.props.signingIn
+             ? <ComposedConmponent {...this.props} /> : <Signin />}
+        </span>
       );
     }
   }

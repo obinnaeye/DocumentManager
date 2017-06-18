@@ -137,17 +137,19 @@ class Signup extends React.Component {
           </div>
           <div className="row">
             <input
-              className="waves-effect waves-light btn"
+              className={`col s12 m3 waves-effect waves-light 
+              btn orange button-margin`}
               value="Signup"
               type="submit"
             />
+            <em>If you have already registered...</em>
             <Link
-              className="waves-effect waves-light btn"
+              className={`col m3 s12 waves-effect 
+              waves-light btn orange button-margin`}
               to="/signin"
             >
               Signin
             </Link>
-            If you have already registered.
           </div>
         </form>
       </div>

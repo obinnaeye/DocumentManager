@@ -69,9 +69,9 @@ class EditProfile extends React.Component {
     const userProfile = JSON.parse(localStorage.getItem('user_profile'));
     const { firstName, lastName, email } = userProfile;
     return (
-      <div className="row">
-        <form className="col s12 m6" onSubmit={this.updateProfile}>
-          <div className="row">
+      <div className="row container center-align">
+        <form className="col s12" onSubmit={this.updateProfile}>
+          <div className="row ">
             <div className="input-field col s12 m6">
               <input
                 disabled
@@ -80,7 +80,7 @@ class EditProfile extends React.Component {
                 type="text"
                 className="validate"
               />
-              <label htmlFor="disabled">User email is not editable!</label>
+              <label htmlFor="disabled" className="active">User email is not editable!</label>
             </div>
             <div className="input-field col s12 m6">
               <input id="password" type="password" className="validate" />
@@ -88,7 +88,7 @@ class EditProfile extends React.Component {
                 htmlFor="password"
               >Password: Not less than 8 characters</label>
             </div>
-            <div className="input-field col s6">
+            <div className="input-field col s12 m6">
               <input
                 defaultValue={firstName}
                 id="first_name"
@@ -97,7 +97,7 @@ class EditProfile extends React.Component {
               />
               <label className="active" htmlFor="first_name">First Name</label>
             </div>
-            <div className="input-field col s6">
+            <div className="input-field col s12 m6">
               <input
                 defaultValue={lastName}
                 id="last_name"
@@ -106,7 +106,7 @@ class EditProfile extends React.Component {
               />
               <label className="active" htmlFor="last_name">Last Name</label>
             </div>
-            <input type="submit" value="Update Profile" />
+            <input className="btn orange" type="submit" value="Update Profile" />
           </div>
         </form>
       </div>

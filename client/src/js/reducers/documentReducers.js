@@ -17,7 +17,7 @@ const documentReducer = (state = initialState, action) => {
     return { ...state, documents: action.documents, fetchingDocuments: true };
 
   case actionTypes.GET_DOCUMENTS_FAILURE:
-    return { ...state, fetchingDocuments: false };
+    return { ...state, fetchingDocuments: false, count: state.count + 1 || 1 };
 
   case actionTypes.GET_USER_DOCUMENTS_SUCCESS:
     return { ...state, userDocuments: action.userDocuments };

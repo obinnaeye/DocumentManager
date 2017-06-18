@@ -86,22 +86,33 @@ class DocumentView extends React.Component {
       dangerouslySetInnerHTML={{ __html: this.state.content }}
     />);
     return (
-      <div className="row">
+      <div className="container row">
         <div className="col s12 m12">
-          <div className="card blue-grey darken-1">
-            <div className="card-content white-text">
-              <span className="card-title">{this.state.title}</span>
+          <div className="card white darken-1">
+            <div className="card-content black-text">
+              <span className="card-title">
+                <strong>{this.state.title}</strong></span>
               <div>{parsedContent}</div>
             </div>
             <div className="card-action">
               <button
+                className="btn orange button-margin"
                 onClick={this.editDocument}
                 name={this.state.id}
-              >Edit Document</button>
+              >
+                <i
+                  className="material-icons"
+                  name={this.state.id}
+                >mode_edit</i></button>
               <button
+                className=" btn red lighten-2 button-margin"
                 onClick={this.deleteDocument}
                 name={this.state.id}
-              >Delete Document</button>
+              >
+                <i
+                  className="material-icons"
+                  name={this.state.id}
+                >delete</i></button>
             </div>
           </div>
         </div>

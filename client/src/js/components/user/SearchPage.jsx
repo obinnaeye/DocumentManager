@@ -40,6 +40,7 @@ class SearchPage extends React.Component {
    */
   componentDidMount() {
     $('select').material_select();
+    $('.collapsible').collapsible();
   }
 
   /**
@@ -121,10 +122,10 @@ class SearchPage extends React.Component {
         return (
           <li key={id}>
             <div className="collapsible-header">
-              <i className="material-icons">filter_drama</i>
-              <b className="red">{title}</b>
-              <span> <b>Created:</b> {createdAt} </span>
-              <span> <b>Modified:</b> {updatedAt} </span>
+              <i className="material-icons orange">library_books</i>
+              <span><b>Title: </b> <em>{title} </em> ||</span>
+              <span> <b>Created:</b> <em>{createdAt}</em> ||</span>
+              <span> <b>Modified:</b> <em>{updatedAt}</em> </span>
             </div>
             <div className="collapsible-body">{parsedContent}</div>
           </li>);
@@ -149,8 +150,9 @@ class SearchPage extends React.Component {
         return (
           <li key={id}>
             <div className="collapsible-header">
-              <i className="material-icons">filter_drama</i>
-              <b className="red">{firstName}</b>
+              <i className="material-icons orange">person</i>
+              <span><b>First Name: </b>
+                <em>{firstName}</em></span>
             </div>
             <div className="collapsible-body">
               <span> <b>FirstName:</b> {firstName} </span><br />
@@ -175,11 +177,11 @@ class SearchPage extends React.Component {
       <div className="container">
         <div className="my-centered" >
           <div className="row">
-            <h5 className="col s2"> Search for: </h5>
+            <h5 className="col s6 m2"> Search for: </h5>
             <select
               id="searchSelect"
               defaultValue="document"
-              className="col s3"
+              className="col s4 m3"
               onChange={this.changeSearch}
             >
               <option value="documents">Document</option>
@@ -187,22 +189,26 @@ class SearchPage extends React.Component {
             </select>
           </div>
           <div className="row my-top-border">
-            <div className="input-field col s6">
+            <div className="input-field col m6 s4">
               <input id="search" type="text" className="validate" />
               <label htmlFor="search">Search</label>
             </div>
-            <div className="input-field col s3">
+            <div className="input-field col m3 s4">
               <input id="limit" type="number" className="validate" />
               <label htmlFor="limit"> Search limit </label>
             </div>
-            <div className="input-field col s3">
+            <div className="input-field col m3 s4">
               <input id="offset" type="number" className="validate" />
               <label htmlFor="offset"> Search offset </label>
             </div>
           </div>
         </div>
         <div className="row">
-          <button id="searchButton" className="btn" onClick={this.search}>
+          <button
+            id="searchButton"
+            className="btn orange col m2 s12"
+            onClick={this.search}
+          >
            Search </button>
         </div>
         <div className=" row my-centered col s12">

@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../actions/UserActions';
+import Signin from '../components/authentication/Signin';
 
 export default (ComposedConmponent) => {
   /**
@@ -11,45 +12,13 @@ export default (ComposedConmponent) => {
    */
   class Authenticate extends React.Component {
     /**
-     * Creates an instance of Authenticate.
-     * @param {any} props
-     * @param {any} context
-     * @memberOf Authenticate
-     */
-    constructor(props, context) {
-      super(props, context);
-      this.state = {
-        callcount: 0
-      };
-    }
-
-    /**
      * @memberOf Authenticate
      * @returns {void}
      */
-    componentWillMount() {
+    componentDidMount() {
       if (!this.props.authenticated && !this.props.signingIn) {
         const { userId } = jwt_decode(localStorage.xsrf_token);
         this.props.UserActions.validateUser(userId);
-      }
-    }
-
-    /**
-     * @param {object} nextProps
-     * @returns {void}
-     * @memberOf Authenticate
-     */
-    componentWillReceiveProps(nextProps) {
-      if (!nextProps.authenticated && !nextProps.signingIn) {
-        if (this.state.callcount > 0) {
-          this.context.router.history.push('/');
-        } else {
-          const { userId } = jwt_decode(localStorage.xsrf_token);
-          this.props.UserActions.validateUser(userId);
-          this.setState({
-            callcount: this.state.callcount + 1
-          });
-        }
       }
     }
 
@@ -59,7 +28,10 @@ export default (ComposedConmponent) => {
      */
     render() {
       return (
-        <ComposedConmponent {...this.props} />
+        <span>
+          { this.props.authenticated || this.props.signingIn
+             ? <ComposedConmponent {...this.props} /> : <Signin />}
+        </span>
       );
     }
   }

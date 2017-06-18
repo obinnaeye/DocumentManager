@@ -35,7 +35,7 @@ class SideNav extends React.Component {
   render() {
     return (
       <div>
-        <ul id="slide-out" className="side-nav">
+        <ul id="slide-out" className="side-nav orange accent-3">
           <li>
             <Link to="/dashboard/my-documents" > My Documents </Link>
           </li>

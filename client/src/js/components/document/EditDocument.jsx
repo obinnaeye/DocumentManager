@@ -21,9 +21,10 @@ class EditDocument extends React.Component {
     super(props, context);
     this.state = {
       editID: props.match.params.id,
-      access: 'Select Document Access Types',
-      callcount: 0,
-      userProfile: JSON.parse(localStorage.user_profile)
+      access: this.props.document.access,
+      callcount: this.props.count,
+      userProfile: JSON.parse(localStorage.user_profile),
+      content: this.props.document.content
     };
     this.save = this.save.bind(this);
     this.saveExit = this.saveExit.bind(this);
@@ -212,15 +213,23 @@ class EditDocument extends React.Component {
   }
 }
 
+EditDocument.defaultProps = {
+  document: {},
+  count: 0
+};
+
 EditDocument.propTypes = {
   match: PropTypes.object.isRequired,
   DocumentActions: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
+  document: PropTypes.object,
+  count: PropTypes.number
 };
 
 const mapStateToProps = state => ({
   document: state.documentReducer.documents,
-  fetchingDocument: state.documentReducer.fetchingDocuments
+  fetchingDocument: state.documentReducer.fetchingDocuments,
+  count: state.documentReducer.count
 });
 
 const mapDispatchToProps = dispatch => ({

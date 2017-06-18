@@ -83,10 +83,10 @@ class UserDocuments extends React.Component {
         return (
           <div key={id} className="myCover" >
             <button
-              className="btn open-doc"
+              className="btn-floating waves-effect waves-light orange"
               onClick={this.viewCarousel}
               name={id}
-            >Open</button>
+            ><i className="material-icons" name={id}>pageview</i></button>
             <h3>{title}</h3>
             {formatedContent}
           </div>
@@ -95,16 +95,18 @@ class UserDocuments extends React.Component {
     }
 
     return (
-      <Coverflow
-        style={{ height: '1000px', color: 'red' }}
-        width={'auto'}
-        height={500}
-        displayQuantityOfSide={3}
-        navigation
-        enableHeading={false}
-      >
-        {formatedDocuments}
-      </Coverflow>
+      <div className="container width-85">
+        <Coverflow
+          style={{ height: '1000px', color: '' }}
+          width={'auto'}
+          height={500}
+          displayQuantityOfSide={1}
+          navigation
+          enableHeading={false}
+        >
+          {formatedDocuments}
+        </Coverflow>
+      </div>
     );
   }
 }

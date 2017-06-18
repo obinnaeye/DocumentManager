@@ -12,7 +12,7 @@ import PageAccessHelper from '../../helper/PageAccessHelper';
 const UserPage = () =>
   (
     <div>
-      <Route path="/dashboard" component={(SideNav)} />
+      <Route path="/dashboard" component={PageAccessHelper(SideNav)} />
       <Route
         exact
         path="/dashboard/:new-document"

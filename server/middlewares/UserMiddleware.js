@@ -13,6 +13,7 @@ export default class UserMiddleware {
    * @return {Void} - Returns void
    */
   static validateCreateRequest(request, response, next) {
+    console.log(request)
     const { email, firstName, lastName, password } = request.body;
     if (!email || !firstName || !lastName || !password) {
       ResponseHandler.send400(response,

@@ -16,6 +16,17 @@ export default class UserController {
    * for public view
    */
   static getUserDetails(user, activeToken) {
+    if (activeToken) {
+      return {
+        userId: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        roleId: user.roleId,
+        createdAt: user.createdAt,
+        activeToken
+      };
+    }
     return {
       userId: user.id,
       email: user.email,
@@ -23,8 +34,14 @@ export default class UserController {
       lastName: user.lastName,
       roleId: user.roleId,
       createdAt: user.createdAt,
-      activeToken
     };
+  }
+
+  static formatedUsers(users) {
+    const formatedUsers = users.map(user =>
+        UserController.getUserDetails(user)
+      );
+    return formatedUsers;
   }
 
   /**
@@ -143,12 +160,9 @@ export default class UserController {
       })
        .then((foundUsers) => {
          if (foundUsers.length) {
-           const formatedUsers = foundUsers.map(foundUser =>
-             UserController.getUserDetails(foundUser)
-           );
            return ResponseHandler.send200(
              response,
-             formatedUsers
+             UserController.formatedUsers(foundUsers)
             );
          }
          return ResponseHandler.send404(response);
@@ -259,7 +273,8 @@ export default class UserController {
     User.findAndCountAll(queryBuilder)
     .then((users) => {
       if (users.count > 0) {
-        ResponseHandler.send200(response, users);
+        console.log(users)
+        ResponseHandler.send200(response, UserController.formatedUsers(users.rows));
       } else {
         ResponseHandler.send404(response);
       }

@@ -2,12 +2,14 @@ import swaggerJSDoc from 'swagger-jsdoc';
 
   // swagger definition
 const swaggerDefinition = {
+  swagger: '2.0',
   info: {
     title: 'Document Management System API',
     version: '1.0.0',
     description: 'API documentation to create, manage and edit documents',
   },
-  host: 'http://localhost:8080',
+  schemes: ['http', 'https'],
+  host: 'localhost:8080',
   basePath: '/'
 };
 

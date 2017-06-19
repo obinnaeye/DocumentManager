@@ -27,6 +27,8 @@ class DocumentRoutes {
    *           type: string
    *        content:
    *           type: string
+   *        access:
+   *           type: string
    *   Document:
    *      allOf:
    *        - $ref: '#definitions/NewDocument'
@@ -55,24 +57,36 @@ class DocumentRoutes {
      * @swagger
      * /documents:
      *   post:
-     *     description: Creates a new document
      *     tags:
-     *      - Create Document
+     *       - New Document
+     *     description: Creates a document
      *     produces:
-     *      - application/json
+     *       - application/json
      *     parameters:
-     *       - name: body
-     *         description: Document object
-     *         in:  body
+     *       - name: authorization
+     *         description: Jwt access token
+     *         in: header
      *         required: true
      *         type: string
-     *         schema:
-     *           $ref: '#/definitions/NewDocument'
+     *       - name: title
+     *         description: document title
+     *         in: form
+     *         required: true
+     *         type: string
+     *       - name: content
+     *         description: document content
+     *         in: form
+     *         required: true
+     *         type: string
+     *       - name: access
+     *         description: document access type
+     *         in: form
+     *         type: number
      *     responses:
-     *       201:
-     *         description: documents
+     *       200:
+     *         description: Document Object created
      *         schema:
-     *          type: object
+     *           $ref: '#/definitions/Document'
      */
     router.post(
       '/documents',
@@ -89,6 +103,34 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static getDocument(router) {
+    /**
+     * @swagger
+     * /documents/:id:
+     *   get:
+     *      description: Returns a document by id
+     *      tags:
+     *        - Get Document
+     *      produces:
+     *        - application/json
+     *      parameters:
+     *        - name: authorization
+     *          description: Jwt access token
+     *          in: header
+     *          required: true
+     *          type: string
+     *        - name: id
+     *          description: Document id
+     *          in: path
+     *          required: true
+     *          type: string
+     *      responses:
+     *          200:
+     *              description: documents
+     *              schema:
+     *                  type: array
+     *                  items:
+     *                      $ref: '#/definitions/Document'
+     */
     router.get(
       '/documents/:id',
       UserAuthenticator.authenticateUser,
@@ -114,8 +156,8 @@ class DocumentRoutes {
      *      produces:
      *        - application/json
      *      parameters:
-     *        - name: Authorization
-     *          description: A valid token
+     *        - name: authorization
+     *          description: Jwt access token
      *          in: header
      *          required: true
      *          type: string
@@ -142,6 +184,32 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static getUserDocuments(router) {
+    /**
+   * @swagger
+   * /users/:id/documents:
+   *    get:
+   *      description: Returns user documents
+   *      tags:
+   *        - User Documents
+   *      produces:
+   *        - application/json
+   *      parameters:
+   *        - name: authorization
+   *          in: header
+   *          description: Jwt access token
+   *          required: true
+   *          type: string
+   *        - name: id
+   *          in: path
+   *          description: User id
+   *          required: true
+   *          type: number
+   *      responses:
+   *        200:
+   *          description: document
+   *          schema:
+   *            type: object
+   */
     router.get(
       '/users/:id/documents',
       UserAuthenticator.authenticateUser,
@@ -160,22 +228,30 @@ class DocumentRoutes {
    * @swagger
    * /search/documents?q={DocumentTitle}:
    *    get:
-   *      description: Returns the documents
+   *      description: Search Documents by title
    *      tags:
-   *        - Finds a document by title
+   *        - Search for documents by title
    *      produces:
    *        - application/json
    *      parameters:
-   *        - name: Authorization
+   *        - name: authorization
    *          in: header
-   *          description: an authorization header
+   *          description: Jwt access token
    *          required: true
    *          type: string
-   *        - in: query
-   *          name: q
-   *          description: title of a document
+   *        - name: q
+   *          in: query
+   *          description: document title
    *          required: true
    *          type: string
+   *        - name: offset
+   *          in: query
+   *          description: Search offset
+   *          type: integer
+   *        - name: limit
+   *          in: query
+   *          description: Search limit
+   *          type: integer
    *      responses:
    *        200:
    *          description: document
@@ -196,6 +272,32 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static updateDocument(router) {
+    /**
+   * @swagger
+   * /documents/:id:
+   *    put:
+   *      description: Update a document
+   *      tags:
+   *        - Update a document
+   *      produces:
+   *        - application/json
+   *      parameters:
+   *        - name: authorization
+   *          in: header
+   *          description: Jwt access token
+   *          required: true
+   *          type: string
+   *        - name: id
+   *          in: path
+   *          description: document id
+   *          required: true
+   *          type: number
+   *      responses:
+   *        200:
+   *          description: document
+   *          schema:
+   *            type: object
+   */
     router.put(
       '/documents/:id',
       UserAuthenticator.authenticateUser,
@@ -210,6 +312,32 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static deleteDocument(router) {
+     /**
+   * @swagger
+   * /documents/:id:
+   *    delete:
+   *      description: Delete a document
+   *      tags:
+   *        - Delete a document
+   *      produces:
+   *        - application/json
+   *      parameters:
+   *        - name: authorization
+   *          in: header
+   *          description: Jwt access token
+   *          required: true
+   *          type: string
+   *        - name: id
+   *          in: path
+   *          description: document id
+   *          required: true
+   *          type: number
+   *      responses:
+   *        200:
+   *          description: document
+   *          schema:
+   *            type: object
+   */
     router.delete(
       '/documents/:id',
       UserAuthenticator.authenticateUser,

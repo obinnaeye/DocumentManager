@@ -29,5 +29,5 @@ export const createUser = user =>
         );
       }, (error) => {
         dispatch(createUserFailure());
-        Materialize.toast(error.response.data.message, 5000);
+        Materialize.toast(error.response.data.message, 5000, 'red');
       });

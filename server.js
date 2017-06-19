@@ -5,6 +5,7 @@ import path from 'path';
 import UserRoutes from './server/routes/UserRoutes';
 import RoleRoutes from './server/routes/RoleRoutes';
 import DocumentRoutes from './server/routes/DocumentRoutes';
+import swagger from './server/routes/swagger';
 
 // Set up the express app
 const app = express();
@@ -19,6 +20,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/public', express.static(path.join(__dirname, 'client/public')));
 
+
+// set swagger route
+swagger(router);
+
 // set role routes
 RoleRoutes.initializeRoutes(router);
 
@@ -28,6 +33,7 @@ UserRoutes.initializeRoutes(router);
 // set up Document routes
 DocumentRoutes.initializeRoutes(router);
 
+app.use('/docs', express.static(path.join(__dirname, './server/swagger/')));
 app.use(router);
 
 // Setup a default catch-all route that sends back a welcome

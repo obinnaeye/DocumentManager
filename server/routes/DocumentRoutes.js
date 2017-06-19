@@ -14,6 +14,27 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static initializeRoutes(router) {
+    /**
+   * @swagger
+   * definition:
+   *   NewDocument:
+   *     type: object
+   *     required:
+   *        - title
+   *        - content
+   *     properties:
+   *        title:
+   *           type: string
+   *        content:
+   *           type: string
+   *   Document:
+   *      allOf:
+   *        - $ref: '#definitions/NewDocument'
+   *        - required:
+   *        - id:
+   *              type: integer
+   *              format: int64
+   */
     DocumentRoutes.createDocument(router);
     DocumentRoutes.getDocument(router);
     DocumentRoutes.getDocuments(router);
@@ -30,6 +51,29 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static createDocument(router) {
+    /**
+     * @swagger
+     * /documents:
+     *   post:
+     *     description: Creates a new document
+     *     tags:
+     *      - Create Document
+     *     produces:
+     *      - application/json
+     *     parameters:
+     *       - name: body
+     *         description: Document object
+     *         in:  body
+     *         required: true
+     *         type: string
+     *         schema:
+     *           $ref: '#/definitions/NewDocument'
+     *     responses:
+     *       201:
+     *         description: documents
+     *         schema:
+     *          type: object
+     */
     router.post(
       '/documents',
       UserAuthenticator.authenticateUser,
@@ -60,6 +104,29 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static getDocuments(router) {
+    /**
+     * @swagger
+     * /documents:
+     *   get:
+     *      description: Returns a list of all documents
+     *      tags:
+     *        - Get Documents List
+     *      produces:
+     *        - application/json
+     *      parameters:
+     *        - name: Authorization
+     *          description: A valid token
+     *          in: header
+     *          required: true
+     *          type: string
+     *      responses:
+     *          200:
+     *              description: documents
+     *              schema:
+     *                  type: array
+     *                  items:
+     *                      $ref: '#/definitions/Document'
+     */
     router.get(
       '/documents',
       UserAuthenticator.authenticateUser,
@@ -89,6 +156,32 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static searchDocuments(router) {
+    /**
+   * @swagger
+   * /search/documents?q={DocumentTitle}:
+   *    get:
+   *      description: Returns the documents
+   *      tags:
+   *        - Finds a document by title
+   *      produces:
+   *        - application/json
+   *      parameters:
+   *        - name: Authorization
+   *          in: header
+   *          description: an authorization header
+   *          required: true
+   *          type: string
+   *        - in: query
+   *          name: q
+   *          description: title of a document
+   *          required: true
+   *          type: string
+   *      responses:
+   *        200:
+   *          description: document
+   *          schema:
+   *            type: object
+   */
     router.get(
       '/search/documents',
       UserAuthenticator.authenticateUser,

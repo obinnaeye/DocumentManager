@@ -59,7 +59,6 @@ export default class UserController {
    */
   static createUser(request, response) {
     const { email } = request.body;
-    console.log(request.body);
     User.findOne({ where: { email } })
       .then((user) => {
         if (user) {

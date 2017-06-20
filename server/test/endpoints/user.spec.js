@@ -21,8 +21,8 @@ describe('Users:', () => {
       .send(regularUser)
       .end((error, response) => {
         // set regular user token and id for other tests below
-        regularUserToken = response.body.token;
-        regularUserId = response.body.id;
+        regularUserToken = response.body.activeToken;
+        regularUserId = response.body.userId;
         done();
       });
     });
@@ -132,7 +132,7 @@ describe('Users:', () => {
     });
   });
 
-  describe('Login', () => {
+  describe('Login:', () => {
     it('should allow login for only CORRECT details of an Admin User',
     (done) => {
       client.post('/users/login')
@@ -142,6 +142,21 @@ describe('Users:', () => {
       })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should return a TOKEN if Admin Login is successful', (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validAdminUser.email,
+        password: SpecHelper.validAdminUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('activeToken');
+        // set the admin user token for other tests
+        adminUserToken = response.body.activeToken;
         done();
       });
     });
@@ -235,6 +250,71 @@ describe('Users:', () => {
       })
       .end((error, response) => {
         expect(response.status).to.equal(400);
+        done();
+      });
+    });
+  });
+
+  describe('Logout', () => {
+    const newRegularUser = SpecHelper.generateRandomUser(2);
+    before((done) => {
+      client.post('/users')
+      .send(newRegularUser)
+      .end((error, response) => {
+        newRegularUser.token = response.body.activeToken;
+        newRegularUser.id = response.body.userId;
+        done();
+      });
+    });
+
+    it('should Fail to Logout a Regular User with an invalid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': 'aninvalidtoken' })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it('should Successfully Logout a Regular User with a valid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': newRegularUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal('Logout Successful');
+        done();
+      });
+    });
+  });
+
+  describe('Get Users:', () => {
+    it('should allow a regular user with a valid token access to list of users',
+    (done) => {
+      client.get('/users')
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
+
+    it('should Allow an Admin User access to list of all Users', (done) => {
+      client.get('/users')
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceOf(Object);
+        done();
+      });
+    });
+
+    xit('should Not Allow Un-Authorized access to list of Users', (done) => {
+      client.get('/users')
+      .end((error, response) => {
+        expect(response.status).to.equal(401);
         done();
       });
     });

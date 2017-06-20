@@ -37,6 +37,13 @@ export default class UserController {
     };
   }
 
+  /**
+   * @desc Returns client-safe array of users
+   * @static
+   * @param {array} users
+   * @returns {array} An array of users
+   * @memberOf UserController
+   */
   static formatedUsers(users) {
     const formatedUsers = users.map(user =>
         UserController.getUserDetails(user)
@@ -52,6 +59,7 @@ export default class UserController {
    */
   static createUser(request, response) {
     const { email } = request.body;
+    console.log(request.body);
     User.findOne({ where: { email } })
       .then((user) => {
         if (user) {
@@ -62,17 +70,16 @@ export default class UserController {
           const newUser = request.body;
           // Restrict creating a new user specified id
           newUser.id = null;
-          newUser.roleId = newUser.roleId || 2;
+          newUser.roleId = 2;
           User.create(newUser)
             .then((createdUser) => {
               const activeToken = UserAuthenticator.generateToken(createdUser);
               createdUser.update({ activeToken })
               .then(() => {
+                const userDetails = UserController.getUserDetails(createdUser, activeToken);
+                userDetails.message = 'You have successfully signed up!';
                 ResponseHandler.send200(response,
-                  {
-                    message: 'You have successfully signed up!',
-                    activeToken
-                  }
+                  userDetails
                 );
               });
             });
@@ -116,6 +123,16 @@ export default class UserController {
               );
           }
         });
+    } else if (!email) {
+      ResponseHandler.send400(
+        response,
+        { message: 'You have not suppllied any email' }
+      );
+    } else {
+      ResponseHandler.send400(
+        response,
+        { message: 'You have not suppllied any password' }
+      );
     }
   }
 
@@ -273,8 +290,8 @@ export default class UserController {
     User.findAndCountAll(queryBuilder)
     .then((users) => {
       if (users.count > 0) {
-        console.log(users)
-        ResponseHandler.send200(response, UserController.formatedUsers(users.rows));
+        ResponseHandler.send200(response,
+        UserController.formatedUsers(users.rows));
       } else {
         ResponseHandler.send404(response);
       }

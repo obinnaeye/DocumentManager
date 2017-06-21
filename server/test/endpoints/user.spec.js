@@ -311,10 +311,338 @@ describe('Users:', () => {
       });
     });
 
-    xit('should Not Allow Un-Authorized access to list of Users', (done) => {
+    it('should not allow invalid user access to list of Users', (done) => {
       client.get('/users')
       .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+  });
+
+  describe('Get User', () => {
+    it('should allow NON-Admin  User with valid token fetch another User',
+    (done) => {
+      client.get(`/users/${regularUserId + 1}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceOf(Object);
+        done();
+      });
+    });
+
+    it('should Allow an Admin User with valid token fetch another User',
+    (done) => {
+      client.get(`/users/${regularUserId}`)
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceOf(Object);
+        done();
+      });
+    });
+
+    it(`should return a 400 status code for
+      a non integer user id when trying to fetch a user`,
+    (done) => {
+      client.get('/users/xxx')
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal('Bad Request');
+        done();
+      });
+    });
+
+    it(`should return a 400 status code for an invalid
+      integer user id when trying to fetch a user`,
+    (done) => {
+      client.get('/users/979')
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
+        expect(response.body.message).to.equal('User not found');
+        done();
+      });
+    });
+
+    it('should Not Allow Un-Authorized user to fetch a user', (done) => {
+      client.get('/users/1')
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.text).to.equal('Please provide Authentication Token');
+        done();
+      });
+    });
+  });
+
+  describe('Update User: ', () => {
+    it('should NOT allow a User to update another User profile', (done) => {
+      client.put(`/users/${regularUserId + 1}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .send({ password: 'new password' })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
+    it(`should NOT Allow a User Update his password with a
+    password that is less than the minimum password length of 8`,
+    (done) => {
+      const shortPassword = '123';
+      client.put(`/users/${regularUserId}`)
+      .send({
+        password: shortPassword
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it(`should NOT Allow a User to Update password with a
+    password that is more than the maximum password length`,
+    (done) => {
+      const longPassword = `jndghjndmcxfghgggbjknmdcghjn
+      gggmdcgdghvbjdcjndfghvbjdncsghbjdsghvbghjndmcxfhvjn dsghvbjndsjghgggb`;
+      client.put(`/users/${regularUserId}`)
+      .send({
+        password: longPassword
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it(`should Allow a User Update his password if a valid Token is provided
+      and the new password length is between 8 and 50`,
+    (done) => {
+      // add the new password to the regular userObject
+      regularUser.newPassword = 'mynewpassword';
+      client.put(`/users/${regularUserId}`)
+      .send({ password: regularUser.newPassword })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should NOT allow a regular User Update to an Admin User',
+    (done) => {
+      client.put(`/users/${regularUserId}`)
+      .send({
+        roleId: 1
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
+    it('should  NOT allow update of a User ID',
+    (done) => {
+      client.put(`/users/${regularUserId}`)
+      .send({
+        id: 4
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it('should Allow a User Login with the updated password',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: regularUser.email,
+        password: regularUser.newPassword
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should NOT Allow a User Login with the old password',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: regularUser.email,
+        password: regularUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(422);
+        expect(response.body.message).to.equal('Wrong password');
+        done();
+      });
+    });
+
+    it(`should Allow an Admin to update a regular
+    User password`,
+    (done) => {
+      // add the admin set password to the regular user Object
+      regularUser.adminSetPassword = 'admin set password';
+      client.put(`/users/${regularUserId}`)
+      .send({
+        password: regularUser.adminSetPassword
+      })
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should Allow a User Login with the new password updated by an Admin',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: regularUser.email,
+        password: regularUser.adminSetPassword
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        // update the user token as a new token is always
+        // generated on every login
+        regularUserToken = response.body.token;
+        done();
+      });
+    });
+
+    it('should NOT allow a User update his profile without a valid Token',
+    (done) => {
+      client.put(`/users/${regularUserId}`)
+      .set({ 'xsrf-token': 'invalidToken' })
+      .send({ firstName: 'someOne' })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.text).to.equal('Invalid User Authentication Token!');
+        done();
+      });
+    });
+  });
+
+  describe('Logout', () => {
+    const newRegularUser = SpecHelper.generateRandomUser(2);
+    before((done) => {
+      client.post('/users')
+      .send(newRegularUser)
+      .end((error, response) => {
+        newRegularUser.token = response.body.activeToken;
+        newRegularUser.id = response.body.userId;
+        done();
+      });
+    });
+
+    it('should Fail to Logout a User with an invalid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': 'invalidtoken' })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.text).to.equal('Invalid User Authentication Token!');
+        done();
+      });
+    });
+
+    it('should Successfully Logout an Admin User with a valid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('shouldss Successfully Logout a Regular User with a valid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': newRegularUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+  });
+
+  describe('Delete User', () => {
+    const currentAdminUser = Object.assign({}, SpecHelper.validAdminUser);
+    before((done) => {
+      client.post('/users/login')
+      .send(currentAdminUser)
+      .end((error, response) => {
+        currentAdminUser.token = response.body.activeToken;
+        currentAdminUser.id = response.body.userId;
+        done();
+      });
+    });
+
+    it(`should NOT allow a Non-Admin User to delete
+    another User`,
+    (done) => {
+      client.delete(`/users/${regularUserId + 1}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
+    xit('should NOT allow a User with an invalid Token delete another User',
+    (done) => {
+      client.delete(`/users/${regularUserId + 1}`)
+      .set({ 'x-access-token': 'invalidToken' })
+      .end((error, response) => {
         expect(response.status).to.equal(401);
+        done();
+      });
+    });
+
+    xit('should allow an Admin user with Valid Token delete another User',
+    (done) => {
+      client.delete(`/users/${regularUserId}`)
+      .set({ 'x-access-token': currentAdminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    xit('should NOT allow an Admin user with invalid Token delete another User',
+    (done) => {
+      client.delete(`/users/${regularUserId}`)
+      .set({ 'x-access-token': 'invalid token' })
+      .end((error, response) => {
+        expect(response.status).to.equal(401);
+        done();
+      });
+    });
+
+    xit(`should NOT allow an Admin user with valid Token delete a User that does
+    not exist`, (done) => {
+      client.delete(`/users/${regularUserId + 10000}`)
+      .set({ 'x-access-token': currentAdminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
+        done();
+      });
+    });
+
+    xit('should not allow deletion of admin User', (done) => {
+      client.delete(`/users/${1}`)
+      .set({ 'x-access-token': currentAdminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
         done();
       });
     });

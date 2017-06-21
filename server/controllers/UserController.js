@@ -75,7 +75,8 @@ export default class UserController {
               const activeToken = UserAuthenticator.generateToken(createdUser);
               createdUser.update({ activeToken })
               .then(() => {
-                const userDetails = UserController.getUserDetails(createdUser, activeToken);
+                const userDetails =
+                  UserController.getUserDetails(createdUser, activeToken);
                 userDetails.message = 'You have successfully signed up!';
                 ResponseHandler.send200(response,
                   userDetails
@@ -199,10 +200,7 @@ export default class UserController {
     User.findById(request.params.id)
     .then((user) => {
       if (user) {
-        // Restrict email from being changed
-        const updateFields = request.body;
-        updateFields.email = user.email;
-        user.update(updateFields)
+        user.update(request.body)
         .then((updatedUser) => {
           ResponseHandler.send200(
             response,

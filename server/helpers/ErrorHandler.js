@@ -35,6 +35,13 @@ export default class ErrorHandler {
       );
     }
 
+    case 'SequelizeDatabaseError' : {
+      return ResponseHandler.send400(
+        response,
+        { message: 'Bad Request' }
+      );
+    }
+
     default: {
       return ResponseHandler.send500(response);
     }

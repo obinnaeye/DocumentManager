@@ -1,25 +1,650 @@
-import expect from 'expect';
-import AxiosCaller from '../helpers/axios';
+/* global before after */
+import supertest from 'supertest';
+import { expect } from 'chai';
+import database from '../../models';
+import app from '../../../server';
+import SpecHelper from '../helpers/SpecHelper';
+import SeedHelper from '../helpers/SeedHelper';
 
-const baseUrl = 'http://localhost:8080/users/';
-const newUser = {
-  email: 'obi5@yahoo.com',
-  firstName: 'obi',
-  lastName: 'obi3',
-  password: 'asdfghjk'
-};
-// Not a test
+const client = supertest.agent(app);
+const regularUser = SpecHelper.generateRandomUser(2);
+let regularUserToken;
+let adminUserToken;
+let regularUserId;
+
 describe('Users:', () => {
-  describe('Create User', () => {
-    it(`should return status code of
-    200 for successfully created user`, (done) => {
-      AxiosCaller.post(`${baseUrl}`, newUser)
-        .then((response) => {
-          expect(response.status).toEqual(400);
-        });
-        console.log('here');
+  before((done) => {
+    SeedHelper.init()
+    .then(() => {
+      // fetch regular user token and id for further tests
+      client.post('/users')
+      .send(regularUser)
+      .end((error, response) => {
+        // set regular user token and id for other tests below
+        regularUserToken = response.body.activeToken;
+        regularUserId = response.body.userId;
+        done();
+      });
+    });
+  });
+
+  after((done) => {
+    database.sequelize.sync({ force: true })
+    .then(() => {
       done();
-    }
-    );
+    });
+  });
+
+  describe('Create User', () => {
+    const newRegularUser = SpecHelper.generateRandomUser(2);
+    it(`should return http code 201
+      if a Regular User is successfully created`, (done) => {
+      client.post('/users')
+      .send(newRegularUser)
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it(`should return a 401 status code if User ID is specified
+    in new User to be created`,
+    (done) => {
+      client.post('/users')
+      .send(() => {
+        // supplying a function makes a call to the api
+        // but defining the const in the (done) block fails to make api call
+        // don't actually know why
+        const invalidNewUser = SpecHelper.generateRandomUser();
+        invalidNewUser.id = 1;
+        return invalidNewUser;
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it('should NOT allow Users with Duplicate Email address to be created',
+    (done) => {
+      client.post('/users')
+      .send(newRegularUser)
+      .end((error, response) => {
+        expect(response.status).to.equal(409);
+        done();
+      });
+    });
+
+    it('should return a TOKEN if a Regular User if successfully created',
+    (done) => {
+      client.post('/users')
+      .send(SpecHelper.generateRandomUser(2))
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('activeToken');
+        done();
+      });
+    });
+
+    it('should return public details of the created Regular User',
+    (done) => {
+      client.post('/users')
+      .send(SpecHelper.generateRandomUser(2))
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('firstName');
+        expect(response.body).to.have.property('lastName');
+        expect(response.body).to.have.property('email');
+        expect(response.body).to.have.property('userId');
+        done();
+      });
+    });
+
+    it('should NOT create a User if Required fields/attributes are missing',
+    (done) => {
+      const invalidUser = {};
+      client.post('/users')
+      .send(invalidUser)
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it(`should make a User role be regular by default if no roleId
+      is supplied`, (done) => {
+      client.post('/users')
+      .send(SpecHelper.generateRandomUser())
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it(`should create a regular user if the User specify an invalid
+    Role id`, (done) => {
+      client.post('/users')
+      .send(SpecHelper.generateRandomUser(10))
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+  });
+
+  describe('Login:', () => {
+    it('should allow login for only CORRECT details of an Admin User',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validAdminUser.email,
+        password: SpecHelper.validAdminUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should return a TOKEN if Admin Login is successful', (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validAdminUser.email,
+        password: SpecHelper.validAdminUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('activeToken');
+        // set the admin user token for other tests
+        adminUserToken = response.body.activeToken;
+        done();
+      });
+    });
+
+    it('should allow login for only CORRECT details of a Regular User',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validRegularUser.email,
+        password: SpecHelper.validRegularUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should return a TOKEN if User Login is successful', (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validRegularUser.email,
+        password: SpecHelper.validRegularUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('activeToken');
+        done();
+      });
+    });
+
+    it('should ensure payload of returned token has User information',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validRegularUser.email,
+        password: SpecHelper.validRegularUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        // decode activeToken
+        // Jwt-decoded npm module can equally be used here
+        // but this is cleaner without importing extra module
+        /* eslint-disable */
+        // see https://stackoverflow.com/questions/6182315/how-to-do-base64-encoding-in-node-js
+        /* eslint-enable */
+        const tokenPayload = response.body.activeToken.split('.')[1];
+        const decodedToken = JSON.parse(
+          new Buffer(tokenPayload, 'base64').toString()
+        );
+        expect(decodedToken).to.have.property('userId');
+        expect(decodedToken).to.have.property('roleId');
+        expect(decodedToken).to.have.property('firstName');
+        expect(decodedToken).to.have.property('lastName');
+        done();
+      });
+    });
+
+    it('should NOT return a TOKEN if User Login FAILS', (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validRegularUser.email,
+        password: 'wrongpassword'
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(422);
+        expect(response.body.message).to.equal('Wrong password');
+        expect(response.body).to.not.have.property('activeToken');
+        done();
+      });
+    });
+
+    it('should NOT allow login for a User that does NOT exist',
+    (done) => {
+      const nonRegisteredUser = SpecHelper.generateRandomUser(2);
+      client.post('/users/login')
+      .send({
+        email: nonRegisteredUser.email,
+        password: nonRegisteredUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(422);
+        done();
+      });
+    });
+
+    it('should NOT allow login if password is not provided',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validRegularUser.email
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+  });
+
+  describe('Logout', () => {
+    const newRegularUser = SpecHelper.generateRandomUser(2);
+    before((done) => {
+      client.post('/users')
+      .send(newRegularUser)
+      .end((error, response) => {
+        newRegularUser.token = response.body.activeToken;
+        newRegularUser.id = response.body.userId;
+        done();
+      });
+    });
+
+    it('should Fail to Logout a Regular User with an invalid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': 'aninvalidtoken' })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it('should Successfully Logout a Regular User with a valid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': newRegularUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal('Logout Successful');
+        done();
+      });
+    });
+  });
+
+  describe('Get Users:', () => {
+    it('should allow a regular user with a valid token access to list of users',
+    (done) => {
+      client.get('/users')
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
+
+    it('should Allow an Admin User access to list of all Users', (done) => {
+      client.get('/users')
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceOf(Object);
+        done();
+      });
+    });
+
+    it('should not allow invalid user access to list of Users', (done) => {
+      client.get('/users')
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+  });
+
+  describe('Get User', () => {
+    it('should allow NON-Admin  User with valid token fetch another User',
+    (done) => {
+      client.get(`/users/${regularUserId + 1}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceOf(Object);
+        done();
+      });
+    });
+
+    it('should Allow an Admin User with valid token fetch another User',
+    (done) => {
+      client.get(`/users/${regularUserId}`)
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceOf(Object);
+        done();
+      });
+    });
+
+    it(`should return a 400 status code for
+      a non integer user id when trying to fetch a user`,
+    (done) => {
+      client.get('/users/xxx')
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal('Bad Request');
+        done();
+      });
+    });
+
+    it(`should return a 400 status code for an invalid
+      integer user id when trying to fetch a user`,
+    (done) => {
+      client.get('/users/979')
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
+        expect(response.body.message).to.equal('User not found');
+        done();
+      });
+    });
+
+    it('should Not Allow Un-Authorized user to fetch a user', (done) => {
+      client.get('/users/1')
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.text).to.equal('Please provide Authentication Token');
+        done();
+      });
+    });
+  });
+
+  describe('Update User: ', () => {
+    it('should NOT allow a User to update another User profile', (done) => {
+      client.put(`/users/${regularUserId + 1}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .send({ password: 'new password' })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
+    it(`should NOT Allow a User Update his password with a
+    password that is less than the minimum password length of 8`,
+    (done) => {
+      const shortPassword = '123';
+      client.put(`/users/${regularUserId}`)
+      .send({
+        password: shortPassword
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it(`should NOT Allow a User to Update password with a
+    password that is more than the maximum password length`,
+    (done) => {
+      const longPassword = `jndghjndmcxfghgggbjknmdcghjn
+      gggmdcgdghvbjdcjndfghvbjdncsghbjdsghvbghjndmcxfhvjn dsghvbjndsjghgggb`;
+      client.put(`/users/${regularUserId}`)
+      .send({
+        password: longPassword
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it(`should Allow a User Update his password if a valid Token is provided
+      and the new password length is between 8 and 50`,
+    (done) => {
+      // add the new password to the regular userObject
+      regularUser.newPassword = 'mynewpassword';
+      client.put(`/users/${regularUserId}`)
+      .send({ password: regularUser.newPassword })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should NOT allow a regular User Update to an Admin User',
+    (done) => {
+      client.put(`/users/${regularUserId}`)
+      .send({
+        roleId: 1
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
+    it('should  NOT allow update of a User ID',
+    (done) => {
+      client.put(`/users/${regularUserId}`)
+      .send({
+        id: 4
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it('should Allow a User Login with the updated password',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: regularUser.email,
+        password: regularUser.newPassword
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should NOT Allow a User Login with the old password',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: regularUser.email,
+        password: regularUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(422);
+        expect(response.body.message).to.equal('Wrong password');
+        done();
+      });
+    });
+
+    it(`should Allow an Admin to update a regular
+    User password`,
+    (done) => {
+      // add the admin set password to the regular user Object
+      regularUser.adminSetPassword = 'admin set password';
+      client.put(`/users/${regularUserId}`)
+      .send({
+        password: regularUser.adminSetPassword
+      })
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should Allow a User Login with the new password updated by an Admin',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: regularUser.email,
+        password: regularUser.adminSetPassword
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        // update the user token as a new token is always
+        // generated on every login
+        regularUserToken = response.body.token;
+        done();
+      });
+    });
+
+    it('should NOT allow a User update his profile without a valid Token',
+    (done) => {
+      client.put(`/users/${regularUserId}`)
+      .set({ 'xsrf-token': 'invalidToken' })
+      .send({ firstName: 'someOne' })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.text).to.equal('Invalid User Authentication Token!');
+        done();
+      });
+    });
+  });
+
+  describe('Logout', () => {
+    const newRegularUser = SpecHelper.generateRandomUser(2);
+    before((done) => {
+      client.post('/users')
+      .send(newRegularUser)
+      .end((error, response) => {
+        newRegularUser.token = response.body.activeToken;
+        newRegularUser.id = response.body.userId;
+        done();
+      });
+    });
+
+    it('should Fail to Logout a User with an invalid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': 'invalidtoken' })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.text).to.equal('Invalid User Authentication Token!');
+        done();
+      });
+    });
+
+    it('should Successfully Logout an Admin User with a valid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('shouldss Successfully Logout a Regular User with a valid token',
+    (done) => {
+      client.post('/users/logout')
+      .set({ 'xsrf-token': newRegularUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+  });
+
+  describe('Delete User', () => {
+    const currentAdminUser = Object.assign({}, SpecHelper.validAdminUser);
+    before((done) => {
+      client.post('/users/login')
+      .send(currentAdminUser)
+      .end((error, response) => {
+        currentAdminUser.token = response.body.activeToken;
+        currentAdminUser.id = response.body.userId;
+        done();
+      });
+    });
+
+    it(`should NOT allow a Non-Admin User to delete
+    another User`,
+    (done) => {
+      client.delete(`/users/${regularUserId + 1}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
+    xit('should NOT allow a User with an invalid Token delete another User',
+    (done) => {
+      client.delete(`/users/${regularUserId + 1}`)
+      .set({ 'x-access-token': 'invalidToken' })
+      .end((error, response) => {
+        expect(response.status).to.equal(401);
+        done();
+      });
+    });
+
+    xit('should allow an Admin user with Valid Token delete another User',
+    (done) => {
+      client.delete(`/users/${regularUserId}`)
+      .set({ 'x-access-token': currentAdminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    xit('should NOT allow an Admin user with invalid Token delete another User',
+    (done) => {
+      client.delete(`/users/${regularUserId}`)
+      .set({ 'x-access-token': 'invalid token' })
+      .end((error, response) => {
+        expect(response.status).to.equal(401);
+        done();
+      });
+    });
+
+    xit(`should NOT allow an Admin user with valid Token delete a User that does
+    not exist`, (done) => {
+      client.delete(`/users/${regularUserId + 10000}`)
+      .set({ 'x-access-token': currentAdminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
+        done();
+      });
+    });
+
+    xit('should not allow deletion of admin User', (done) => {
+      client.delete(`/users/${1}`)
+      .set({ 'x-access-token': currentAdminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
   });
 });

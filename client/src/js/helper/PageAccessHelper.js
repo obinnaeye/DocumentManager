@@ -30,7 +30,8 @@ export default (ComposedConmponent) => {
       return (
         <span>
           { this.props.authenticated || this.props.signingIn
-             ? <ComposedConmponent {...this.props} /> : <Signin />}
+             ? <ComposedConmponent {...this.props} /> :
+             <Signin {...this.props} />}
         </span>
       );
     }

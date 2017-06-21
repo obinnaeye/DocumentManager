@@ -16,6 +16,17 @@ export default class UserController {
    * for public view
    */
   static getUserDetails(user, activeToken) {
+    if (activeToken) {
+      return {
+        userId: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        roleId: user.roleId,
+        createdAt: user.createdAt,
+        activeToken
+      };
+    }
     return {
       userId: user.id,
       email: user.email,
@@ -23,8 +34,21 @@ export default class UserController {
       lastName: user.lastName,
       roleId: user.roleId,
       createdAt: user.createdAt,
-      activeToken
     };
+  }
+
+  /**
+   * @desc Returns client-safe array of users
+   * @static
+   * @param {array} users
+   * @returns {array} An array of users
+   * @memberOf UserController
+   */
+  static formatedUsers(users) {
+    const formatedUsers = users.map(user =>
+        UserController.getUserDetails(user)
+      );
+    return formatedUsers;
   }
 
   /**
@@ -45,17 +69,17 @@ export default class UserController {
           const newUser = request.body;
           // Restrict creating a new user specified id
           newUser.id = null;
-          newUser.roleId = newUser.roleId || 2;
+          newUser.roleId = 2;
           User.create(newUser)
             .then((createdUser) => {
               const activeToken = UserAuthenticator.generateToken(createdUser);
               createdUser.update({ activeToken })
               .then(() => {
+                const userDetails =
+                  UserController.getUserDetails(createdUser, activeToken);
+                userDetails.message = 'You have successfully signed up!';
                 ResponseHandler.send200(response,
-                  {
-                    message: 'You have successfully signed up!',
-                    activeToken
-                  }
+                  userDetails
                 );
               });
             });
@@ -99,6 +123,16 @@ export default class UserController {
               );
           }
         });
+    } else if (!email) {
+      ResponseHandler.send400(
+        response,
+        { message: 'You have not suppllied any email' }
+      );
+    } else {
+      ResponseHandler.send400(
+        response,
+        { message: 'You have not suppllied any password' }
+      );
     }
   }
 
@@ -143,12 +177,9 @@ export default class UserController {
       })
        .then((foundUsers) => {
          if (foundUsers.length) {
-           const formatedUsers = foundUsers.map(foundUser =>
-             UserController.getUserDetails(foundUser)
-           );
            return ResponseHandler.send200(
              response,
-             formatedUsers
+             UserController.formatedUsers(foundUsers)
             );
          }
          return ResponseHandler.send404(response);
@@ -169,10 +200,7 @@ export default class UserController {
     User.findById(request.params.id)
     .then((user) => {
       if (user) {
-        // Restrict email from being changed
-        const updateFields = request.body;
-        updateFields.email = user.email;
-        user.update(updateFields)
+        user.update(request.body)
         .then((updatedUser) => {
           ResponseHandler.send200(
             response,
@@ -259,7 +287,8 @@ export default class UserController {
     User.findAndCountAll(queryBuilder)
     .then((users) => {
       if (users.count > 0) {
-        ResponseHandler.send200(response, users);
+        ResponseHandler.send200(response,
+        UserController.formatedUsers(users.rows));
       } else {
         ResponseHandler.send404(response);
       }

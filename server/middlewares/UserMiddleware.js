@@ -83,6 +83,11 @@ export default class UserMiddleware {
         response,
         { message: 'Email Updating Not Allowed' }
       );
+    } else if (request.body.password &&
+      (request.body.password.length < 8 || request.body.password.length > 50)) {
+      ResponseHandler.send400(response, {
+        message: 'Password length should range between 8 - 50 characters'
+      });
     } else if (
       request.decoded.userId === updateId
       ||

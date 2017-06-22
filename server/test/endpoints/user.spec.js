@@ -37,9 +37,9 @@ describe('Users:', () => {
 
   describe('Create User', () => {
     const newRegularUser = SpecHelper.generateRandomUser(2);
-    it(`should return http code 201
+    it(`should return http code 200
       if a Regular User is successfully created`, (done) => {
-      client.post('/users')
+      client.post('/users/')
       .send(newRegularUser)
       .end((error, response) => {
         expect(response.status).to.equal(200);
@@ -47,20 +47,16 @@ describe('Users:', () => {
       });
     });
 
-    it(`should return a 401 status code if User ID is specified
+    it(`should override provided ID if User ID is specified
     in new User to be created`,
     (done) => {
-      client.post('/users')
-      .send(() => {
-        // supplying a function makes a call to the api
-        // but defining the const in the (done) block fails to make api call
-        // don't actually know why
-        const invalidNewUser = SpecHelper.generateRandomUser();
-        invalidNewUser.id = 1;
-        return invalidNewUser;
-      })
+      const invalidNewUser = SpecHelper.generateRandomUser(2);
+      invalidNewUser.id = 3;
+      client.post('/users/')
+      .send(invalidNewUser)
       .end((error, response) => {
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal('You have successfully signed up!');
         done();
       });
     });
@@ -82,6 +78,20 @@ describe('Users:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property('activeToken');
+        done();
+      });
+    });
+
+    it('should not allow password to be less than 8 characters',
+    (done) => {
+      const user = SpecHelper.generateRandomUser(2);
+      user.password = 'less';
+      client.post('/users')
+      .send(user)
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal(
+          'Password should be between 8 and 50 letters');
         done();
       });
     });
@@ -121,8 +131,21 @@ describe('Users:', () => {
       });
     });
 
-    it(`should create a regular user if the User specify an invalid
-    Role id`, (done) => {
+    it(`should throw an error if invalid email for user
+      is supplied`, (done) => {
+      const newUser = SpecHelper.generateRandomUser();
+      newUser.email = 'newField';
+      client.post('/users')
+      .send(newUser)
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.body[0].message).to.equal('Email address is invalid');
+        done();
+      });
+    });
+
+    it(`should still create a regular user if the User specify an invalid
+    Role id, Role id is 2 by default.`, (done) => {
       client.post('/users')
       .send(SpecHelper.generateRandomUser(10))
       .end((error, response) => {
@@ -133,7 +156,7 @@ describe('Users:', () => {
   });
 
   describe('Login:', () => {
-    it('should allow login for only CORRECT details of an Admin User',
+    it('should allow login for CORRECT details of an Admin User',
     (done) => {
       client.post('/users/login')
       .send({
@@ -161,7 +184,7 @@ describe('Users:', () => {
       });
     });
 
-    it('should allow login for only CORRECT details of a Regular User',
+    it('should allow login for CORRECT details of a Regular User',
     (done) => {
       client.post('/users/login')
       .send({
@@ -242,6 +265,18 @@ describe('Users:', () => {
       });
     });
 
+    it('should NOT allow login if email is not provided',
+    (done) => {
+      client.post('/users/login')
+      .send({
+        email: SpecHelper.validRegularUser.password
+      })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
     it('should NOT allow login if password is not provided',
     (done) => {
       client.post('/users/login')
@@ -318,6 +353,50 @@ describe('Users:', () => {
         done();
       });
     });
+
+    it('should allow specifying offset when fetching Users', (done) => {
+      const searchOffset = 2;
+      client.get(`/api/users/?offset=${searchOffset}`)
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
+
+    it('should overridee invalid offset when fetching Users', (done) => {
+      const searchOffset = -2;
+      client.get(`/api/users/?offset=${searchOffset}`)
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
+
+    it('should allow specifying limit when fetching Users', (done) => {
+      const searchLimit = 2;
+      client.get(`/api/users/?limit=${searchLimit}`)
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
+
+    it('should overridee invalid limit when fetching Users', (done) => {
+      const searchLimit = -2;
+      client.get(`/api/users/?limit=${searchLimit}`)
+      .set({ 'xsrf-token': adminUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
   });
 
   describe('Get User', () => {
@@ -377,7 +456,66 @@ describe('Users:', () => {
     });
   });
 
+  describe('Search Users:', () => {
+    it('should search for Users by firstName',
+    (done) => {
+      const query = regularUser.firstName;
+      client.get(`/search/users/?q=${query}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
+
+    it('should search for Users by lastName',
+    (done) => {
+      const query = regularUser.lastName;
+      client.get(`/search/users/?q=${query}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
+
+    it('should search for Users by email',
+    (done) => {
+      const query = regularUser.email;
+      client.get(`/search/users/?q=${query}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceof(Object);
+        done();
+      });
+    });
+
+    it('should return status code of 400 if no search query is supplied',
+    (done) => {
+      const query = '';
+      client.get(`/search/users/?q=${query}`)
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+  });
+
   describe('Update User: ', () => {
+    it('should NOT allow update of unexisting user', (done) => {
+      client.put(`/users/${regularUserId + 911911}`)
+      .set({ 'xsrf-token': adminUserToken })
+      .send({ password: 'new password' })
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
+        done();
+      });
+    });
+
     it('should NOT allow a User to update another User profile', (done) => {
       client.put(`/users/${regularUserId + 1}`)
       .set({ 'xsrf-token': regularUserToken })
@@ -459,6 +597,20 @@ describe('Users:', () => {
       });
     });
 
+    it('should  NOT allow update of a User email',
+    (done) => {
+      client.put(`/users/${regularUserId}`)
+      .send({
+        email: 'obinna@obinna.com'
+      })
+      .set({ 'xsrf-token': regularUserToken })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal('Email Updating Not Allowed');
+        done();
+      });
+    });
+
     it('should Allow a User Login with the updated password',
     (done) => {
       client.post('/users/login')
@@ -513,7 +665,7 @@ describe('Users:', () => {
         expect(response.status).to.equal(200);
         // update the user token as a new token is always
         // generated on every login
-        regularUserToken = response.body.token;
+        regularUserToken = response.body.activeToken;
         done();
       });
     });
@@ -598,51 +750,40 @@ describe('Users:', () => {
       });
     });
 
-    xit('should NOT allow a User with an invalid Token delete another User',
-    (done) => {
-      client.delete(`/users/${regularUserId + 1}`)
-      .set({ 'x-access-token': 'invalidToken' })
-      .end((error, response) => {
-        expect(response.status).to.equal(401);
-        done();
-      });
-    });
-
-    xit('should allow an Admin user with Valid Token delete another User',
+    it('should allow an Admin user to delete another User',
     (done) => {
       client.delete(`/users/${regularUserId}`)
-      .set({ 'x-access-token': currentAdminUser.token })
+      .set({ 'xsrf-token': currentAdminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(200);
         done();
       });
     });
 
-    xit('should NOT allow an Admin user with invalid Token delete another User',
-    (done) => {
-      client.delete(`/users/${regularUserId}`)
-      .set({ 'x-access-token': 'invalid token' })
-      .end((error, response) => {
-        expect(response.status).to.equal(401);
-        done();
-      });
-    });
-
-    xit(`should NOT allow an Admin user with valid Token delete a User that does
+    it(`should NOT allow an Admin user to delete a User that does
     not exist`, (done) => {
       client.delete(`/users/${regularUserId + 10000}`)
-      .set({ 'x-access-token': currentAdminUser.token })
+      .set({ 'xsrf-token': currentAdminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(404);
         done();
       });
     });
 
-    xit('should not allow deletion of admin User', (done) => {
+    it('should not allow deletion of admin User', (done) => {
       client.delete(`/users/${1}`)
-      .set({ 'x-access-token': currentAdminUser.token })
+      .set({ 'xsrf-token': currentAdminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
+    it('should not allow deletion of nonexisting User', (done) => {
+      client.delete('/users/')
+      .set({ 'xsrf-token': currentAdminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
         done();
       });
     });

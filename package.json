@@ -17,8 +17,9 @@
     "migrate:test": "NODE_ENV=test sequelize db:migrate",
     "postinstall": "./node_modules/.bin/webpack",
     "seed:test": "NODE_ENV=test sequelize db:seed:all",
-    "testa": "nyc npm test",
-    "test": "npm run mocha"
+    "test": "npm run mocha",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
+    "test:coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=html mocha \"server/test/**/*.spec.js\" --timeout 10000 && npm run report-coverage"
   },
   "repository": {
     "type": "git",

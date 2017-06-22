@@ -308,7 +308,6 @@ class UserRoutes {
      */
     router.get('/users/:id',
     UserAuthenticator.authenticateUser,
-    UserMiddleware.validateGetRequest,
     UserController.getUser);
   }
 

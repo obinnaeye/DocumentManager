@@ -82,10 +82,11 @@ export default class UserController {
                   userDetails
                 );
               });
+            })
+            .catch((error) => {
+              ErrorHandler.handleRequestError(response, error);
             });
         }
-      }, (error) => {
-        ErrorHandler.handleRequestError(response, error);
       });
   }
 
@@ -164,6 +165,8 @@ export default class UserController {
    * @return{Void} - returns Void
    */
   static searchUser(request, response) {
+    const limit = request.query.limit || '10';
+    const offset = request.query.offset || '0';
     if (request.query.q) {
       const like = `%${request.query.q}%`;
       User.findAll({ where:
@@ -173,6 +176,8 @@ export default class UserController {
           { lastName: { $ilike: like } }
         ]
       },
+        limit,
+        offset,
         order: '"email" DESC'
       })
        .then((foundUsers) => {
@@ -187,9 +192,12 @@ export default class UserController {
            response,
            { message: error }
          ));
+    } else {
+      ResponseHandler.send400(response, {
+        message: 'No search query supplied!'
+      });
     }
   }
-
   /**
    * Method to update a user's profiles
    * @param{Object} request - Request object
@@ -215,7 +223,6 @@ export default class UserController {
       }
     });
   }
-
   /**
    * Method to delete a specified user
    * @param{Object} request - Request object
@@ -224,20 +231,36 @@ export default class UserController {
    */
   static deleteUser(request, response) {
     const id = Number(request.params.id);
-    User.destroy({ where: { id } })
-    .then((deletedUserCount) => {
-      if (deletedUserCount === 1) {
-        ResponseHandler.send200(
-          response,
-          { message: 'User Deleted' }
-        );
-      } else {
-        ResponseHandler.send404(
-          response,
-          { message: 'User not found, no user was deleted'
+    User.findOne({ where: { id } })
+      .then((user) => {
+        if (user) {
+          const userRoleId = user.roleId;
+          if (userRoleId === 1) {
+            ResponseHandler.send403(response, {
+              message: 'Admin cannot be deleted!'
+            });
+          } else {
+            User.destroy({ where: { id } })
+            .then((deletedUserCount) => {
+              if (deletedUserCount === 1) {
+                ResponseHandler.send200(
+                  response,
+                  { message: 'User Deleted' }
+                );
+              } else {
+                ResponseHandler.send404(
+                  response,
+                  { message: 'User not found, no user was deleted'
+                  });
+              }
+            });
+          }
+        } else {
+          ResponseHandler.send404(response, {
+            message: 'User not found!'
           });
-      }
-    });
+        }
+      });
   }
 
   /**

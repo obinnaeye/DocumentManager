@@ -6,3 +6,4 @@
 npm-debug.log
 client/public/js/bundle.min.js
 bower_components
+.nyc_output

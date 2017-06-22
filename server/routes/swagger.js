@@ -9,7 +9,7 @@ const swaggerDefinition = {
     description: 'API documentation to create, manage and edit documents',
   },
   schemes: ['http', 'https'],
-  host: 'localhost:8080',
+  host: process.env.BASE_URL,
   basePath: '/'
 };
 

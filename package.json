@@ -20,7 +20,7 @@
     "seed:dev": "NODE_ENV=development sequelize db:seed:all",
     "test": "npm run mocha",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "test:coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=html mocha \"server/test/endpoints/role.spec.js\" --timeout 10000 && npm run report-coverage"
+    "test:coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=html mocha \"server/test/**/*.spec.js\" --timeout 10000 && npm run report-coverage"
   },
   "repository": {
     "type": "git",

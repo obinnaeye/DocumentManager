@@ -106,12 +106,13 @@ export default class UserController {
               const activeToken = UserAuthenticator.generateToken(existingUser);
               // update user's activeToken
               existingUser.update({ activeToken })
-                .then(() => {
-                  // send the token here
+                .then((updatedUser) => {
+                  const userDetails =
+                  UserController.getUserDetails(updatedUser, activeToken);
+                  userDetails.message = 'You have successfully signed up!';
                   ResponseHandler.send200(response,
-                    { message: 'You have successfully logged in',
-                      activeToken
-                    });
+                    userDetails
+                  );
                 });
             } else {
               ResponseHandler.send422(response,

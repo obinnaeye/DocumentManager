@@ -760,16 +760,6 @@ describe('Users:', () => {
       });
     });
 
-    it(`should NOT allow an Admin user to delete a User that does
-    not exist`, (done) => {
-      client.delete(`/users/${regularUserId + 10000}`)
-      .set({ 'xsrf-token': currentAdminUser.token })
-      .end((error, response) => {
-        expect(response.status).to.equal(404);
-        done();
-      });
-    });
-
     it('should not allow deletion of admin User', (done) => {
       client.delete(`/users/${1}`)
       .set({ 'xsrf-token': currentAdminUser.token })
@@ -780,7 +770,7 @@ describe('Users:', () => {
     });
 
     it('should not allow deletion of nonexisting User', (done) => {
-      client.delete('/users/')
+      client.delete('/users/911911')
       .set({ 'xsrf-token': currentAdminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(404);

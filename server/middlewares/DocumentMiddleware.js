@@ -1,5 +1,4 @@
 import ResponseHandler from '../helpers/ResponseHandler';
-import { Document } from '../models';
 
 /**
  * Class to verify/check Document related requests
@@ -15,7 +14,6 @@ export default class DocumentMiddleware {
    */
   static validateCreateRequest(request, response, next) {
     const { title, content } = request.body;
-    const { userId } = request.decoded;
     if (request.body.id) {
       request.body.id = null;
     }
@@ -24,33 +22,14 @@ export default class DocumentMiddleware {
         response,
         { message: 'Please supply document title' }
       );
-    }
-    if (!content) {
+    } else if (!content) {
       ResponseHandler.send400(
         response,
         { message: 'Document should have content' }
       );
+    } else {
+      next();
     }
-      // check for document duplicates here
-    Document.findAll({
-      where: {
-        $and: [
-          { ownerId: userId },
-          { title },
-          { content }
-        ]
-      }
-    }).then((documents) => {
-      if (documents.length > 0) {
-        ResponseHandler.send409(
-          response,
-          { message: `A document with the title '${title}'
-          already exist. Choose a different title.` }
-        );
-      } else {
-        next();
-      }
-    });
   }
 
   /**

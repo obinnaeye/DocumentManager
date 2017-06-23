@@ -35,6 +35,13 @@ export default class ErrorHandler {
       );
     }
 
+    case 'SequelizeUniqueConstraintError' : {
+      return ResponseHandler.send400(
+        response,
+        { message: 'Bad Request' }
+      );
+    }
+
     case 'SequelizeDatabaseError' : {
       return ResponseHandler.send400(
         response,

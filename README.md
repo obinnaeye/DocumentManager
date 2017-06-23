@@ -76,7 +76,7 @@ npm test
 ```
 
 ## Issues?
-Submit your issue [here]
+Submit your issue [here](https://github.com/andela-onnenanya/document-manager/issues)
 
 ## License
 

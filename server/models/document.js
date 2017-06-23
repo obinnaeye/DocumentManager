@@ -23,8 +23,11 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       default: 'public',
       validate: {
-        isIn: [['public', 'private', 'role']]
-      }
+        isIn: {
+          args: [['public', 'private', 'role']],
+          msg: 'Access type should be public, private or role'
+        },
+      },
     },
     ownerId: {
       type: DataTypes.INTEGER,

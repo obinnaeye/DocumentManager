@@ -48,7 +48,7 @@ class DocumentController {
         if (foundDocument) {
           ResponseHandler.send409(
             response,
-            { message: `You already ${title}, choose a different title!` }
+            { message: `${title} already exist, choose a different title!` }
           );
         } else {
           Document.create(newDocument)
@@ -73,44 +73,45 @@ class DocumentController {
    * @memberof DocumentController
    */
   static getDocument(request, response) {
-    const { id } = request.params;
+    let { id } = request.params;
     const { userId } = request.decoded;
+    id = Number(id);
     const userRoleId = request.decoded.roleId;
-    Document.findOne({
-      where: { id }
-    })
-    .then((foundDocument) => {
-      if (foundDocument) {
-        // chceck document access type
-        // give access to owner, admin;
-        // or public user if access is public
-        if (
-          foundDocument.access === 'public'
-          || userId === foundDocument.ownerId
-          || userRoleId === 1
-          ) {
-          ResponseHandler.send200(
-            response,
-            DocumentController.getDocumentDetails(foundDocument)
-          );
+    if (isNaN(id)) {
+      ResponseHandler.send400(response, {
+        message: 'Document id should be number!'
+      });
+    } else {
+      Document.findOne({
+        where: { id }
+      })
+      .then((foundDocument) => {
+        if (foundDocument) {
+          // chceck document access type
+          // give access to owner, admin;
+          // or public user if access is public
+          if (
+            foundDocument.access === 'public'
+            || userId === foundDocument.ownerId
+            || userRoleId === 1
+            ) {
+            ResponseHandler.send200(
+              response,
+              DocumentController.getDocumentDetails(foundDocument)
+            );
+          } else {
+            ResponseHandler.send403(
+              response,
+              { message: 'You do not have the right access to this document' }
+            );
+          }
         } else {
-          ResponseHandler.send403(
-            response,
-            { message: 'You do not have the right access to this document' }
+          ResponseHandler.send404(
+            response
           );
         }
-      } else {
-        ResponseHandler.send404(
-          response
-        );
-      }
-    })
-    .catch((error) => {
-      ErrorHandler.handleRequestError(
-        response,
-        error
-      );
-    });
+      });
+    }
   }
 
   /**
@@ -132,7 +133,7 @@ class DocumentController {
     if (roleId === 1) {
       Document.findAndCountAll(queryBuilder)
       .then((foundDocuments) => {
-        if (foundDocuments.count !== 0) {
+        if (foundDocuments.count > 0) {
           ResponseHandler.send200(
             response,
             foundDocuments.rows
@@ -140,9 +141,6 @@ class DocumentController {
         } else {
           ResponseHandler.send404(response);
         }
-      })
-      .catch((error) => {
-        ErrorHandler.handleRequestError(response, error);
       });
     } else {
       Document.findAndCountAll({ where: {
@@ -154,7 +152,7 @@ class DocumentController {
         queryBuilder
       })
       .then((foundDocuments) => {
-        if (foundDocuments.count !== 0) {
+        if (foundDocuments.count > 0) {
           ResponseHandler.send200(
             response,
             foundDocuments.rows
@@ -162,9 +160,6 @@ class DocumentController {
         } else {
           ResponseHandler.send404(response);
         }
-      })
-      .catch((error) => {
-        ErrorHandler.handleRequestError(response, error);
       });
     }
   }
@@ -191,17 +186,18 @@ class DocumentController {
       };
       Document.findAll(queryBuilder)
         .then((foundDocuments) => {
-          if (foundDocuments) {
-            return ResponseHandler.send200(
+          if (foundDocuments.length > 0) {
+            ResponseHandler.send200(
               response,
               foundDocuments
             );
+          } else {
+            ResponseHandler.send404(
+              response,
+              { message: 'You do not have any document' }
+            );
           }
-        })
-        .catch(error => ResponseHandler.send404(
-            response,
-            { message: error }
-          ));
+        });
     }
   }
 
@@ -220,7 +216,7 @@ class DocumentController {
     const like = `%${request.query.q}%`;
 
     if (!request.query.q) {
-      ResponseHandler.send404(response);
+      ResponseHandler.send400(response);
     } else if (roleId === 1) {
       const queryBuilder = {
         where: {
@@ -242,9 +238,6 @@ class DocumentController {
         } else {
           ResponseHandler.send404(response);
         }
-      })
-      .catch((error) => {
-        ErrorHandler.handleRequestError(response, error);
       });
     } else {
       const queryBuilder = {
@@ -263,7 +256,7 @@ class DocumentController {
       };
       Document.findAndCountAll(queryBuilder)
         .then((foundDocuments) => {
-          if (foundDocuments.count !== 0) {
+          if (foundDocuments.count > 0) {
             ResponseHandler.send200(
               response,
               foundDocuments.rows
@@ -271,9 +264,6 @@ class DocumentController {
           } else {
             ResponseHandler.send404(response);
           }
-        })
-        .catch((error) => {
-          ErrorHandler.handleRequestError(response, error);
         });
     }
   }
@@ -286,56 +276,51 @@ class DocumentController {
    * @memberof DocumentController
    */
   static updateDocument(request, response) {
-    const { id } = request.params;
+    let { id } = request.params;
     const { userId } = request.decoded;
+    id = Number(id);
     const userRoleId = request.decoded.roleId;
-    Document.findById(Number(id))
-    .then((foundDocument) => {
-      if (foundDocument) {
-        // chceck document access type
-        // give access to owner, admin;
-        if (
-          userId === foundDocument.ownerId
-          || userRoleId === 1
-          ) {
-          foundDocument.update({
-            title: request.body.title,
-            content: request.body.content,
-            userId,
-            roleId: userRoleId,
-            access: request.body.access
-          })
-          .then((updatedDocument) => {
-            ResponseHandler.send200(
-              response,
-              updatedDocument
+    if (isNaN(id)) {
+      ResponseHandler.send400(response, {
+        message: 'Document id should be number!'
+      });
+    } else {
+      Document.findById(id)
+        .then((foundDocument) => {
+          if (foundDocument) {
+            // chceck document access type
+            // give access to owner, admin;
+            if (
+              userId === foundDocument.ownerId
+              || userRoleId === 1
+              ) {
+              foundDocument.update({
+                title: request.body.title || foundDocument.title,
+                content: request.body.content || foundDocument.content,
+                userId,
+                roleId: userRoleId,
+                access: request.body.access || foundDocument.access
+              })
+              .then((updatedDocument) => {
+                ResponseHandler.send200(
+                  response,
+                  updatedDocument
+                );
+              });
+            } else {
+              ResponseHandler.send403(
+                response,
+                { message: `You do not have the right access
+                  to update this document` }
+              );
+            }
+          } else {
+            ResponseHandler.send404(
+              response
             );
-          })
-          .catch((error) => {
-            ErrorHandler.handleRequestError(
-              response,
-              error
-            );
-          });
-        } else {
-          ResponseHandler.send403(
-            response,
-            { message: `You do not have the right access
-              to update this document` }
-          );
-        }
-      } else {
-        ResponseHandler.send404(
-          response
-        );
-      }
-    })
-    .catch((error) => {
-      ErrorHandler.handleRequestError(
-        response,
-        error
-      );
-    });
+          }
+        });
+    }
   }
 
   /**

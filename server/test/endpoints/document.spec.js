@@ -8,7 +8,7 @@ import SeedHelper from '../helpers/SeedHelper';
 const client = supertest.agent(app);
 
 describe('Documents:', () => {
-  const adminUser = Object.assign({}, SpecHelper.validAdminUser);
+  const adminUser = { ...SpecHelper.validAdminUser };
   const regularUser1 = SpecHelper.generateRandomUser(2);
   const regularUser2 = SpecHelper.generateRandomUser(2);
   const regularUser3 = SpecHelper.generateRandomUser(2);
@@ -55,6 +55,8 @@ describe('Documents:', () => {
           });
         });
       });
+    }).catch((error) => {
+      console.log(error);
     });
   });
 

@@ -81,9 +81,12 @@ export default class UserController {
                 ResponseHandler.send200(response,
                   userDetails
                 );
+              }).catch((error) => {
+                console.log('errors', error.errors)
               });
             })
             .catch((error) => {
+              console.log(error)
               ErrorHandler.handleRequestError(response, error);
             });
         }

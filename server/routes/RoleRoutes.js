@@ -8,11 +8,11 @@ import RoleMiddleware from '../middlewares/RoleMiddleware';
 class RoleRoutes {
 
   /**
-   * Method that sets all Role routes
+   * Method that initializes all Role routes
    * @param{Object} router - Express router
    * @return{Void} returns void
    */
-  static setRoleRoutes(router) {
+  static initializeRoutes(router) {
     /**
    * @swagger
    * definition:
@@ -33,11 +33,8 @@ class RoleRoutes {
    *           type: integer
    *           format: int64
    */
-    RoleRoutes.getRole(router);
-    RoleRoutes.getRoles(router);
     RoleRoutes.createRole(router);
     RoleRoutes.deleteRole(router);
-    RoleRoutes.updateRole(router);
   }
 
   /**

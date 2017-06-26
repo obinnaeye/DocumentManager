@@ -95,42 +95,22 @@ describe('Roles:', () => {
       });
     });
 
-    xit('should allow an Admin user with VALID token delete a Role',
+    it('should allow an Admin user with VALID token delete a Role',
     (done) => {
       client.delete('/roles/3')
-      .set({ 'x-access-token': adminUser.token })
+      .set({ 'xsrf-token': adminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(200);
         done();
       });
     });
 
-    xit(`should NOT allow an Admin user with VALID token delete a
+    it(`should NOT allow an Admin user with VALID token delete a
     non-existing Role`, (done) => {
-      client.delete('/roles/100')
-      .set({ 'x-access-token': adminUser.token })
+      client.delete('/roles/911911')
+      .set({ 'xsrf-token': adminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(404);
-        done();
-      });
-    });
-
-    xit(`should return a 403 status code to show it does NOT allow an
-    Admin user with VALID token delete admin Role`, (done) => {
-      client.delete('/roles/1')
-      .set({ 'x-access-token': adminUser.token })
-      .end((error, response) => {
-        expect(response.status).to.equal(403);
-        done();
-      });
-    });
-
-    xit(`should return a 403 status code to show it does NOT allow an
-    Admin user with VALID token delete regular Role`, (done) => {
-      client.delete('/roles/2')
-      .set({ 'x-access-token': adminUser.token })
-      .end((error, response) => {
-        expect(response.status).to.equal(403);
         done();
       });
     });

@@ -21,7 +21,7 @@ class SeedHelper {
 
   /**
    * Populates database with test users
-   * @returns {Object} - a Promise object
+   * @returns {Object} - A Promise object
    */
   static populateUserTable() {
     const users = [

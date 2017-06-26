@@ -36,14 +36,49 @@ class UserRoutes {
      *       email:
      *         type: string
      *   User:
-     *     allOf:
-     *       - $ref: '#/definitions/NewUser'
-     *       - required:
-     *         - id
-     *       - properties:
-     *         id:
-     *           type: integer
-     *           format: int64
+     *     type: object
+     *     required:
+     *       - firstname
+     *       - lastname
+     *       - email
+     *       - password
+     *     properties:
+     *       firstName:
+     *         type: string
+     *       lastName:
+     *         type: string
+     *       roleId:
+     *         type: integer
+     *       email:
+     *         type: string
+     *       userId:
+     *         type: integer
+     *       createdAt:
+     *         type: string
+     *         format: date
+     *       activeToken:
+     *          type: string
+     *   SafeUser:
+     *     type: object
+     *     required:
+     *       - firstname
+     *       - lastname
+     *       - email
+     *       - password
+     *     properties:
+     *       firstName:
+     *         type: string
+     *       lastName:
+     *         type: string
+     *       roleId:
+     *         type: integer
+     *       email:
+     *         type: string
+     *       userId:
+     *         type: integer
+     *       createdAt:
+     *         type: string
+     *         format: date
      */
     UserRoutes.createUser(router);
     UserRoutes.login(router);
@@ -138,7 +173,7 @@ class UserRoutes {
      *       200:
      *         description: Jwt access token
      *         schema:
-     *          type: object
+     *           $ref: '#/definitions/User'
      */
     router.post('/users/login',
     UserController.login);
@@ -171,7 +206,7 @@ class UserRoutes {
    *    get:
    *      description: Returns the user
    *      tags:
-   *        - Finds a user by email
+   *        - Searches for a user
    *      produces:
    *        - application/json
    *      parameters:
@@ -197,7 +232,7 @@ class UserRoutes {
    *        200:
    *          description: user
    *          schema:
-   *            type: object
+   *            $ref: '#/definitions/User'
    */
     router.get('/search/users/',
     UserAuthenticator.authenticateUser,
@@ -221,18 +256,36 @@ class UserRoutes {
      *     produces:
      *      - application/json
      *     parameters:
-     *       - name: body
-     *         description: User object
-     *         in:  body
+     *       - name: authorization
+     *         in: header
+     *         description: Jwt access token
+     *         required: true
+     *         type: string
+     *       - name: id
+     *         in: path
+     *         description: User id
      *         required: true
      *         type: integer
+     *       - name: body
+     *         description: 'User object: Delete fields not to be updated'
+     *         in:  body
+     *         required: true
+     *         type: object
      *         schema:
-     *           $ref: '#/definitions/User'
+     *           type: object
+     *           properties:
+     *              firstName:
+     *                type: string
+     *              lastName:
+     *                type: string
+     *              password:
+     *                type: string
+     *                format: password
      *     responses:
-     *       201:
+     *       200:
      *         description: users
      *         schema:
-     *          type: array
+     *          $ref: '#/definitions/User'
      */
     router.put('/users/:id',
     UserAuthenticator.authenticateUser,
@@ -249,7 +302,7 @@ class UserRoutes {
   static deleteUser(router) {
     /**
      * @swagger
-     * /users/:id:
+     * /users/{id}:
      *   delete:
      *     description: Deletes a user by id
      *     tags:
@@ -257,6 +310,11 @@ class UserRoutes {
      *     produces:
      *      - application/json
      *     parameters:
+     *       - name: authorization
+     *         in: header
+     *         description: Jwt access token
+     *         required: true
+     *         type: string
      *       - name: id
      *         description: User id
      *         in:  path
@@ -265,10 +323,10 @@ class UserRoutes {
      *         schema:
      *           $ref: '#/definitions/User'
      *     responses:
-     *       201:
-     *         description: users
+     *       200:
+     *         description: message
      *         schema:
-     *          type: array
+     *          type: string
      */
     router.delete('/users/:id',
     UserAuthenticator.authenticateUser,
@@ -293,18 +351,21 @@ class UserRoutes {
      *     produces:
      *      - application/json
      *     parameters:
-     *       - name: body
-     *         description: User object
-     *         in:  body
+     *       - name: authorization
+     *         in: header
+     *         description: Jwt access token
      *         required: true
      *         type: string
-     *         schema:
-     *           $ref: '#/definitions/User'
+     *       - name: id
+     *         description: User id
+     *         in:  path
+     *         required: true
+     *         type: integer
      *     responses:
-     *       201:
+     *       200:
      *         description: users
      *         schema:
-     *          type: array
+     *          $ref: '#/definitions/SafeUser'
      */
     router.get('/users/:id',
     UserAuthenticator.authenticateUser,
@@ -328,18 +389,26 @@ class UserRoutes {
      *     produces:
      *      - application/json
      *     parameters:
-     *        - name: Authorization
+     *        - name: authorization
      *          in: header
-     *          description: an authorization header
+     *          description: Jwt access token
      *          required: true
      *          type: string
+     *        - name: offset
+     *          in: query
+     *          description: User query offset
+     *          type: integer
+     *        - name: limit
+     *          in: query
+     *          description: User query limit
+     *          type: integer
      *     responses:
      *        200:
      *          description: users
      *          schema:
      *            type: array
      *            items:
-     *              $ref: '#/definitions/User'
+     *              $ref: '#/definitions/SafeUser'
      */
     router.get('/users/',
     UserAuthenticator.authenticateUser,

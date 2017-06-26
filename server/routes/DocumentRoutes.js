@@ -30,12 +30,21 @@ class DocumentRoutes {
    *        access:
    *           type: string
    *   Document:
-   *      allOf:
-   *        - $ref: '#definitions/NewDocument'
-   *        - required:
-   *        - id:
-   *              type: integer
-   *              format: int64
+   *     type: object
+   *     required:
+   *        - title
+   *        - content
+   *        - id
+   *     properties:
+   *        title:
+   *           type: string
+   *        content:
+   *           type: string
+   *        access:
+   *           type: string
+   *        id:
+   *           type: integer
+   *           format: int64
    */
     DocumentRoutes.createDocument(router);
     DocumentRoutes.getDocument(router);
@@ -68,20 +77,13 @@ class DocumentRoutes {
      *         in: header
      *         required: true
      *         type: string
-     *       - name: title
-     *         description: document title
-     *         in: form
+     *       - name: body
+     *         description: New Document object
+     *         in: body
      *         required: true
-     *         type: string
-     *       - name: content
-     *         description: document content
-     *         in: form
-     *         required: true
-     *         type: string
-     *       - name: access
-     *         description: document access type
-     *         in: form
-     *         type: number
+     *         type: object
+     *         schema:
+     *           $ref: '#/definitions/NewDocument'
      *     responses:
      *       200:
      *         description: Document Object created
@@ -105,7 +107,7 @@ class DocumentRoutes {
   static getDocument(router) {
     /**
      * @swagger
-     * /documents/:id:
+     * /documents/{id}:
      *   get:
      *      description: Returns a document by id
      *      tags:
@@ -122,14 +124,12 @@ class DocumentRoutes {
      *          description: Document id
      *          in: path
      *          required: true
-     *          type: string
+     *          type: integer
      *      responses:
      *          200:
      *              description: documents
      *              schema:
-     *                  type: array
-     *                  items:
-     *                      $ref: '#/definitions/Document'
+     *                  $ref: '#/definitions/Document'
      */
     router.get(
       '/documents/:id',
@@ -148,7 +148,7 @@ class DocumentRoutes {
   static getDocuments(router) {
     /**
      * @swagger
-     * /documents:
+     * /documents/:
      *   get:
      *      description: Returns a list of all documents
      *      tags:
@@ -161,6 +161,16 @@ class DocumentRoutes {
      *          in: header
      *          required: true
      *          type: string
+     *        - name: limit
+     *          description: Documents query limit
+     *          in: query
+     *          required: false
+     *          type: integer
+     *        - name: offset
+     *          description: Documents query offset
+     *          in: query
+     *          required: false
+     *          type: integer
      *      responses:
      *          200:
      *              description: documents
@@ -170,7 +180,7 @@ class DocumentRoutes {
      *                      $ref: '#/definitions/Document'
      */
     router.get(
-      '/documents',
+      '/documents/',
       UserAuthenticator.authenticateUser,
       DocumentMiddleware.validateGetRequest,
       DocumentController.getDocuments
@@ -186,7 +196,7 @@ class DocumentRoutes {
   static getUserDocuments(router) {
     /**
    * @swagger
-   * /users/:id/documents:
+   * /users/{id}/documents:
    *    get:
    *      description: Returns user documents
    *      tags:
@@ -203,7 +213,7 @@ class DocumentRoutes {
    *          in: path
    *          description: User id
    *          required: true
-   *          type: number
+   *          type: integer
    *      responses:
    *        200:
    *          description: document
@@ -256,7 +266,7 @@ class DocumentRoutes {
    *        200:
    *          description: document
    *          schema:
-   *            type: object
+   *            $ref: '#/definitions/Document'
    */
     router.get(
       '/search/documents',
@@ -274,7 +284,7 @@ class DocumentRoutes {
   static updateDocument(router) {
     /**
    * @swagger
-   * /documents/:id:
+   * /documents/{id}:
    *    put:
    *      description: Update a document
    *      tags:
@@ -292,11 +302,18 @@ class DocumentRoutes {
    *          description: document id
    *          required: true
    *          type: number
+   *        - name: body
+   *          in: body
+   *          description: "UpdateDocument object: Delete fields not to update"
+   *          required: true
+   *          type: object
+   *          schema:
+   *            $ref: '#/definitions/NewDocument'
    *      responses:
    *        200:
    *          description: document
    *          schema:
-   *            type: object
+   *            $ref: '#/definitions/Document'
    */
     router.put(
       '/documents/:id',
@@ -314,7 +331,7 @@ class DocumentRoutes {
   static deleteDocument(router) {
      /**
    * @swagger
-   * /documents/:id:
+   * /documents/{id}:
    *    delete:
    *      description: Delete a document
    *      tags:
@@ -331,12 +348,12 @@ class DocumentRoutes {
    *          in: path
    *          description: document id
    *          required: true
-   *          type: number
+   *          type: integer
    *      responses:
    *        200:
-   *          description: document
+   *          description: Success message
    *          schema:
-   *            type: object
+   *            type: string
    */
     router.delete(
       '/documents/:id',

@@ -222,7 +222,7 @@ describe('Roles:', () => {
       });
     });
 
-    xit('should NOT allow update of regular Role', (done) => {
+    it('should NOT allow update of regular Role', (done) => {
       const newTitle = 'new title1';
       client.put(`/roles/${2}`)
       .set({ 'xsrf-token': adminUser.token })

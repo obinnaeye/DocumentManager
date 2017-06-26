@@ -30,6 +30,35 @@ export default class UserMiddleware {
   }
 
   /**
+   * Middleware to check and handle violation of get Roles
+   * rules by the request
+   * @param {Object} request - Request Object
+   * @param {Object} response - Response Object
+   * @param {Function} next - Function call to move to next
+   * @return {undefined}
+   */
+  static validateGetRequest(request, response, next) {
+    if (request.decoded.roleId !== 1) {
+      ResponseHandler.send403(
+        response,
+        { message: 'Admin Privilege Required' }
+      );
+    } else if (request.query && Number(request.query.limit) < 1) {
+      ResponseHandler.send400(
+        response,
+        { message: 'Invalid Limit' }
+      );
+    } else if (request.query && Number(request.query.offset) < 0) {
+      ResponseHandler.send400(
+        response,
+        { message: 'Invalid Offset' }
+      );
+    } else {
+      next();
+    }
+  }
+
+  /**
    * Middleware to check and handle validation of user deletion request
    * @param {Object} request - Request Object
    * @param {Object} response - Response Object

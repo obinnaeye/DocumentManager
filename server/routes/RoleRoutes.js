@@ -24,17 +24,21 @@ class RoleRoutes {
    *       title:
    *         type: string
    *   Role:
-   *     allOf:
-   *       - $ref: '#/definitions/NewRole'
-   *       - required:
-   *         - id
-   *       - properties:
-   *         id:
-   *           type: integer
-   *           format: int64
+   *     type: object
+   *     required:
+   *       - title
+   *       - id
+   *     properties:
+   *       title:
+   *         type: string
+   *       id:
+   *         type: integer
    */
+    RoleRoutes.getRole(router);
+    RoleRoutes.getRoles(router);
     RoleRoutes.createRole(router);
     RoleRoutes.deleteRole(router);
+    RoleRoutes.updateRole(router);
   }
 
   /**
@@ -47,24 +51,28 @@ class RoleRoutes {
      * @swagger
      * /roles:
      *   post:
-     *     description: Creates a role
+     *     description: Creates a new role
      *     tags:
      *      - Create Role
      *     produces:
      *      - application/json
      *     parameters:
-     *       - name: Authorization
+     *       - name: authorization
      *         in:  header
-     *         description: an authorization token
+     *         description: Jwt access token
      *         required: true
      *         type: string
+     *       - name: body
+     *         in: body
+     *         type: object
+     *         required: true
      *         schema:
-     *           $ref: '#/definitions/Role'
+     *           $ref: '#/definitions/NewRole'
      *     responses:
-     *       201:
-     *         description: roles
+     *       200:
+     *         description: role
      *         schema:
-     *          type: object
+     *          $ref: '#/definitions/Role'
      */
     router.post(
       '/roles',
@@ -79,6 +87,107 @@ class RoleRoutes {
    * @param{Object} router - Express router
    * @return{Void} returns void
    */
+  static getRole(router) {
+             /**
+     * @swagger
+     * /roles/{id}:
+     *   get:
+     *     description: Returns a role
+     *     tags:
+     *      - Returns a Role by id
+     *     produces:
+     *      - application/json
+     *     parameters:
+     *       - name: authorization
+     *         in:  header
+     *         description: Jwt access token
+     *         required: true
+     *         type: string
+     *       - name: id
+     *         in:  path
+     *         description: Role id
+     *         required: true
+     *         type: integer
+     *     responses:
+     *       200:
+     *         description: roles
+     *         schema:
+     *          $ref: '#/definitions/Role'
+     */
+    router.get(
+      '/roles/:id',
+      UserAuthenticator.authenticateUser,
+      RoleMiddleware.validateGetRequest,
+      RoleController.getRole
+    );
+  }
+
+  /**
+   * Method to setup Route for deleting a specified role
+   * @param{Object} router - Express router
+   * @return{Void} returns void
+   */
+  static getRoles(router) {
+    router.get(
+      '/roles',
+      UserAuthenticator.authenticateUser,
+      RoleMiddleware.validateGetRequest,
+      RoleController.getRoles
+    );
+  }
+
+  /**
+   * Method to setup Route for deleting a specified role
+   * @param{Object} router - Express router
+   * @return{Void} returns void
+   */
+  static updateRole(router) {
+                /**
+     * @swagger
+     * /roles/{id}:
+     *   put:
+     *     description: Updates a role
+     *     tags:
+     *      - Updates a role
+     *     produces:
+     *      - application/json
+     *     parameters:
+     *       - name: authorization
+     *         in: header
+     *         description: Jwt access token
+     *         required: true
+     *         type: string
+     *       - name: id
+     *         in:  path
+     *         description: Role id
+     *         required: true
+     *         type: integer
+     *       - name: body
+     *         description: Role object
+     *         in:  body
+     *         required: true
+     *         type: object
+     *         schema:
+     *           $ref: '#/definitions/NewRole'
+     *     responses:
+     *       200:
+     *         description: roles
+     *         schema:
+     *          type: object
+     */
+    router.put(
+      '/roles/:id',
+      UserAuthenticator.authenticateUser,
+      RoleMiddleware.validateUpdateRequest,
+      RoleController.updateRole
+    );
+  }
+
+  /**
+   * Method to setup Route for deleting a specified role by id
+   * @param{Object} router - Express router
+   * @return{Void} returns void
+   */
   static deleteRole(router) {
                     /**
      * @swagger
@@ -90,18 +199,21 @@ class RoleRoutes {
      *     produces:
      *      - application/json
      *     parameters:
-     *       - name: Authorization
+     *       - name: authorization
      *         in:  header
-     *         description: an authorization token
+     *         description: Jwt access token
      *         required: true
      *         type: string
-     *         schema:
-     *           $ref: '#/definitions/Role'
+     *       - name: id
+     *         in:  path
+     *         description: Role id
+     *         required: true
+     *         type: integer
      *     responses:
-     *       201:
-     *         description: roles
+     *       200:
+     *         description: Success message
      *         schema:
-     *          type: object
+     *          type: string
      */
     router.delete(
       '/roles/:id',

@@ -82,11 +82,11 @@ export default class UserController {
                   userDetails
                 );
               }).catch((error) => {
-                console.log('errors', error.errors)
+                //console.log('errors', error.errors)
               });
             })
             .catch((error) => {
-              console.log(error)
+              //console.log(error)
               ErrorHandler.handleRequestError(response, error);
             });
         }

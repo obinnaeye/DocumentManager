@@ -30,7 +30,7 @@ describe('Roles:', () => {
         });
       });
     }).catch((error) => {
-      console.log('role', error);
+      //console.log('role', error);
       done();
     });
   });
@@ -81,7 +81,159 @@ describe('Roles:', () => {
         done();
       });
     });
+  });
 
+  describe('Get Roles', () => {
+    it('should allow an Admin User with VALID token get a specific Role by id',
+    (done) => {
+      client.get('/roles/2')
+      .set({ 'xsrf-token': adminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should allow specifying offset when fetching Roles', (done) => {
+      const searchOffset = 1;
+      client.get(`/roles/?offset=${searchOffset}`)
+      .set({ 'xsrf-token': adminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it(`should return a 400(Bad Request) status code when an 
+    invalid offset is specified`,
+    (done) => {
+      const invalidSearchOffset = -1;
+      client.get(`/roles/?offset=${invalidSearchOffset}`)
+      .set({ 'xsrf-token': adminUser.token })
+      .end((error, response) => {
+        console.log('indvalid',response.body)
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it('should NOT allow an Admin User get a non-existing Role',
+    (done) => {
+      client.get('/roles/9119')
+      .set({ 'xsrf-token': adminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
+        done();
+      });
+    });
+
+    it(`should NOT allow a Non Admin User with VALID token
+    access a specific Role`,
+    (done) => {
+      client.get('/roles/2')
+      .set({ 'xsrf-token': regularUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
+    it('should allow an Admin User with VALID token get all Roles',
+    (done) => {
+      client.get('/roles')
+      .set({ 'xsrf-token': adminUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.be.instanceOf(Object);
+        done();
+      });
+    });
+
+    it('should NOT allow a Non-Admin User with VALID token get all Roles',
+    (done) => {
+      client.get('/roles')
+      .set({ 'xsrf-token': regularUser.token })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+  });
+
+  describe('Update Role', () => {
+    const newRole = SpecHelper.generateRandomRole('update');
+    before((done) => {
+      client.post('/roles')
+      .send(newRole)
+      .set({ 'xsrf-token': adminUser.token })
+      .end((error, response) => {
+        newRole.id = response.body.id;
+        done();
+      });
+    });
+
+    it('should allow an Admin user to UPDATE a Role',
+    (done) => {
+      const newTitle = 'new title';
+      client.put(`/roles/${newRole.id}`)
+      .set({ 'xsrf-token': adminUser.token })
+      .send({ title: newTitle })
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should NOT allow an Admin user to Update a non-existing Role',
+    (done) => {
+      const newTitle = 'new title1';
+      client.put(`/roles/${911911}`)
+      .set({ 'xsrf-token': adminUser.token })
+      .send({ title: newTitle })
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
+        done();
+      });
+    });
+
+    it('should NOT allow update of a Role ID',
+    (done) => {
+      client.put(`/roles/${3}`)
+      .set({ 'xsrf-token': adminUser.token })
+      .send({ id: 5 })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal('Role ID Can not be Updated!');
+        done();
+      });
+    });
+
+    it('should NOT allow update of admin Role',
+    (done) => {
+      const newTitle = 'new title1';
+      client.put(`/roles/${1}`)
+      .set({ 'xsrf-token': adminUser.token })
+      .send({ title: newTitle })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        expect(response.body.message).to.equal(
+          'Protected Roles can not be Updated!');
+        done();
+      });
+    });
+
+    xit('should NOT allow update of regular Role', (done) => {
+      const newTitle = 'new title1';
+      client.put(`/roles/${2}`)
+      .set({ 'xsrf-token': adminUser.token })
+      .send({ title: newTitle })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        expect(response.body.message).to.equal(
+          'Protected Roles can not be Updated!');
+        done();
+      });
+    });
   });
 
   describe('Delete Role', () => {
@@ -115,5 +267,4 @@ describe('Roles:', () => {
       });
     });
   });
-
 });

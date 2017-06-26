@@ -26,7 +26,7 @@ describe('Users:', () => {
         done();
       });
     }).catch((error) => {
-      console.log('user', error);
+      //console.log('user', error);
     });
   });
 
@@ -35,7 +35,7 @@ describe('Users:', () => {
     .then(() => {
       done();
     }).catch((error) => {
-      console.log(error);
+      //console.log(error);
     });
   });
 

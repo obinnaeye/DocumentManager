@@ -62,7 +62,7 @@ class Signup extends React.Component {
    */
   render() {
     return (<div className="container">
-      <div className="row">
+      <div className="row white my-container">
         <h3>Signup Here:</h3>
         <form className="col s12" action="#" onSubmit={this.submit}>
           <div className="row">
@@ -138,14 +138,14 @@ class Signup extends React.Component {
           <div className="row">
             <input
               className={`col s12 m3 waves-effect waves-light 
-              btn orange button-margin`}
+              btn black button-margin`}
               value="Signup"
               type="submit"
             />
             <em>If you have already registered...</em>
             <Link
               className={`col m3 s12 waves-effect 
-              waves-light btn orange button-margin`}
+              waves-light btn grey button-margin`}
               to="/signin"
             >
               Signin

@@ -29,9 +29,6 @@ describe('Roles:', () => {
           done();
         });
       });
-    }).catch((error) => {
-      //console.log('role', error);
-      done();
     });
   });
 
@@ -111,7 +108,6 @@ describe('Roles:', () => {
       client.get(`/roles/?offset=${invalidSearchOffset}`)
       .set({ 'xsrf-token': adminUser.token })
       .end((error, response) => {
-        console.log('indvalid',response.body)
         expect(response.status).to.equal(400);
         done();
       });

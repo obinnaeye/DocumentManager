@@ -25,8 +25,6 @@ describe('Users:', () => {
         regularUserId = response.body.userId;
         done();
       });
-    }).catch((error) => {
-      //console.log('user', error);
     });
   });
 
@@ -34,8 +32,6 @@ describe('Users:', () => {
     database.sequelize.sync({ force: true })
     .then(() => {
       done();
-    }).catch((error) => {
-      //console.log(error);
     });
   });
 

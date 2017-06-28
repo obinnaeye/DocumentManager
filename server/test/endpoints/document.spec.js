@@ -55,8 +55,6 @@ describe('Documents:', () => {
           });
         });
       });
-    }).catch((error) => {
-      //console.log(error);
     });
   });
 

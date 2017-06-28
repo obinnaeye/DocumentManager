@@ -24,6 +24,8 @@ class AllDocuments extends React.Component {
     };
 
     this.renderedDocuments = this.renderedDocuments.bind(this);
+    this.editDocument = this.editDocument.bind(this);
+    this.deleteDocument = this.deleteDocument.bind(this);
   }
 
   /**
@@ -44,12 +46,38 @@ class AllDocuments extends React.Component {
    * @memberOf UserDocuments
    */
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (nextProps.documents.length > 0) {
       this.setState({
         documents: nextProps.documents,
         fetchingDocuments: nextProps.fetchingDocuments
       });
     }
+  }
+
+  /**
+   * @desc Redirects to edit page using document id
+   * @param {object} e
+   * @memberOf DocumentView
+   * @returns {void}
+   */
+  editDocument(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.history.push(`/dashboard/edit-document/${id}`);
+  }
+
+  /**
+   * @desc Delets a docuement and redirects to documents page
+   * @param {object} e
+   * @memberOf DocumentView
+   * @returns {void}
+   */
+  deleteDocument(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    console.log('dele',id);
+    this.props.DocumentActions.deleteDocument(id);
   }
 
   /**
@@ -73,9 +101,11 @@ class AllDocuments extends React.Component {
     if (this.state.fetchingDocuments) {
       const documents = this.state.documents;
       const render = documents.map((document) => {
-        const { id, title, content, createdAt, updatedAt } = document;
+        const { id, title, content, createdAt, updatedAt, ownerId } = document;
         const parsedContent =
           <span dangerouslySetInnerHTML={{ __html: content }} />;
+        const { userId, roleId } = JSON.parse(localStorage.getItem('user_profile'));
+        console.log('ownerid', ownerId, userId, roleId);
         return (
           <li key={id}>
             <div className="collapsible-header">
@@ -83,6 +113,27 @@ class AllDocuments extends React.Component {
               <span><b>Title: </b> <em>{title} </em> ||</span>
               <span> <b>Created:</b> <em>{createdAt}</em> ||</span>
               <span> <b>Modified:</b> <em>{updatedAt}</em> </span>
+              { userId === ownerId || roleId === 1 ?
+                <span className="right">
+                  <a
+                    className=" button-margin "
+                    onClick={this.editDocument}
+                    name={id}
+                  >
+                    <i
+                      className="material-icons"
+                      name={id}
+                    >mode_edit</i></a>
+                  <a
+                    className=" my-danger lighten-2 button-margin"
+                    onClick={this.deleteDocument}
+                    name={id}
+                  >
+                    <i
+                      className="material-icons"
+                      name={id}
+                    >delete</i></a>
+                </span> : ''}
             </div>
             <div className="collapsible-body white">{parsedContent}</div>
           </li>);

@@ -1,7 +1,11 @@
 const path = require('path');
+const webpack = require('webpack');
+
+const debug = process.env.NODE_ENV !== 'production';
+const production = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: debug ? 'inline-sourcemap' : 'cheap-eval-source-map',
   entry: path.join(__dirname, '/client/src/js/index.jsx'),
 
   module: {
@@ -32,5 +36,14 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'client/public/js'),
     filename: 'bundle.min.js'
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: production ?
+        JSON.stringify('production') : JSON.stringify('development')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin()
+  ]
 };

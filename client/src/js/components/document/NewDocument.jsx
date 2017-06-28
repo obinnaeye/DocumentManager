@@ -115,7 +115,7 @@ class NewDocument extends React.Component {
    */
   render() {
     return (
-      <div className="row center-align">
+      <div className="row center-align white">
         <div className="row center-align">
           <div className="input-field col m5 s6">
             <input id="documentTitle" type="text" className="validate" />
@@ -131,10 +131,10 @@ class NewDocument extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col s12 m10 center" >
+          <div className="col s12 m9 center" >
             <textarea name="editor" id="editor" />
           </div>
-          <div className="col s12 m2 edit-document-buttons">
+          <div className="col s12 m3 edit-document-buttons">
             <button
               className="btn waves-effect waves-light orange accent-3"
               onClick={this.save}
@@ -146,7 +146,7 @@ class NewDocument extends React.Component {
             <button
               className="btn waves-effect waves-light red lighten-2"
               onClick={this.exit}
-            >Cancel</button>
+            >Exit</button>
           </div>
         </div>
       </div>

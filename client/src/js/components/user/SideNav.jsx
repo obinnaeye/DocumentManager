@@ -1,5 +1,5 @@
 /* global $ */
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 
 /**
@@ -23,9 +23,12 @@ class SideNav extends React.Component {
 
     $('#pushpin').pushpin({
       top: 150,
-      bottom: 1000,
-      offset: 70
+      offset: 0
     });
+
+    if (this.props.location.pathname === '/dashboard') {
+      $('#pushpin').click();
+    }
   }
 
   /**
@@ -48,6 +51,12 @@ class SideNav extends React.Component {
           <li>
             <Link to="/dashboard/edit-profile" > Edit Profile </Link>
           </li>
+          <li>
+            <Link to="/dashboard/all-documents" > All Document </Link>
+          </li>
+          <li>
+            <Link to="/dashboard/all-users" > All Users </Link>
+          </li>
         </ul>
         <a
           href="#slide-out"
@@ -62,6 +71,10 @@ class SideNav extends React.Component {
     );
   }
 }
+
+SideNav.propTypes = {
+  location: PropTypes.object.isRequired
+};
 
 export default SideNav;
 

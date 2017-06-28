@@ -44,10 +44,11 @@ class NavBar extends React.Component {
   navigationButtons() {
     const authenticated = this.props.authenticated;
     const signingIn = this.props.signingIn;
-    if (authenticated || signingIn) {
+    const createdUser = this.props.createdUser;
+    if (authenticated || signingIn || createdUser) {
       return (
       [
-        <li key="dashboard"><Link to="/dashboard/my-documents">
+        <li key="dashboard"><Link to="/dashboard">
         Dashboard</Link></li>,
         <li key="auth"><Link to="/" onClick={this.logout}>Logout</Link></li>
       ]
@@ -118,12 +119,14 @@ NavBar.propTypes = {
   UserActions: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   authenticated: PropTypes.bool,
-  signingIn: PropTypes.bool.isRequired
+  signingIn: PropTypes.bool.isRequired,
+  createdUser: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   authenticated: state.userReducers.authenticated,
-  signingIn: state.signInReducer.signingIn
+  signingIn: state.signInReducer.signingIn,
+  createdUser: state.signInReducer.createdUser
 });
 
 const mapDispatchToProps = dispatch => ({

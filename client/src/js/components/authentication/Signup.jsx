@@ -23,6 +23,12 @@ class Signup extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.createdUser) {
+      this.props.history.push('/dashboard');
+    }
+  }
+
   /**
    * @desc Handles change events on form input fields
    * @param {object} e
@@ -64,7 +70,7 @@ class Signup extends React.Component {
     return (<div className="container">
       <div className="row white my-container">
         <h3>Signup Here:</h3>
-        <form className="col s12" action="#" onSubmit={this.submit}>
+        <form className="col s12" onSubmit={this.submit}>
           <div className="row">
             <div className="input-field col s6">
               <input
@@ -162,7 +168,7 @@ Signup.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  user: state.user
+  createdUser: state.signUpReducer.createdUser
 });
 
 const mapDispatchToProps = dispatch => ({

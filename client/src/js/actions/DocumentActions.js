@@ -76,10 +76,6 @@ export const getAllDocuments = () => {
     ajaxCall.get('/documents/')
       .then((response) => {
         dispatch(getDocumentsSuccess(response.data));
-        Materialize.toast(
-          'Document Saved',
-          3000
-        );
       })
       .catch((error) => {
         dispatch(getDocumentsFailure());

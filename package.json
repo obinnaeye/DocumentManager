@@ -82,6 +82,7 @@
     "path": "^0.12.7",
     "pg": "^6.2.3",
     "pg-hstore": "^2.3.2",
+    "rc-pagination": "^1.9.8",
     "react": "^15.5.4",
     "react-coverflow": "^0.2.3",
     "react-dom": "^15.5.4",

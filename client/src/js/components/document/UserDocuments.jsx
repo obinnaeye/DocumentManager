@@ -98,7 +98,7 @@ class UserDocuments extends React.Component {
       <div className="container width-85">
         <div className="row">
           <div className="col s12">
-            <Coverflow
+            { documents.length > 0 ? <Coverflow
               style={{ height: '1000px', color: '' }}
               width={'auto'}
               height={500}
@@ -107,7 +107,20 @@ class UserDocuments extends React.Component {
               enableHeading={false}
             >
               {formatedDocuments}
-            </Coverflow>
+            </Coverflow> :
+            <div className="row">
+              <div className="col offset-m3 s12 m6">
+                <p className="white center-align">
+                  Your Book Shelf is EMPTY, Go to
+                  Dashboard and Create One Now!</p>
+                <img
+                  className="empty"
+                  src="/public/img/empty.jpg"
+                  alt="No Document found"
+                />
+              </div>
+            </div>
+            }
           </div>
         </div>
       </div>

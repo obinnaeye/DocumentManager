@@ -2,24 +2,23 @@ import React, { PropTypes } from 'react';
 
 const Select = props =>
   (
-    <div>
-      <a
-        className="dropdown-button input-field col s5 center-align"
-        data-beloworigin="true"
-        data-activates="dropdown1"
-      >{props.access}
-      </a>
-      <ul id="dropdown1" className="dropdown-content">
-        <li id="Private" onClick={props.onClick}>Private</li>
-        <li id="Public" onClick={props.onClick}>Public</li>
-        <li id="Role" onClick={props.onClick}>Role</li>
-      </ul>
+    <div className="input-field col s6">
+      <select
+        className="browser-default"
+        onChange={props.onChange}
+        id="access"
+        value={props.value}
+      >
+        <option value="private">Private</option>
+        <option value="public">Public</option>
+        <option value="writer">Role</option>
+      </select>
     </div>
   );
 
 Select.propTypes = {
-  access: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired
 };
 
 export default Select;

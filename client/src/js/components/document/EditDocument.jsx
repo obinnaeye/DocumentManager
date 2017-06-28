@@ -3,7 +3,6 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as DocumentActions from '../../actions/DocumentActions';
-import Select from './Select';
 
 /**
  * @class EditDocument
@@ -97,7 +96,7 @@ class EditDocument extends React.Component {
       this.setState({
         title,
         content,
-        access: sentenceCaseAccess
+        access
       });
     }
   }
@@ -108,7 +107,7 @@ class EditDocument extends React.Component {
    * @returns {void}
    */
   handleChange(e) {
-    const access = e.target.getAttribute('id');
+    const access = e.target.value;
     this.setState({
       access
     });
@@ -123,9 +122,7 @@ class EditDocument extends React.Component {
     const title = $('#documentTitle').val() || this.state.title;
     const content = CKEDITOR.instances.editor.getData() || this.state.content;
     const sentenceCaseAccess = $('#access').val() || this.state.access;
-    const access =
-      sentenceCaseAccess.substr(0, 1).toLowerCase() +
-      sentenceCaseAccess.substr(1);
+    const access = this.state.access;
     if (!title) {
       Materialize.toast(
         'The document cannot be save; No Title was supplied!', 5000, 'red');
@@ -172,21 +169,26 @@ class EditDocument extends React.Component {
    * @memberOf EditDocument
    */
   render() {
+    const { access } = this.state;
+    console.log('access',access)
     return (
-      <div className="row center-align edit-document-container">
+      <div className="row center-align edit-document-container white">
         <div className="row center-align">
           <div className="input-field col s5">
             <input id="documentTitle" type="text" className="validate" />
             <label htmlFor="documentTitle">Title: Unique Title</label>
           </div>
-          <div>
-            Select Document Access Types
-          </div>
           <div className="input-field col s5 center-align">
-            <Select
-              access={this.state.access}
-              onClick={this.handleChange}
-            />
+            <select
+              className="browser-default"
+              onChange={this.handleChange}
+              id="access"
+              value={access}
+            >
+              <option value="private">Private</option>
+              <option value="public">Public</option>
+              <option value="role">Role</option>
+            </select>
           </div>
         </div>
         <div className="row">
@@ -205,7 +207,7 @@ class EditDocument extends React.Component {
             <button
               className="btn waves-effect waves-light red lighten-2"
               onClick={this.exit}
-            >Cancel</button>
+            >Exit</button>
           </div>
         </div>
       </div>

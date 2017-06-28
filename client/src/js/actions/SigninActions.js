@@ -25,7 +25,7 @@ export const signinUser = user =>
         dispatch(signinUserSuccess(decodedUser));
         Materialize.toast(
           'You have successfully signed in! Welcome!',
-          5000
+          5000, 'green'
         );
       })
       .catch((error) => {

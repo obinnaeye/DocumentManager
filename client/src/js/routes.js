@@ -4,6 +4,7 @@ import Signin from '../js/components/authentication/Signin';
 import NavBar from './components/common/NavBar';
 import Signup from './components/authentication/Signup';
 import UserPage from '../js/components/user/UserPage';
+import HomePage from '../js/components/home/HomePage';
 
 // user PageAccessHelper here on UserPage and remove from other components
 export default (

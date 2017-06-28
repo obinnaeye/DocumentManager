@@ -1,3 +1,16 @@
+body {
+  background-image: url(/public/img/home.jpg);
+  background-color: #663300;
+  margin-top: 50px;;
+  height: 100%
+}
+
+@media screen and (min-width: 300px) {
+    body {
+        background-position: 90% 30%;
+    }
+}
+
 .nav-wrapper {
   padding: 0px 20px;
 }
@@ -9,11 +22,13 @@ figure {
   height: 350px !important;
   align-self: stretch !important;
   word-wrap: break-word;
+  opacity: 1
 }
 
 .coverflow__container__1P-xE {
   margin-top: 50px !important;
-  background: orange !important;
+  background: black !important;
+  opacity: 0.8
 }
 .open-doc{
   z-index: 10000;
@@ -37,28 +52,53 @@ figure {
     position: relative;
   }
 
-  // Class for when element is below threshold
-  .pin-bottom {
-    position: relative;
-  }
+// Class for when element is below threshold
+.pin-bottom {
+  position: relative;
+}
 
-  // Class for when element is pinned
-  .pinned {
-    position: fixed !important;
-  }
+// Class for when element is pinned
+.pinned {
+  position: fixed !important;
+}
 
-  .edit-document-container {
-    margin-top: 25px
-  }
-  .edit-document-buttons button {
-    margin-top: 15px;
-    width: 80%
-  }
+.edit-document-container {
+  margin-top: 25px;
+  padding: 10px
+}
+.edit-document-buttons button {
+  margin-top: 15px;
+  width: 80%
+}
 
-  .width-85 {
-    width: 100% !important;
-  }
+.width-85 {
+  width: 100% !important;
+}
 
-  .button-margin {
-    margin: 0 10px
-  }
+.button-margin {
+  margin: 0 10px
+}
+
+.my-container {
+  padding: 10px !important;
+  margin: 0px auto;
+}
+
+.my-centered {
+  margin: 0 auto;
+  background: red;
+  padding: 20px;
+}
+
+.empty {
+  width: 100%;
+  height: 50%;
+}
+
+.scroll-a {
+  max-height: 95%;
+  overflow: auto
+}
+.my-danger {
+  color: red !important
+}

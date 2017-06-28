@@ -1,9 +1,9 @@
 /* global jwt_decode */
 import React, { PropTypes } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../actions/UserActions';
-import Signin from '../components/authentication/Signin';
 
 export default (ComposedConmponent) => {
   /**
@@ -11,12 +11,22 @@ export default (ComposedConmponent) => {
    * @extends {React.Component}
    */
   class Authenticate extends React.Component {
+    constructor(props, context) {
+      super(props, context);
+      this.state = {
+        authenticated: this.props.authenticated,
+        createdUser: this.props.createdUser,
+        signingIn: this.props.signingIn
+      };
+    }
+
     /**
      * @memberOf Authenticate
      * @returns {void}
      */
     componentDidMount() {
-      if (!this.props.authenticated && !this.props.signingIn) {
+      if (!this.props.authenticated && !this.props.signingIn &&
+      !this.props.createdUser) {
         const { userId } = jwt_decode(localStorage.xsrf_token);
         this.props.UserActions.validateUser(userId);
       }
@@ -29,9 +39,9 @@ export default (ComposedConmponent) => {
     render() {
       return (
         <span>
-          { this.props.authenticated || this.props.signingIn
+          { this.state.authenticated || this.state.signingIn || this.state.createdUser
              ? <ComposedConmponent {...this.props} /> :
-             <Signin {...this.props} />}
+             <Redirect to="/signin" />}
         </span>
       );
     }
@@ -40,7 +50,8 @@ export default (ComposedConmponent) => {
   Authenticate.propTypes = {
     authenticated: PropTypes.bool.isRequired,
     signingIn: PropTypes.bool.isRequired,
-    UserActions: PropTypes.object.isRequired
+    UserActions: PropTypes.object.isRequired,
+    createdUser: PropTypes.bool.isRequired
   };
 
   Authenticate.contextTypes = {
@@ -49,7 +60,8 @@ export default (ComposedConmponent) => {
 
   const mapStateToProps = state => ({
     authenticated: state.userReducers.authenticated,
-    signingIn: state.signInReducer.signingIn
+    signingIn: state.signInReducer.signingIn,
+    createdUser: state.signUpReducer.createdUser
   });
 
   const mapDispatchToProps = dispatch => ({

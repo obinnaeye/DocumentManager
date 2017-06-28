@@ -69,7 +69,7 @@ class EditProfile extends React.Component {
     const userProfile = JSON.parse(localStorage.getItem('user_profile'));
     const { firstName, lastName, email } = userProfile;
     return (
-      <div className="row container center-align">
+      <div className="row container center-align white">
         <form className="col s12" onSubmit={this.updateProfile}>
           <div className="row ">
             <div className="input-field col s12 m6">

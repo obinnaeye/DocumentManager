@@ -240,6 +240,7 @@ export default class UserController {
         if (user) {
           const userRoleId = user.roleId;
           if (userRoleId === 1) {
+            console.log('roleId', userRoleId, user)
             ResponseHandler.send403(response, {
               message: 'Admin cannot be deleted!'
             });

@@ -1,3 +1,4 @@
+import findIndex from 'lodash/findIndex';
 import actionTypes from '../constants/actionTypes';
 
 const initialState = { documents: [], userDocuments: [] };
@@ -22,14 +23,16 @@ const documentReducer = (state = initialState, action) => {
   case actionTypes.GET_USER_DOCUMENTS_SUCCESS:
     return { ...state, userDocuments: action.userDocuments };
 
-  // case actionTypes.DELETE_DOCUMENT_SUCCESS: {
-  //   const index =
-  //     findIndex(state[0].userDocuments, { id: action.documentId });
-  //   const stateUserDocuments = state.userDocuments;
-  //   stateUserDocuments.splice(index, 1);
-  //   return { ...state, userDocuments: stateUserDocuments };
-  //   // remove the document also from state's documents ....
-  // }
+  case actionTypes.DELETE_DOCUMENT_SUCCESS: {
+    console.log(state.documents, 'state', action.documentId)
+    const index =
+      findIndex(state.documents, { id: action.documentId });
+    console.log(index);
+    const stateDocuments = state.documents;
+    stateDocuments.splice(index, 1);
+    console.log('docuemnts', stateDocuments, 'index', index);
+    return { ...state, documents: stateDocuments };
+  }
 
   // case actionTypes.UPDATE_DOCUMENT_SUCCESS:
   // //format well

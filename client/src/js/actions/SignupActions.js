@@ -24,8 +24,8 @@ export const createUser = user =>
         localStorage.setItem('user_profile', JSON.stringify(decodedUser));
         dispatch(createUserSuccess(response.data));
         Materialize.toast(
-          'Account created! Please login to continue',
-          5000
+          'Account created successfully!',
+          3000, 'green'
         );
       }, (error) => {
         dispatch(createUserFailure());

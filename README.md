@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/andela-onnenanya/document-manager.svg?branch=develop)](https://travis-ci.org/andela-onnenanya/document-manager)
+[![Code Climate](https://codeclimate.com/github/andela-onnenanya/document-manager/badges/gpa.svg)](https://codeclimate.com/github/andela-onnenanya/document-manager)
+[![Coverage Status](https://coveralls.io/repos/github/andela-onnenanya/document-manager/badge.svg)](https://coveralls.io/github/andela-onnenanya/document-manager)
+
 # Document-Manager
 A simple app used for creating, editing, storing and managing documents. You can access documents based on roles and user-type. It also offers API endpoints for creating and managing documents.
 

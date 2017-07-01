@@ -50,6 +50,7 @@ class EditDocument extends React.Component {
    * @returns {void}
    */
   componentWillReceiveProps(nextProps) {
+    console.log('props', nextProps)
     this.checkProps(nextProps);
   }
 
@@ -88,7 +89,7 @@ class EditDocument extends React.Component {
       }, 5000);
     } else {
       const { title, content, access } = nextProps.document;
-      CKEDITOR.instances.editor.setData(content);
+      CKEDITOR.instances.editor.insertHtml(content);
       $('#documentTitle').val(title);
       document.getElementById('documentTitle').focus();
       this.setState({
@@ -188,10 +189,10 @@ class EditDocument extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col s12 m10 center" >
+          <div className="col s12 m9 center" >
             <textarea name="editor" id="editor" value={this.state.content} />
           </div>
-          <div className="col s12 m2 edit-document-buttons">
+          <div className="col s12 m3 edit-document-buttons">
             <button
               className="btn waves-effect waves-light orange accent-3"
               onClick={this.save}

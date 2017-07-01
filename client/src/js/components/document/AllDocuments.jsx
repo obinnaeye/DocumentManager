@@ -108,6 +108,7 @@ class AllDocuments extends React.Component {
               { userId === ownerId || roleId === 1 ?
                 <span className="right">
                   <a
+                    className="my-zindex-high"
                     onClick={this.editDocument}
                     name={id}
                   >
@@ -116,7 +117,7 @@ class AllDocuments extends React.Component {
                       name={id}
                     >mode_edit</i></a>
                   <a
-                    className=" my-danger lighten-2"
+                    className=" my-danger lighten-2 my-zindex-high"
                     onClick={this.deleteDocument}
                     name={id}
                   >

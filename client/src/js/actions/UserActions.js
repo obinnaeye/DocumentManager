@@ -1,3 +1,4 @@
+/* global Materialize */
 import ajaxCall from 'axios';
 import actionTypes from '../constants/actionTypes';
 import setToken from '../helper/setTokenHelper';
@@ -18,6 +19,42 @@ export const searchUsers = (searchData) => {
       })
       .catch((error) => {
         dispatch(searchUserFailure(error));
+      });
+};
+
+export const getUserSuccess = user =>
+  ({ type: actionTypes.GET_USER_SUCCESS, user });
+
+export const getUserFailure = () =>
+  ({ type: actionTypes.GET_USER_FAILURE });
+
+export const getUser = (userId) => {
+  setToken();
+  return dispatch =>
+    ajaxCall.get(`/users/${userId}`)
+      .then((response) => {
+        dispatch(getUserSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(getUserFailure(error));
+      });
+};
+
+export const getUsersSuccess = users =>
+  ({ type: actionTypes.GET_USERS_SUCCESS, users });
+
+export const getUsersFailure = () =>
+  ({ type: actionTypes.GET_USERS_FAILURE });
+
+export const getUsers = () => {
+  setToken();
+  return dispatch =>
+    ajaxCall.get(`/users/`)
+      .then((response) => {
+        dispatch(getUsersSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(getUsersFailure(error));
       });
 };
 
@@ -74,5 +111,24 @@ export const logout = () => {
       })
       .catch((error) => {
         dispatch(logoutFailure(error));
+      });
+};
+
+export const deleteSuccess = userId =>
+  ({ type: actionTypes.DELETE_USER_SUCCESS, userId });
+
+export const deleteFailure = () =>
+  ({ type: actionTypes.DELETE_USER_FAILURE });
+
+export const deleteUser = (userId) => {
+  setToken();
+  return dispatch =>
+    ajaxCall.delete(`/users/${userId}`)
+      .then((response) => {
+        dispatch(deleteSuccess(userId));
+        Materialize.toast(response.data.message, 3000, 'green');
+      })
+      .catch((error) => {
+        Materialize.toast(error.message, 3000, 'red');
       });
 };

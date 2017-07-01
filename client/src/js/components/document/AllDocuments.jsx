@@ -1,4 +1,4 @@
-/* global jwt_decode */
+/* global $ */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -36,23 +36,28 @@ class AllDocuments extends React.Component {
     this.props.DocumentActions.getAllDocuments();
   }
 
-  componentDidUpdate() {
-    $('.collapsible').collapsible();
-  }
-
   /**
    * @param {object} nextProps
    * @returns {void}
    * @memberOf UserDocuments
    */
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.documents.length > 0) {
       this.setState({
         documents: nextProps.documents,
-        fetchingDocuments: nextProps.fetchingDocuments
+        fetchingDocuments: nextProps.fetchingDocuments,
+        count: nextProps.count
       });
     }
+  }
+
+  /**
+   * @return {void} Returns void
+   * @memberOf AllDocuments
+   */
+  componentDidUpdate() {
+    $('.collapsible').collapsible();
+    this.props = this.props;
   }
 
   /**
@@ -76,21 +81,8 @@ class AllDocuments extends React.Component {
   deleteDocument(e) {
     e.preventDefault();
     const id = e.target.getAttribute('name');
-    console.log('dele',id);
     this.props.DocumentActions.deleteDocument(id);
   }
-
-  /**
-   * @desc Opens a single document
-   * @param {object} e
-   * @returns {void}
-   * @memberOf UserDocuments
-   */
-  // viewCarousel(e) {
-  //   e.preventDefault();
-  //   const id = e.target.getAttribute('name');
-  //   this.props.history.push(`/dashboard/documents/${id}`);
-  // }
 
   /**
    * Formats document for rendering
@@ -104,8 +96,8 @@ class AllDocuments extends React.Component {
         const { id, title, content, createdAt, updatedAt, ownerId } = document;
         const parsedContent =
           <span dangerouslySetInnerHTML={{ __html: content }} />;
-        const { userId, roleId } = JSON.parse(localStorage.getItem('user_profile'));
-        console.log('ownerid', ownerId, userId, roleId);
+        const { userId, roleId } =
+        JSON.parse(localStorage.getItem('user_profile'));
         return (
           <li key={id}>
             <div className="collapsible-header">
@@ -116,7 +108,6 @@ class AllDocuments extends React.Component {
               { userId === ownerId || roleId === 1 ?
                 <span className="right">
                   <a
-                    className=" button-margin "
                     onClick={this.editDocument}
                     name={id}
                   >
@@ -125,7 +116,7 @@ class AllDocuments extends React.Component {
                       name={id}
                     >mode_edit</i></a>
                   <a
-                    className=" my-danger lighten-2 button-margin"
+                    className=" my-danger lighten-2"
                     onClick={this.deleteDocument}
                     name={id}
                   >
@@ -147,7 +138,7 @@ class AllDocuments extends React.Component {
    * @memberOf UserDocuments
    */
   render() {
-    const documents = this.props.documents;
+    const documents = this.state.documents;
 
     return (
       <div className="container width-85">
@@ -186,12 +177,15 @@ AllDocuments.propTypes = {
   documents: PropTypes.array.isRequired,
   DocumentActions: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  fetchingDocuments: PropTypes.bool.isRequired
+  fetchingDocuments: PropTypes.bool.isRequired,
+  count: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
   documents: state.documentReducer.documents,
-  fetchingDocuments: state.documentReducer.fetchingDocuments
+  fetchingDocuments: state.documentReducer.fetchingDocuments,
+  deletingDocument: state.documentReducer.deletingDocument,
+  count: state.documentReducer.count
 });
 
 const mapDispatchToProps = dispatch => ({

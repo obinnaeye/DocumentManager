@@ -24,19 +24,16 @@ const documentReducer = (state = initialState, action) => {
     return { ...state, userDocuments: action.userDocuments };
 
   case actionTypes.DELETE_DOCUMENT_SUCCESS: {
-    console.log(state.documents, 'state', action.documentId)
+    // Use unary plus to convert id string to number
     const index =
-      findIndex(state.documents, { id: action.documentId });
-    console.log(index);
+      findIndex(state.documents, { id: +(action.documentId) });
     const stateDocuments = state.documents;
     stateDocuments.splice(index, 1);
-    console.log('docuemnts', stateDocuments, 'index', index);
-    return { ...state, documents: stateDocuments };
+    return { ...state,
+      documents: stateDocuments,
+      deletingDocument: true,
+      count: state.count + 1 || 1 };
   }
-
-  // case actionTypes.UPDATE_DOCUMENT_SUCCESS:
-  // //format well
-  //   return { ...state, documents: action.updatedDocument };
   default:
     return state;
   }

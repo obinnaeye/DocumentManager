@@ -112,9 +112,8 @@ export const deleteDocument = (documentId) => {
   return dispatch =>
     ajaxCall.delete(`/documents/${documentId}`)
       .then((response) => {
-        Materialize.toast(response.data.message, 3000);
         dispatch(deleteSuccess(documentId));
-        return response.data.message; // check wether to delete
+        Materialize.toast(response.data.message, 3000, 'green');
       })
       .catch((error) => {
         Materialize.toast(error.message, 3000);

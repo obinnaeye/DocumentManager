@@ -11,6 +11,13 @@ export default (ComposedConmponent) => {
    * @extends {React.Component}
    */
   class Authenticate extends React.Component {
+
+    /**
+     * Creates an instance of Authenticate.
+     * @param {object} props
+     * @param {object} context
+     * @memberOf Authenticate
+     */
     constructor(props, context) {
       super(props, context);
       this.state = {
@@ -39,7 +46,8 @@ export default (ComposedConmponent) => {
     render() {
       return (
         <span>
-          { this.state.authenticated || this.state.signingIn || this.state.createdUser
+          { this.state.authenticated || this.state.signingIn
+            || this.state.createdUser
              ? <ComposedConmponent {...this.props} /> :
              <Redirect to="/signin" />}
         </span>

@@ -56,7 +56,8 @@ describe('Users:', () => {
       .send(invalidNewUser)
       .end((error, response) => {
         expect(response.status).to.equal(200);
-        expect(response.body.message).to.equal('You have successfully signed up!');
+        expect(response.body.message)
+        .to.equal('You have successfully signed up!');
         done();
       });
     });
@@ -759,15 +760,6 @@ describe('Users:', () => {
         done();
       });
     });
-
-    // it('should not allow deletion of admin User', (done) => {
-    //   client.delete(`/users/${1}`)
-    //   .set({ 'xsrf-token': currentAdminUser.token })
-    //   .end((error, response) => {
-    //     expect(response.status).to.equal(403);
-    //     done();
-    //   });
-    // });
 
     it('should not allow deletion of nonexisting User', (done) => {
       client.delete('/users/911911')

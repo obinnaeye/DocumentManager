@@ -178,7 +178,7 @@ class AllUsers extends React.Component {
       <div className="container width-85">
         <div className="row">
           <div className="col s12 m10 offset-m1">
-            <p className="col s12 center-align white my-top-border"> <strong>
+            <p className="col s12 center-align white"> <strong>
             All Users</strong> </p>
             <div className="row white my-top-margin">
               <div className="col s4 m2 offset-m2 white">

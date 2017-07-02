@@ -83,7 +83,7 @@ class UserDocuments extends React.Component {
         return (
           <div key={id} className="myCover" >
             <button
-              className="btn-floating waves-effect waves-light orange"
+              className="btn-floating waves-effect waves-light"
               onClick={this.viewCarousel}
               name={id}
             ><i className="material-icons" name={id}>pageview</i></button>

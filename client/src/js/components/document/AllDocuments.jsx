@@ -1,4 +1,4 @@
-/* global $ */
+/* global $ Materialize */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -20,12 +20,16 @@ class AllDocuments extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      documents: this.props.documents
+      documents: this.props.documents,
+      offset: 0,
+      limit: 10
     };
 
     this.renderedDocuments = this.renderedDocuments.bind(this);
-    this.editDocument = this.editDocument.bind(this);
+    this.viewDocument = this.viewDocument.bind(this);
     this.deleteDocument = this.deleteDocument.bind(this);
+    this.getDocuments = this.getDocuments.bind(this);
+    this.inputChange = this.inputChange.bind(this);
   }
 
   /**
@@ -33,7 +37,7 @@ class AllDocuments extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    this.props.DocumentActions.getAllDocuments();
+    this.getDocuments();
   }
 
   /**
@@ -61,15 +65,44 @@ class AllDocuments extends React.Component {
   }
 
   /**
-   * @desc Redirects to edit page using document id
+   * @desc - Method that gets all document instances
+   * @return {void} - Returns void
+   * @memberOf AllDocuments
+   */
+  getDocuments() {
+    const { offset, limit } = this.state;
+    this.props.DocumentActions.getAllDocuments(offset, limit);
+  }
+
+  /**
+   * @desc - Method that handles change events
+   * @param {objcet} e - event target
+   * @return {void} - Returns void
+   * @memberOf AllUsers
+   */
+  inputChange(e) {
+    e.preventDefault();
+    const value = e.target.value;
+    const name = e.target.getAttribute('id');
+    if (value < 0) {
+      Materialize.toast(`${name} can not be negative`, 3000, 'red');
+      return;
+    }
+    this.setState({
+      [name]: value
+    }, this.getDocuments);
+  }
+
+  /**
+   * @desc Redirects to view page using document id
    * @param {object} e
    * @memberOf DocumentView
    * @returns {void}
    */
-  editDocument(e) {
+  viewDocument(e) {
     e.preventDefault();
     const id = e.target.getAttribute('name');
-    this.props.history.push(`/dashboard/edit-document/${id}`);
+    this.props.history.push(`/dashboard/documents/${id}`);
   }
 
   /**
@@ -109,13 +142,13 @@ class AllDocuments extends React.Component {
                 <span className="right">
                   <a
                     className="my-zindex-high"
-                    onClick={this.editDocument}
+                    onClick={this.viewDocument}
                     name={id}
                   >
                     <i
                       className="material-icons"
                       name={id}
-                    >mode_edit</i></a>
+                    >pageview</i></a>
                   <a
                     className=" my-danger lighten-2 my-zindex-high"
                     onClick={this.deleteDocument}
@@ -147,6 +180,30 @@ class AllDocuments extends React.Component {
           <div className="col s12 m10 offset-m1">
             <p className="col s12 center-align white"> <strong>
             All Documents</strong> </p>
+            <div className="row white my-top-margin">
+              <div className="col s4 m2 offset-m2 white">
+                <p>Pagination Tools:</p> </div>
+              <div className="input-field col m3 s4 white">
+                <input
+                  id="limit"
+                  type="number"
+                  className="validate"
+                  value={this.state.limit}
+                  onChange={this.inputChange}
+                />
+                <label htmlFor="limit" className="active"> List limit </label>
+              </div>
+              <div className="input-field col m3 s4 white">
+                <input
+                  id="offset"
+                  type="number"
+                  className="validate"
+                  value={this.state.offset}
+                  onChange={this.inputChange}
+                />
+                <label htmlFor="offset" className="active"> List offset </label>
+              </div>
+            </div>
             { documents.length > 0 ?
               <div className=" scroll-a row col s12">
                 <ul className="collapsible" data-collapsible="accordion">

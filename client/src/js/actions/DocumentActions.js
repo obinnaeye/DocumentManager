@@ -70,10 +70,10 @@ export const getUserDocuments = (userId) => {
       });
 };
 
-export const getAllDocuments = () => {
+export const getAllDocuments = (offset, limit) => {
   setToken();
   return dispatch =>
-    ajaxCall.get('/documents/')
+    ajaxCall.get(`/documents/?limit=${limit}&offset=${offset}`)
       .then((response) => {
         dispatch(getDocumentsSuccess(response.data));
       })

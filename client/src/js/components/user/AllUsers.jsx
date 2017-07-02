@@ -1,139 +1,166 @@
-/* global */
+/* global $ Materialize */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../../actions/UserActions';
 
 /**
- * @class UserDocuments
+ * @class AllUsers
  * @extends {React.Component}
  */
 class AllUsers extends React.Component {
 
   /**
-   * Creates an instance of UserDocuments.
+   * Creates an instance of AllUsers.
    * @param {object} props
    * @param {object} context
    * @returns {void}
-   * @memberOf UserDocuments
+   * @memberOf AllUsers
    */
   constructor(props, context) {
     super(props, context);
     this.state = {
-      documents: this.props.documents
+      users: this.props.users,
+      offset: 0,
+      limit: 10
     };
 
-    this.renderedDocuments = this.renderedDocuments.bind(this);
-    this.editDocument = this.editDocument.bind(this);
-    this.deleteDocument = this.deleteDocument.bind(this);
+    this.renderedUsers = this.renderedUsers.bind(this);
+    this.editUser = this.editUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.inputChange = this.inputChange.bind(this);
+    this.getUsers = this.getUsers.bind(this);
   }
 
   /**
-   * @memberOf UserDocuments
+   * @memberOf AllUsers
    * @returns {void}
    */
   componentDidMount() {
-    this.props.DocumentActions.getAllDocuments();
-  }
-
-  componentDidUpdate() {
-    $('.collapsible').collapsible();
+    this.getUsers();
   }
 
   /**
    * @param {object} nextProps
    * @returns {void}
-   * @memberOf UserDocuments
+   * @memberOf AllUsers
    */
   componentWillReceiveProps(nextProps) {
-    if (nextProps.documents.length > 0) {
+    if (nextProps.users.length > 0) {
       this.setState({
-        documents: nextProps.documents,
-        fetchingDocuments: nextProps.fetchingDocuments
+        users: nextProps.users,
+        fetchingUsers: nextProps.fetchingUsers
       });
     }
   }
 
   /**
-   * @desc Redirects to edit page using document id
-   * @param {object} e
-   * @memberOf DocumentView
-   * @returns {void}
+   * @return {void} Returns void
+   * @memberOf AllDocuments
    */
-  editDocument(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
-    this.props.history.push(`/dashboard/edit-document/${id}`);
+  componentDidUpdate() {
+    $('.collapsible').collapsible();
+    this.props = this.props;
   }
 
   /**
-   * @desc Delets a docuement and redirects to documents page
-   * @param {object} e
-   * @memberOf DocumentView
-   * @returns {void}
+   * @desc - Method that gets all user instances
+   * @return {void} - Returns void
+   * @memberOf AllUsers
    */
-  deleteDocument(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
-    console.log('dele',id);
-    this.props.UserActions.deleteDocument(id);
+  getUsers() {
+    const { offset, limit } = this.state;
+    this.props.UserActions.getUsers(offset, limit);
   }
 
   /**
-   * @desc Opens a single document
+   * @desc Redirects to edit page using user id
    * @param {object} e
+   * @memberOf AllUsers
    * @returns {void}
-   * @memberOf UserDocuments
    */
-  // viewCarousel(e) {
-  //   e.preventDefault();
-  //   const id = e.target.getAttribute('name');
-  //   this.props.history.push(`/dashboard/documents/${id}`);
-  // }
+  editUser(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.history.push(`/dashboard/edit-user/${id}`);
+  }
 
   /**
-   * Formats document for rendering
+   * @desc Delets a docuement and redirects to users page
+   * @param {object} e
+   * @memberOf AllUsers
+   * @returns {void}
+   */
+  deleteUser(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.UserActions.deleteUser(id);
+  }
+
+  /**
+   * @desc - Method that handles change events
+   * @param {objcet} e - event target
+   * @return {void} - Returns void
+   * @memberOf AllUsers
+   */
+  inputChange(e) {
+    e.preventDefault();
+    const value = e.target.value;
+    const name = e.target.getAttribute('id');
+    if (value < 0) {
+      Materialize.toast(`${name} can not be negative`, 3000, 'red');
+      return;
+    }
+    this.setState({
+      [name]: value
+    }, this.getUsers);
+  }
+
+  /**
+   * Formats user for rendering
    * @returns {element} DOM element
-   * @memberOf SearchPage
+   * @memberOf AllUsers
    */
-  renderedDocuments() {
-    if (this.state.fetchingDocuments) {
-      const documents = this.state.documents;
-      const render = documents.map((document) => {
-        const { id, title, content, createdAt, updatedAt, ownerId } = document;
-        const parsedContent =
-          <span dangerouslySetInnerHTML={{ __html: content }} />;
-        const { userId, roleId } = JSON.parse(localStorage.getItem('user_profile'));
+  renderedUsers() {
+    if (this.state.fetchingUsers) {
+      const users = this.state.users;
+      const { roleId } =
+        JSON.parse(localStorage.getItem('user_profile'));
+      const render = users.map((user) => {
+        const { firstName, lastName, email, userId } = user;
         return (
-          <li key={id}>
+          <li key={userId}>
             <div className="collapsible-header">
-              <i className="material-icons orange">library_books</i>
-              <span><b>Title: </b> <em>{title} </em> ||</span>
-              <span> <b>Created:</b> <em>{createdAt}</em> ||</span>
-              <span> <b>Modified:</b> <em>{updatedAt}</em> </span>
-              { userId === ownerId || roleId === 1 ?
+              <i className="material-icons orange">person</i>
+              <span><b>First Name: </b>
+                <em>{firstName}</em></span>
+            </div>
+            <div className="collapsible-body white">
+              <span> <b>FirstName:</b> {firstName} </span><br />
+              <span> <b>LastName:</b> {lastName} </span><br />
+              <span> <b>Email:</b> {email} </span><br />
+              { roleId === 2 ?
                 <span className="right">
                   <a
-                    className=" button-margin "
-                    onClick={this.editDocument}
-                    name={id}
+                    className="my-zindex-high button-margin"
+                    onClick={this.editUser}
+                    name={userId}
                   >
                     <i
                       className="material-icons"
-                      name={id}
+                      name={userId}
                     >mode_edit</i></a>
                   <a
-                    className=" my-danger lighten-2 button-margin"
-                    onClick={this.deleteDocument}
-                    name={id}
+                    className="my-danger lighten-2 my-zindex-high button-margin"
+                    onClick={this.deleteUser}
+                    name={userId}
                   >
                     <i
                       className="material-icons"
-                      name={id}
+                      name={userId}
                     >delete</i></a>
                 </span> : ''}
             </div>
-            <div className="collapsible-body white">{parsedContent}</div>
           </li>);
       });
       return render;
@@ -142,33 +169,56 @@ class AllUsers extends React.Component {
 
   /**
    * @returns {element} DOM element div
-   * @memberOf UserDocuments
+   * @memberOf AllUsers
    */
   render() {
-    const documents = this.props.documents;
+    const users = this.props.users;
 
     return (
       <div className="container width-85">
         <div className="row">
           <div className="col s12 m10 offset-m1">
             <p className="col s12 center-align white"> <strong>
-            All Documents</strong> </p>
-            { documents.length > 0 ?
+            All Users</strong> </p>
+            <div className="row white my-top-margin">
+              <div className="col s4 m2 offset-m2 white">
+                <p>Pagination Tools:</p> </div>
+              <div className="input-field col m3 s4 white">
+                <input
+                  id="limit"
+                  type="number"
+                  className="validate"
+                  value={this.state.limit}
+                  onChange={this.inputChange}
+                />
+                <label htmlFor="limit" className="active"> List limit </label>
+              </div>
+              <div className="input-field col m3 s4 white">
+                <input
+                  id="offset"
+                  type="number"
+                  className="validate"
+                  value={this.state.offset}
+                  onChange={this.inputChange}
+                />
+                <label htmlFor="offset" className="active"> List offset </label>
+              </div>
+            </div>
+            { users.length > 0 ?
               <div className=" scroll-a row col s12">
                 <ul className="collapsible" data-collapsible="accordion">
-                  {this.renderedDocuments()}
+                  {this.renderedUsers()}
                 </ul>
               </div>
                 :
               <div className="row">
                 <div className="col offset-m3 s12 m6">
                   <p className="white center-align">
-                    Your Book Shelf is EMPTY, Go to
-                    Dashboard and Create One Now!</p>
+                    No Users found, Try with different offset or limit!</p>
                   <img
                     className="empty"
                     src="/public/img/empty.jpg"
-                    alt="No Document found"
+                    alt="No User found"
                   />
                 </div>
               </div>
@@ -181,15 +231,15 @@ class AllUsers extends React.Component {
 }
 
 AllUsers.propTypes = {
-  documents: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
   UserActions: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  fetchingDocuments: PropTypes.bool.isRequired
+  fetchingUsers: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
-  documents: state.documentReducer.documents,
-  fetchingDocuments: state.documentReducer.fetchingDocuments
+  users: state.userReducers.users,
+  fetchingUsers: state.userReducers.fetchingUsers
 });
 
 const mapDispatchToProps = dispatch => ({

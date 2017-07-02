@@ -23,6 +23,11 @@ class Signup extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
+  /**
+   * @param {object} nextProps - Next props received
+   * @return {void} - Returns void
+   * @memberOf Signup
+   */
   componentWillReceiveProps(nextProps) {
     if (nextProps.createdUser) {
       this.props.history.push('/dashboard');
@@ -165,6 +170,8 @@ class Signup extends React.Component {
 
 Signup.propTypes = {
   SignupActions: PropTypes.object.isRequired,
+  createdUser: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

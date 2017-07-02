@@ -88,9 +88,7 @@ class EditDocument extends React.Component {
       }, 5000);
     } else {
       const { title, content, access } = nextProps.document;
-      const sentenceCaseAccess =
-        access.substr(0, 1).toUpperCase() + access.substr(1);
-      CKEDITOR.instances.editor.setData(content);
+      CKEDITOR.instances.editor.insertHtml(content);
       $('#documentTitle').val(title);
       document.getElementById('documentTitle').focus();
       this.setState({
@@ -121,7 +119,6 @@ class EditDocument extends React.Component {
   save() {
     const title = $('#documentTitle').val() || this.state.title;
     const content = CKEDITOR.instances.editor.getData() || this.state.content;
-    const sentenceCaseAccess = $('#access').val() || this.state.access;
     const access = this.state.access;
     if (!title) {
       Materialize.toast(
@@ -170,7 +167,6 @@ class EditDocument extends React.Component {
    */
   render() {
     const { access } = this.state;
-    console.log('access',access)
     return (
       <div className="row center-align edit-document-container white">
         <div className="row center-align">
@@ -192,10 +188,10 @@ class EditDocument extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col s12 m10 center" >
+          <div className="col s12 m9 center" >
             <textarea name="editor" id="editor" value={this.state.content} />
           </div>
-          <div className="col s12 m2 edit-document-buttons">
+          <div className="col s12 m3 edit-document-buttons">
             <button
               className="btn waves-effect waves-light orange accent-3"
               onClick={this.save}

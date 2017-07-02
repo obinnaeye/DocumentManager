@@ -51,6 +51,14 @@ class DocumentView extends React.Component {
   }
 
   /**
+   * @return {void} Returns void
+   * @memberOf AllDocuments
+   */
+  componentDidUpdate() {
+    this.props = this.props;
+  }
+
+  /**
    * @desc Redirects to edit page using document id
    * @param {object} e
    * @memberOf DocumentView

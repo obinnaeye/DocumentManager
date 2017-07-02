@@ -25,13 +25,16 @@ class SearchPage extends React.Component {
       user: [],
       fetchingDocuments: false,
       fetchingUsers: false,
-      searching: false
+      searching: false,
+      limit: 10,
+      offset: 0
     };
 
     this.renderedDocuments = this.renderedDocuments.bind(this);
     this.combinedRendered = this.combinedRendered.bind(this);
     this.renderedUsers = this.renderedUsers.bind(this);
     this.search = this.search.bind(this);
+    this.inputChange = this.inputChange.bind(this);
   }
 
   /**
@@ -66,8 +69,7 @@ class SearchPage extends React.Component {
   search() {
     const search = $('#search').val();
     const searchIn = $('#searchSelect').val();
-    const limit = $('#limit').val();
-    const offset = $('#offset').val();
+    const { offset, limit } = this.state;
     const searchData = {
       q: search,
       limit,
@@ -105,6 +107,26 @@ class SearchPage extends React.Component {
       return this.renderedDocuments();
     }
     return this.renderedUsers();
+  }
+
+  /**
+   * @desc - Method that handles change events
+   * @param {objcet} e - event target
+   * @return {void} - Returns void
+   * @memberOf AllUsers
+   */
+  inputChange(e) {
+    e.preventDefault();
+    const value = e.target.value;
+    const name = e.target.getAttribute('id');
+    if (value < 0) {
+      Materialize.toast(`${name} can not be negative`, 3000, 'red');
+      return;
+    }
+    this.setState({
+      [name]: value
+    },
+    this.search);
   }
 
   /**
@@ -195,12 +217,24 @@ class SearchPage extends React.Component {
                 <label htmlFor="search">Search</label>
               </div>
               <div className="input-field col m3 s4">
-                <input id="limit" type="number" className="validate" />
-                <label htmlFor="limit"> Search limit </label>
+                <input
+                  id="limit"
+                  type="number"
+                  className="validate"
+                  value={this.state.limit}
+                  onChange={this.inputChange}
+                />
+                <label htmlFor="limit" className="active">Search limit</label>
               </div>
               <div className="input-field col m3 s4">
-                <input id="offset" type="number" className="validate" />
-                <label htmlFor="offset"> Search offset </label>
+                <input
+                  id="offset"
+                  type="number"
+                  className="validate"
+                  value={this.state.offset}
+                  onChange={this.inputChange}
+                />
+                <label htmlFor="offset" className="active">Search offset</label>
               </div>
             </div>
           </div>

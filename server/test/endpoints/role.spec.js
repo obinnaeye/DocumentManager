@@ -1,3 +1,4 @@
+/* global before after */
 import supertest from 'supertest';
 import { expect } from 'chai';
 import database from '../../models';

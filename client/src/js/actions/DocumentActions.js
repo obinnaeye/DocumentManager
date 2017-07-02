@@ -70,10 +70,10 @@ export const getUserDocuments = (userId) => {
       });
 };
 
-export const getAllDocuments = () => {
+export const getAllDocuments = (offset, limit) => {
   setToken();
   return dispatch =>
-    ajaxCall.get('/documents/')
+    ajaxCall.get(`/documents/?limit=${limit}&offset=${offset}`)
       .then((response) => {
         dispatch(getDocumentsSuccess(response.data));
       })
@@ -112,9 +112,8 @@ export const deleteDocument = (documentId) => {
   return dispatch =>
     ajaxCall.delete(`/documents/${documentId}`)
       .then((response) => {
-        Materialize.toast(response.data.message, 3000);
         dispatch(deleteSuccess(documentId));
-        return response.data.message; // check wether to delete
+        Materialize.toast(response.data.message, 3000, 'green');
       })
       .catch((error) => {
         Materialize.toast(error.message, 3000);

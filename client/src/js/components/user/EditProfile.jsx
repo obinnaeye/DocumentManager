@@ -17,8 +17,37 @@ class EditProfile extends React.Component {
    */
   constructor(props, context) {
     super(props, context);
-    this.state = {};
+    this.state = {
+      user: props.user || JSON.parse(localStorage.getItem('user_profile'))
+    };
     this.updateProfile = this.updateProfile.bind(this);
+  }
+
+  /**
+   * @return {void} Returns void
+   * @memberOf EditProfile
+   */
+  componentWillMount() {
+    const { roleId } = JSON.parse(localStorage.getItem('user_profile'));
+    if (this.props.match.params.id && roleId !== 2) {
+      Materialize.toast(
+        `You do not have required permission to access this page,
+        redirecting...`, 5000, 'red');
+      setTimeout(() => {
+        this.props.history.push('/dashboard');
+      }, 3000);
+    }
+  }
+
+  /**
+   * @return {void} Returns void
+   * @memberOf EditProfile
+   */
+  componentDidMount() {
+    if (this.props.match.params.id) {
+      const userId = this.props.match.params.id;
+      this.props.UserActions.getUser(userId);
+    }
   }
 
   /**
@@ -27,6 +56,13 @@ class EditProfile extends React.Component {
    * @memberOf EditProfile
    */
   componentWillReceiveProps(nextProps) {
+    if (this.props.match.params.id && nextProps.fetchingUser) {
+      this.setState({
+        user: nextProps.user
+      }, () => {
+      });
+      return;
+    }
     if (!nextProps.updatingUser && !this.props.updatingUser) {
       Materialize.toast(
         'Profile update failed, please try again later!', 5000, 'red');
@@ -39,7 +75,8 @@ class EditProfile extends React.Component {
    * @memberOf EditProfile
    */
   updateProfile() {
-    const { userId } = JSON.parse(localStorage.getItem('user_profile'));
+    const { userId } = this.props.match.params.id ||
+    JSON.parse(localStorage.getItem('user_profile'));
     const password = $('#password').val();
     const firstName = $('#first_name').val();
     const lastName = $('#last_name').val();
@@ -66,8 +103,7 @@ class EditProfile extends React.Component {
    * @memberOf EditProfile
    */
   render() {
-    const userProfile = JSON.parse(localStorage.getItem('user_profile'));
-    const { firstName, lastName, email } = userProfile;
+    const { firstName, lastName, email } = this.state.user;
     return (
       <div className="row container center-align white">
         <form className="col s12" onSubmit={this.updateProfile}>
@@ -80,7 +116,8 @@ class EditProfile extends React.Component {
                 type="text"
                 className="validate"
               />
-              <label htmlFor="disabled" className="active">User email is not editable!</label>
+              <label htmlFor="disabled" className="active">
+              User email is not editable!</label>
             </div>
             <div className="input-field col s12 m6">
               <input id="password" type="password" className="validate" />
@@ -90,7 +127,7 @@ class EditProfile extends React.Component {
             </div>
             <div className="input-field col s12 m6">
               <input
-                defaultValue={firstName}
+                value={firstName}
                 id="first_name"
                 type="text"
                 className="validate"
@@ -99,14 +136,18 @@ class EditProfile extends React.Component {
             </div>
             <div className="input-field col s12 m6">
               <input
-                defaultValue={lastName}
+                value={lastName}
                 id="last_name"
                 type="text"
                 className="validate"
               />
               <label className="active" htmlFor="last_name">Last Name</label>
             </div>
-            <input className="btn orange" type="submit" value="Update Profile" />
+            <input
+              className="btn orange"
+              type="submit"
+              value="Update Profile"
+            />
           </div>
         </form>
       </div>
@@ -115,16 +156,23 @@ class EditProfile extends React.Component {
 }
 
 EditProfile.defaultProps = {
-  updatingUser: false
+  updatingUser: false,
+  fetchingUser: false
 };
 
 EditProfile.propTypes = {
   updatingUser: PropTypes.bool,
+  fetchingUser: PropTypes.bool,
   UserActions: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  updatingUser: state.userReducers.updatingUser
+  updatingUser: state.userReducers.updatingUser,
+  user: state.userReducers.user,
+  fetchingUser: state.userReducers.fetchingUser
 });
 
 const mapDispatchToProps = dispatch => ({

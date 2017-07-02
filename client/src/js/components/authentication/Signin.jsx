@@ -1,4 +1,4 @@
-/* global Materialize */
+/* global Materialize jwt_decode */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -37,6 +37,11 @@ class Signin extends React.Component {
       this.props.UserActions.validateUser(userId);
     }
   }
+  /**
+   * @param {object} nextProps - Next props received
+   * @return {void} - Returns void
+   * @memberOf Signin
+   */
   componentWillReceiveProps(nextProps) {
     const { authenticated, signingIn, createdUser } = nextProps;
     if (authenticated || signingIn || createdUser) {

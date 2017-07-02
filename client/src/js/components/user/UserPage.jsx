@@ -8,6 +8,7 @@ import EditDocument from '../document/EditDocument';
 import SearchPage from './SearchPage';
 import EditProfile from './EditProfile';
 import AllDocuments from '../document/AllDocuments';
+import AllUsers from '../user/AllUsers';
 import PageAccessHelper from '../../helper/PageAccessHelper';
 
 const UserPage = () =>
@@ -48,6 +49,16 @@ const UserPage = () =>
         exact
         path="/dashboard/all-documents"
         component={PageAccessHelper(AllDocuments)}
+      />
+      <Route
+        exact
+        path="/dashboard/all-users"
+        component={PageAccessHelper(AllUsers)}
+      />
+      <Route
+        exact
+        path="/dashboard/edit-user/:id"
+        component={PageAccessHelper(EditProfile)}
       />
     </div>
   );

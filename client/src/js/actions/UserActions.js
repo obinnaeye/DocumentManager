@@ -46,10 +46,10 @@ export const getUsersSuccess = users =>
 export const getUsersFailure = () =>
   ({ type: actionTypes.GET_USERS_FAILURE });
 
-export const getUsers = () => {
+export const getUsers = (offset, limit) => {
   setToken();
   return dispatch =>
-    ajaxCall.get(`/users/`)
+    ajaxCall.get(`/users/?limit=${limit}&offset=${offset}`)
       .then((response) => {
         dispatch(getUsersSuccess(response.data));
       })

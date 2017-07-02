@@ -1,4 +1,4 @@
-/* global $ */
+/* global $ Materialize */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -20,12 +20,16 @@ class AllUsers extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      users: this.props.users
+      users: this.props.users,
+      offset: 0,
+      limit: 10
     };
 
     this.renderedUsers = this.renderedUsers.bind(this);
     this.editUser = this.editUser.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
+    this.inputChange = this.inputChange.bind(this);
+    this.getUsers = this.getUsers.bind(this);
   }
 
   /**
@@ -33,7 +37,7 @@ class AllUsers extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    this.props.UserActions.getUsers();
+    this.getUsers();
   }
 
   /**
@@ -60,6 +64,16 @@ class AllUsers extends React.Component {
   }
 
   /**
+   * @desc - Method that gets all user instances
+   * @return {void} - Returns void
+   * @memberOf AllUsers
+   */
+  getUsers() {
+    const { offset, limit } = this.state;
+    this.props.UserActions.getUsers(offset, limit);
+  }
+
+  /**
    * @desc Redirects to edit page using user id
    * @param {object} e
    * @memberOf AllUsers
@@ -81,6 +95,25 @@ class AllUsers extends React.Component {
     e.preventDefault();
     const id = e.target.getAttribute('name');
     this.props.UserActions.deleteUser(id);
+  }
+
+  /**
+   * @desc - Method that handles change events
+   * @param {objcet} e - event target
+   * @return {void} - Returns void
+   * @memberOf AllUsers
+   */
+  inputChange(e) {
+    e.preventDefault();
+    const value = e.target.value;
+    const name = e.target.getAttribute('id');
+    if (value < 0) {
+      Materialize.toast(`${name} can not be negative`, 3000, 'red');
+      return;
+    }
+    this.setState({
+      [name]: value
+    }, this.getUsers);
   }
 
   /**
@@ -145,8 +178,32 @@ class AllUsers extends React.Component {
       <div className="container width-85">
         <div className="row">
           <div className="col s12 m10 offset-m1">
-            <p className="col s12 center-align white"> <strong>
+            <p className="col s12 center-align white my-top-border"> <strong>
             All Users</strong> </p>
+            <div className="row white my-top-margin">
+              <div className="col s4 m2 offset-m2 white">
+                <p>Pagination Tools:</p> </div>
+              <div className="input-field col m3 s4 white">
+                <input
+                  id="limit"
+                  type="number"
+                  className="validate"
+                  value={this.state.limit}
+                  onChange={this.inputChange}
+                />
+                <label htmlFor="limit" className="active"> List limit </label>
+              </div>
+              <div className="input-field col m3 s4 white">
+                <input
+                  id="offset"
+                  type="number"
+                  className="validate"
+                  value={this.state.offset}
+                  onChange={this.inputChange}
+                />
+                <label htmlFor="offset" className="active"> List offset </label>
+              </div>
+            </div>
             { users.length > 0 ?
               <div className=" scroll-a row col s12">
                 <ul className="collapsible" data-collapsible="accordion">
@@ -157,8 +214,7 @@ class AllUsers extends React.Component {
               <div className="row">
                 <div className="col offset-m3 s12 m6">
                   <p className="white center-align">
-                    Your Book Shelf is EMPTY, Go to
-                    Dashboard and Create One Now!</p>
+                    No Users found, Try with different offset or limit!</p>
                   <img
                     className="empty"
                     src="/public/img/empty.jpg"

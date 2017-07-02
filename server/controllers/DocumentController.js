@@ -155,7 +155,6 @@ class DocumentController {
       })
       .then((foundDocuments) => {
         if (foundDocuments.rows.length > 0) {
-          console.log(foundDocuments)
           ResponseHandler.send200(
             response,
             foundDocuments.rows
@@ -175,11 +174,9 @@ class DocumentController {
    * @memberof DocumentController
    */
   static getUserDocuments(request, response) {
-    console.log('hss', request.params.id)
     const id = Number(request.params.id);
     const ownerId = request.decoded.userId;
     if (id !== ownerId && request.decoded.roleId !== 1) {
-      console.log('alaa', id, ownerId)
       ResponseHandler.send400(
         response,
         { message: 'User ID does not match id in uri params' }

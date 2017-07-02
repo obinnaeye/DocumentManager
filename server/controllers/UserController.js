@@ -82,11 +82,10 @@ export default class UserController {
                   userDetails
                 );
               }).catch((error) => {
-                //console.log('errors', error.errors)
+                ErrorHandler.handleRequestError(response, error);
               });
             })
             .catch((error) => {
-              //console.log(error)
               ErrorHandler.handleRequestError(response, error);
             });
         }
@@ -240,7 +239,6 @@ export default class UserController {
         if (user) {
           const userRoleId = user.roleId;
           if (userRoleId === 1) {
-            console.log('roleId', userRoleId, user)
             ResponseHandler.send403(response, {
               message: 'Admin cannot be deleted!'
             });

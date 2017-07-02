@@ -50,7 +50,6 @@ class EditDocument extends React.Component {
    * @returns {void}
    */
   componentWillReceiveProps(nextProps) {
-    console.log('props', nextProps)
     this.checkProps(nextProps);
   }
 

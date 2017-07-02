@@ -29,7 +29,7 @@ class EditProfile extends React.Component {
    */
   componentWillMount() {
     const { roleId } = JSON.parse(localStorage.getItem('user_profile'));
-    if (this.props.match.params.id && roleId !== 2) {
+    if (this.props.match.params.id && roleId !== 1) {
       Materialize.toast(
         `You do not have required permission to access this page,
         redirecting...`, 5000, 'red');

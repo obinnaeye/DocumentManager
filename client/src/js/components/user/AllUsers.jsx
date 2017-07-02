@@ -139,7 +139,7 @@ class AllUsers extends React.Component {
               <span> <b>FirstName:</b> {firstName} </span><br />
               <span> <b>LastName:</b> {lastName} </span><br />
               <span> <b>Email:</b> {email} </span><br />
-              { roleId === 2 ?
+              { roleId === 1 ?
                 <span className="right">
                   <a
                     className="my-zindex-high button-margin"

@@ -58,7 +58,9 @@ export default (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: (models) => {
-        User.belongsTo(models.Role, { foreignKey: 'roleId' });
+        User.belongsTo(models.Role,
+          { foreignKey: 'roleId'
+          });
         User.hasMany(models.Document, { foreignKey: 'ownerId' });
       }
     },

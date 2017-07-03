@@ -49,7 +49,8 @@ class AllUsers extends React.Component {
     if (nextProps.users.length > 0) {
       this.setState({
         users: nextProps.users,
-        fetchingUsers: nextProps.fetchingUsers
+        fetchingUsers: nextProps.fetchingUsers,
+        count: nextProps.count
       });
     }
   }
@@ -147,7 +148,7 @@ class AllUsers extends React.Component {
                     name={userId}
                   >
                     <i
-                      className="material-icons"
+                      className="material-icons my-pointer"
                       name={userId}
                     >mode_edit</i></a>
                   <a
@@ -156,7 +157,7 @@ class AllUsers extends React.Component {
                     name={userId}
                   >
                     <i
-                      className="material-icons"
+                      className="material-icons my-pointer"
                       name={userId}
                     >delete</i></a>
                 </span> : ''}
@@ -234,12 +235,14 @@ AllUsers.propTypes = {
   users: PropTypes.array.isRequired,
   UserActions: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  fetchingUsers: PropTypes.bool.isRequired
+  fetchingUsers: PropTypes.bool.isRequired,
+  count: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
   users: state.userReducers.users,
-  fetchingUsers: state.userReducers.fetchingUsers
+  fetchingUsers: state.userReducers.fetchingUsers,
+  count: state.userReducers.count
 });
 
 const mapDispatchToProps = dispatch => ({

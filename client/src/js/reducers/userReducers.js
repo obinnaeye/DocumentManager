@@ -45,10 +45,10 @@ const userReducers = (state = initialState, action) => {
 
   case actionTypes.DELETE_USER_SUCCESS: {
     // Use unary plus to convert id string to number
-    const index =
-      findIndex(state.users, { id: +(action.userId) });
+    const index = findIndex(state.users, { userId: +(action.userId) });
     const stateUsers = state.users;
     stateUsers.splice(index, 1);
+    console.log(index, action.userId, "index here", stateUsers);
     return { ...state,
       users: stateUsers,
       deletingUsers: true,

@@ -48,7 +48,6 @@ const userReducers = (state = initialState, action) => {
     const index = findIndex(state.users, { userId: +(action.userId) });
     const stateUsers = state.users;
     stateUsers.splice(index, 1);
-    console.log(index, action.userId, "index here", stateUsers);
     return { ...state,
       users: stateUsers,
       deletingUsers: true,

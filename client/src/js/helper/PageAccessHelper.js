@@ -1,6 +1,6 @@
 /* global jwt_decode */
 import React, { PropTypes } from 'react';
-import { Redirect } from 'react-router-dom';
+//import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../actions/UserActions';
@@ -40,6 +40,22 @@ export default (ComposedConmponent) => {
     }
 
     /**
+   * @param {object} nextProps - Next props received
+   * @return {void} - Returns void
+   * @memberOf Authenticate
+   */
+    componentWillReceiveProps(nextProps) {
+      const { authenticated, signingIn, createdUser } = nextProps;
+      if (authenticated || signingIn || createdUser) {
+        this.setState({
+          authenticated: nextProps.authenticated,
+          createdUser: nextProps.createdUser,
+          signingIn: nextProps.signingIn
+        });
+      }
+    }
+
+    /**
      * @returns {element} DOM element ComposedConmponent
      * @memberOf Authenticate
      */
@@ -49,7 +65,7 @@ export default (ComposedConmponent) => {
           { this.state.authenticated || this.state.signingIn
             || this.state.createdUser
              ? <ComposedConmponent {...this.props} /> :
-             <Redirect to="/signin" />}
+             ''}
         </span>
       );
     }

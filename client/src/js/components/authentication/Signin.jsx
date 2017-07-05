@@ -2,9 +2,9 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 import * as SigninActions from '../../actions/SigninActions';
 import * as UserActions from '../../actions/UserActions';
+import SigninForm from './SigninForm';
 
 /**
  *
@@ -83,63 +83,11 @@ class Signin extends React.Component {
    */
   render() {
     return (
-      <div className="row my-container">
-        <div className="col s12 m6 offset-m3 white">
-          <h3>Signin Here:</h3>
-          <form onSubmit={this.submit}>
-            <div className="row">
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  id="email"
-                  type="email"
-                  className="validate"
-                  required=""
-                  aria-required="true"
-                />
-                <label
-                  htmlFor="email"
-                  data-error="wrong"
-                  data-success="ok"
-                >
-                  Email: (user@domain.com)
-                </label>
-              </div>
-            </div>
-            <div className="row">
-              <div className="input-field col s12">
-                <input
-                  onChange={this.onChange}
-                  id="password"
-                  type="password"
-                  className="validate"
-                  required=""
-                  aria-required="true"
-                />
-                <label htmlFor="password">
-                  Password: (Not less than 8 characters)
-                </label>
-              </div>
-            </div>
-            <div className="row">
-              <input
-                className={`col s12 m3 waves-effect
-                  waves-light btn black button-margin`}
-                value="Signin"
-                type="submit"
-              />
-              New User?
-              <Link
-                className={`col s12 m3 waves-effect
-                waves-light btn grey button-margin`}
-                to="/signup"
-              >
-                Signup
-              </Link>
-            </div>
-          </form>
-        </div>
-      </div>);
+      <SigninForm
+        onChange={this.onChange}
+        submit={this.submit}
+      />
+    );
   }
 }
 

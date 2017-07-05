@@ -2,8 +2,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 import * as SignupActions from '../../actions/SignupActions';
+import SignupForm from './SignupForm';
 
 /**
  * @class Signup
@@ -72,99 +72,12 @@ class Signup extends React.Component {
    * @memberOf Signup
    */
   render() {
-    return (<div className="container">
-      <div className="row white my-container">
-        <h3>Signup Here:</h3>
-        <form className="col s12" onSubmit={this.submit}>
-          <div className="row">
-            <div className="input-field col s6">
-              <input
-                onChange={this.onChange}
-                id="firstName"
-                type="text"
-                className="validate"
-                required=""
-                aria-required="true"
-              />
-              <label
-                htmlFor="firstName"
-                data-error="wrong"
-                data-success="ok"
-              >
-              First Name
-              </label>
-            </div>
-            <div className="input-field col s6">
-              <input
-                onChange={this.onChange}
-                id="lastName"
-                type="text"
-                className="validate"
-                required=""
-                aria-required="true"
-              />
-              <label
-                htmlFor="lastName"
-                data-error="wrong"
-                data-success="ok"
-              >
-                Last Name
-              </label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input
-                onChange={this.onChange}
-                id="email"
-                type="email"
-                className="validate"
-                required=""
-                aria-required="true"
-              />
-              <label
-                htmlFor="email"
-                data-error="wrong"
-                data-success="ok"
-              >
-                Email: (user@domain.com)
-              </label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input
-                onChange={this.onChange}
-                id="password"
-                type="password"
-                className="validate"
-                required=""
-                aria-required="true"
-              />
-              <label htmlFor="password">
-                Password: (Not less than 8 characters)
-              </label>
-            </div>
-          </div>
-          <div className="row">
-            <input
-              className={`col s12 m3 waves-effect waves-light 
-              btn black button-margin`}
-              value="Signup"
-              type="submit"
-            />
-            <em>If you have already registered...</em>
-            <Link
-              className={`col m3 s12 waves-effect 
-              waves-light btn grey button-margin`}
-              to="/signin"
-            >
-              Signin
-            </Link>
-          </div>
-        </form>
-      </div>
-    </div>);
+    return (
+      <SignupForm
+        onChange={this.onChange}
+        submit={this.submit}
+      />
+    );
   }
 }
 

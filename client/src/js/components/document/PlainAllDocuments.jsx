@@ -23,7 +23,7 @@ const DocumentCollapsible = ({
               value={limit}
               onChange={inputChange}
             />
-            <label htmlFor="limit" className="active"> Listas limit </label>
+            <label htmlFor="limit" className="active"> List limit </label>
           </div>
           <div className="input-field col m3 s4 white">
             <input

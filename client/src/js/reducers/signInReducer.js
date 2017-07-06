@@ -1,8 +1,7 @@
 import actionTypes from '../constants/actionTypes';
+import initialState from './initialState';
 
-const initialState = { signingIn: false, user: {} };
-
-const signUpReducer = (state = initialState, action) => {
+const signInReducer = (state = initialState, action) => {
   switch (action.type) {
 
   case actionTypes.SIGNIN_USER_SUCCESS:
@@ -11,12 +10,9 @@ const signUpReducer = (state = initialState, action) => {
   case actionTypes.SIGNIN_USER_FAILURE:
     return { ...state, signingIn: false };
 
-  // case actionTypes.SET_USER_DETAILS:
-  //   return { ...state, signingIn: false, userDetails: action.userDetails };
-
   default:
     return state;
   }
 };
 
-export default signUpReducer;
+export default signInReducer;

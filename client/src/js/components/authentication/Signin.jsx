@@ -1,10 +1,12 @@
 /* global Materialize jwt_decode */
 import React, { PropTypes } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as SigninActions from '../../actions/SigninActions';
 import * as UserActions from '../../actions/UserActions';
 import SigninForm from './SigninForm';
+import Preloader from '../../helper/Preloader';
 
 /**
  *
@@ -20,6 +22,10 @@ class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      createdUser: this.props.createdUser,
+      authenticated: this.props.authenticated,
+      signingIn: this.props.signingIn,
+      count: this.props.count,
       user: {}
     };
     this.submit = this.submit.bind(this);
@@ -31,8 +37,8 @@ class Signin extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    if (!this.props.authenticated && !this.props.signingIn &&
-    !this.props.createdUser) {
+    const { authenticated, signingIn, createdUser } = this.props;
+    if (!authenticated && !signingIn && !createdUser) {
       const { userId } = jwt_decode(localStorage.xsrf_token);
       this.props.UserActions.validateUser(userId);
     }
@@ -43,10 +49,13 @@ class Signin extends React.Component {
    * @memberOf Signin
    */
   componentWillReceiveProps(nextProps) {
-    const { authenticated, signingIn, createdUser } = nextProps;
-    if (authenticated || signingIn || createdUser) {
-      this.props.history.push('/dashboard');
-    }
+    const { authenticated, signingIn, createdUser, count } = nextProps;
+    this.setState({
+      authenticated,
+      signingIn,
+      createdUser,
+      count
+    });
   }
   /**
    *
@@ -82,11 +91,16 @@ class Signin extends React.Component {
    * @memberOf Signin
    */
   render() {
-    return (
+    const { authenticated, signingIn, createdUser, count } = this.state;
+    const condition = (!authenticated && !signingIn && !createdUser);
+    const signinForm = (
       <SigninForm
         onChange={this.onChange}
         submit={this.submit}
-      />
+      />);
+    const redirect = <Redirect to="dashboard" />;
+    return (
+      Preloader(count, condition, signinForm, redirect)
     );
   }
 }
@@ -97,14 +111,14 @@ Signin.propTypes = {
   UserActions: PropTypes.object.isRequired,
   createdUser: PropTypes.bool.isRequired,
   SigninActions: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  count: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
   authenticated: state.userReducers.authenticated,
-  signingIn: state.signInReducer.signingIn,
-  createdUser: state.signUpReducer.createdUser,
-  user: state.signInReducer.user
+  signingIn: state.userReducers.signingIn,
+  createdUser: state.userReducers.createdUser,
+  user: state.userReducers.user
 });
 
 const mapDispatchToProps = dispatch => ({

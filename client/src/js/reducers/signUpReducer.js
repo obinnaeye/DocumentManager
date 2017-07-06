@@ -1,6 +1,5 @@
 import actionTypes from '../constants/actionTypes';
-
-const initialState = { createdUser: false, user: {} };
+import initialState from './initialState';
 
 const signUpReducer = (state = initialState, action) => {
   switch (action.type) {

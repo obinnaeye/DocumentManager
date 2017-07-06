@@ -1,9 +1,12 @@
-/* global Materialize */
+/* global Materialize jwt_decode */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as SignupActions from '../../actions/SignupActions';
+import * as UserActions from '../../actions/UserActions';
 import SignupForm from './SignupForm';
+import Preloader from '../../helper/Preloader';
 
 /**
  * @class Signup
@@ -13,14 +16,28 @@ class Signup extends React.Component {
   /**
    * Creates an instance of Signup.
    * @memberOf Signup
+   * @param {object} props - componet props
    */
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      createdUser: this.props.createdUser,
+      authenticated: this.props.authenticated,
+      signingIn: this.props.signingIn,
+      count: this.props.count,
       user: {}
     };
     this.submit = this.submit.bind(this);
     this.onChange = this.onChange.bind(this);
+  }
+
+  /**
+   * @memberof Signup
+   * @returns {void}
+   */
+  componentDidMount() {
+    const { userId } = jwt_decode(localStorage.xsrf_token);
+    this.props.UserActions.validateUser(userId);
   }
 
   /**
@@ -29,9 +46,13 @@ class Signup extends React.Component {
    * @memberOf Signup
    */
   componentWillReceiveProps(nextProps) {
-    if (nextProps.createdUser) {
-      this.props.history.push('/dashboard');
-    }
+    const { authenticated, signingIn, createdUser, count } = nextProps;
+    this.setState({
+      authenticated,
+      signingIn,
+      createdUser,
+      count
+    });
   }
 
   /**
@@ -72,29 +93,39 @@ class Signup extends React.Component {
    * @memberOf Signup
    */
   render() {
-    return (
+    const { authenticated, signingIn, createdUser, count } = this.state;
+    const condition = (!authenticated && !signingIn && !createdUser);
+    const signupForm = (
       <SignupForm
         onChange={this.onChange}
         submit={this.submit}
-      />
+      />);
+    const redirect = <Redirect to="/dashboard" />;
+    return (
+      Preloader(count, condition, signupForm, redirect)
     );
   }
 }
 
 Signup.propTypes = {
+  authenticated: PropTypes.bool.isRequired,
+  signingIn: PropTypes.bool.isRequired,
+  UserActions: PropTypes.object.isRequired,
   SignupActions: PropTypes.object.isRequired,
   createdUser: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  count: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
-  createdUser: state.signUpReducer.createdUser
+  createdUser: state.userReducers.createdUser,
+  authenticated: state.userReducers.authenticated,
+  signingIn: state.userReducers.signingIn,
+  count: state.userReducers.count
 });
 
 const mapDispatchToProps = dispatch => ({
-  SignupActions: bindActionCreators(SignupActions, dispatch)
+  SignupActions: bindActionCreators(SignupActions, dispatch),
+  UserActions: bindActionCreators(UserActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
-
-// export default Signup;

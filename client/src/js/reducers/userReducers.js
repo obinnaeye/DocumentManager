@@ -1,15 +1,21 @@
 import findIndex from 'lodash/findIndex';
 import actionTypes from '../constants/actionTypes';
-
-const initialState = {
-  users: [],
-  fetchingUsers: false,
-  fetchingUser: false,
-  count: 0
-};
+import initialState from './initialState';
 
 const userReducers = (state = initialState, action) => {
   switch (action.type) {
+  case actionTypes.CREATE_USER_SUCCESS:
+    return ({ ...state, createdUser: true, user: action.user });
+
+  case actionTypes.CREATE_USER_FAILURE:
+    return { ...state, createdUser: false };
+
+  case actionTypes.SIGNIN_USER_SUCCESS:
+    return { ...state, signingIn: true, user: action.user, };
+
+  case actionTypes.SIGNIN_USER_FAILURE:
+    return { ...state, signingIn: false };
+
   case actionTypes.GET_USERS_SUCCESS:
     return ({ ...state, users: action.users, fetchingUsers: true });
 
@@ -35,23 +41,28 @@ const userReducers = (state = initialState, action) => {
     return ({ ...state, updatingUser: false });
 
   case actionTypes.VALIDATE_USER_SUCCESS:
-    return ({ ...state, authenticated: true });
+    return ({ ...state, authenticated: true, count: state.count + 1 || 1 });
 
   case actionTypes.VALIDATE_USER_FAILURE:
-    return ({ ...state, authenticated: false });
+    return ({ ...state, authenticated: false, count: state.count + 1 || 1 });
 
   case actionTypes.LOGOUT_SUCCESS:
-    return {};
+    return ({ ...state,
+      authenticated: false,
+      signingIn: false,
+      createdUser: false,
+      count: state.count + 1 || 1
+    });
 
   case actionTypes.DELETE_USER_SUCCESS: {
     // Use unary plus to convert id string to number
     const index = findIndex(state.users, { userId: +(action.userId) });
     const stateUsers = state.users;
     stateUsers.splice(index, 1);
-    return { ...state,
+    return ({ ...state,
       users: stateUsers,
       deletingUsers: true,
-      count: state.count + 1 || 1 };
+      count: state.count + 1 || 1 });
   }
 
   default:

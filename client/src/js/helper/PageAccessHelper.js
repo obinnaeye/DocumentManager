@@ -1,6 +1,5 @@
 /* global jwt_decode */
 import React, { PropTypes } from 'react';
-//import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../actions/UserActions';
@@ -84,8 +83,8 @@ export default (ComposedConmponent) => {
 
   const mapStateToProps = state => ({
     authenticated: state.userReducers.authenticated,
-    signingIn: state.signInReducer.signingIn,
-    createdUser: state.signUpReducer.createdUser
+    signingIn: state.userReducers.signingIn,
+    createdUser: state.userReducers.createdUser
   });
 
   const mapDispatchToProps = dispatch => ({

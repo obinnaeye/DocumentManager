@@ -3,6 +3,8 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../../actions/UserActions';
+import UserCollapsible from './UserCollapsible';
+import PlainAllUsers from './PlainAllUsers';
 
 /**
  * @class AllUsers
@@ -130,39 +132,16 @@ class AllUsers extends React.Component {
       const render = users.map((user) => {
         const { firstName, lastName, email, userId } = user;
         return (
-          <li key={userId}>
-            <div className="collapsible-header">
-              <i className="material-icons orange">person</i>
-              <span><b>First Name: </b>
-                <em>{firstName}</em></span>
-            </div>
-            <div className="collapsible-body white">
-              <span> <b>FirstName:</b> {firstName} </span><br />
-              <span> <b>LastName:</b> {lastName} </span><br />
-              <span> <b>Email:</b> {email} </span><br />
-              { roleId === 1 ?
-                <span className="right">
-                  <a
-                    className="my-zindex-high button-margin"
-                    onClick={this.editUser}
-                    name={userId}
-                  >
-                    <i
-                      className="material-icons my-pointer"
-                      name={userId}
-                    >mode_edit</i></a>
-                  <a
-                    className="my-danger lighten-2 my-zindex-high button-margin"
-                    onClick={this.deleteUser}
-                    name={userId}
-                  >
-                    <i
-                      className="material-icons my-pointer"
-                      name={userId}
-                    >delete</i></a>
-                </span> : ''}
-            </div>
-          </li>);
+          <UserCollapsible
+            roleId={roleId}
+            firstName={firstName}
+            lastName={lastName}
+            email={email}
+            userId={userId}
+            editUser={this.editUser}
+            deleteUser={this.deleteUser}
+          />
+        );
       });
       return render;
     }
@@ -173,60 +152,16 @@ class AllUsers extends React.Component {
    * @memberOf AllUsers
    */
   render() {
-    const users = this.props.users;
+    const { users, limit, offset } = this.state;
 
     return (
-      <div className="container width-85">
-        <div className="row">
-          <div className="col s12 m10 offset-m1">
-            <p className="col s12 center-align white"> <strong>
-            All Users</strong> </p>
-            <div className="row white my-top-margin">
-              <div className="col s4 m2 offset-m2 white">
-                <p>Pagination Tools:</p> </div>
-              <div className="input-field col m3 s4 white">
-                <input
-                  id="limit"
-                  type="number"
-                  className="validate"
-                  value={this.state.limit}
-                  onChange={this.inputChange}
-                />
-                <label htmlFor="limit" className="active"> List limit </label>
-              </div>
-              <div className="input-field col m3 s4 white">
-                <input
-                  id="offset"
-                  type="number"
-                  className="validate"
-                  value={this.state.offset}
-                  onChange={this.inputChange}
-                />
-                <label htmlFor="offset" className="active"> List offset </label>
-              </div>
-            </div>
-            { users.length > 0 ?
-              <div className=" scroll-a row col s12">
-                <ul className="collapsible" data-collapsible="accordion">
-                  {this.renderedUsers()}
-                </ul>
-              </div>
-                :
-              <div className="row">
-                <div className="col offset-m3 s12 m6">
-                  <p className="white center-align">
-                    No Users found, Try with different offset or limit!</p>
-                  <img
-                    className="empty"
-                    src="/public/img/empty.jpg"
-                    alt="No User found"
-                  />
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
+      <PlainAllUsers
+        limit={limit}
+        offset={offset}
+        users={users}
+        inputChange={this.inputChange}
+        renderedUsers={this.renderedUsers}
+      />
     );
   }
 }

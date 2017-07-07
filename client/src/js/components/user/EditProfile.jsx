@@ -18,9 +18,10 @@ class EditProfile extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      user: props.user || JSON.parse(localStorage.getItem('user_profile'))
+      user: {}
     };
     this.updateProfile = this.updateProfile.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   /**
@@ -44,10 +45,9 @@ class EditProfile extends React.Component {
    * @memberOf EditProfile
    */
   componentDidMount() {
-    if (this.props.match.params.id) {
-      const userId = this.props.match.params.id;
-      this.props.UserActions.getUser(userId);
-    }
+    const { userId } = JSON.parse(localStorage.getItem('user_profile'));
+    const editId = +this.props.match.params.id || userId;
+    this.props.UserActions.getUser(editId);
   }
 
   /**
@@ -56,17 +56,24 @@ class EditProfile extends React.Component {
    * @memberOf EditProfile
    */
   componentWillReceiveProps(nextProps) {
-    if (this.props.match.params.id && nextProps.fetchingUser) {
-      this.setState({
-        user: nextProps.user
-      }, () => {
-      });
-      return;
-    }
-    if (!nextProps.updatingUser && !this.props.updatingUser) {
-      Materialize.toast(
-        'Profile update failed, please try again later!', 5000, 'red');
-    }
+    this.setState({
+      user: nextProps.user
+    });
+  }
+  /**
+   * @desc Handles change events on form input fields
+   * @param {object} event - triggered event
+   * @returns {void}
+   * @memberOf EditProfile
+   */
+  onChange(event) {
+    const { user } = this.state;
+    const name = event.target.getAttribute('id');
+    const value = event.target.value;
+    user[name] = value;
+    this.setState({
+      user
+    });
   }
 
   /**
@@ -75,13 +82,12 @@ class EditProfile extends React.Component {
    * @memberOf EditProfile
    */
   updateProfile() {
-    const { userId } = this.props.match.params.id ||
-    JSON.parse(localStorage.getItem('user_profile'));
+    const { userId } = this.state.user;
     const password = $('#password').val();
-    const firstName = $('#first_name').val();
-    const lastName = $('#last_name').val();
-    const updateInfo = { firstName, lastName, userId };
-
+    const firstName = $('#firstName').val();
+    const lastName = $('#lastName').val();
+    const updateData = { lastName, firstName };
+    const updateInfo = { updateData, userId };
     if (password && password.length < 8) {
       Materialize.toast(`Password must be up to 8 characters<br />
       You can leave password blank if you do not want to change your password`,
@@ -92,10 +98,7 @@ class EditProfile extends React.Component {
     if (password.length > 7) {
       updateInfo.password = password;
     }
-    this.props.UserActions.updateUser(updateInfo)
-      .then(() => {
-        Materialize.toast('Profile updated successfully!', 3000, 'green');
-      });
+    this.props.UserActions.updateUser(updateInfo);
   }
 
   /**
@@ -128,20 +131,24 @@ class EditProfile extends React.Component {
             <div className="input-field col s12 m6">
               <input
                 value={firstName}
-                id="first_name"
+                id="firstName"
                 type="text"
                 className="validate"
+                onChange={this.onChange}
+                required
               />
-              <label className="active" htmlFor="first_name">First Name</label>
+              <label className="active" htmlFor="firstName">First Name</label>
             </div>
             <div className="input-field col s12 m6">
               <input
                 value={lastName}
-                id="last_name"
+                id="lastName"
                 type="text"
                 className="validate"
+                onChange={this.onChange}
+                required
               />
-              <label className="active" htmlFor="last_name">Last Name</label>
+              <label className="active" htmlFor="lastName">Last Name</label>
             </div>
             <input
               className="btn orange"
@@ -161,8 +168,6 @@ EditProfile.defaultProps = {
 };
 
 EditProfile.propTypes = {
-  updatingUser: PropTypes.bool,
-  fetchingUser: PropTypes.bool,
   UserActions: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,

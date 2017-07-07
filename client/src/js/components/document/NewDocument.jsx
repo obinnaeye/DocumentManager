@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as DocumentActions from '../../actions/DocumentActions';
+import PlainNewDocument from './PlainNewDocument';
 
 /**
  * @class NewDocument
@@ -115,41 +116,11 @@ class NewDocument extends React.Component {
    */
   render() {
     return (
-      <div className="row center-align white">
-        <div className="row center-align">
-          <div className="input-field col m5 s6">
-            <input id="documentTitle" type="text" className="validate" />
-            <label htmlFor="documentTitle">Title: Unique Title</label>
-          </div>
-          <div className="input-field col m5 s6 center-align">
-            <select id="access">
-              <option value="" disabled selected>Choose Access Type</option>
-              <option value="private">Private</option>
-              <option value="public">Public</option>
-              <option value="role">Role</option>
-            </select>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col s12 m9 center" >
-            <textarea name="editor" id="editor" />
-          </div>
-          <div className="col s12 m3 edit-document-buttons">
-            <button
-              className="btn waves-effect waves-light orange accent-3"
-              onClick={this.save}
-            >Save</button><br />
-            <button
-              className="btn waves-effect waves-light orange accent-3"
-              onClick={this.saveExit}
-            >Save and Exit</button><br />
-            <button
-              className="btn waves-effect waves-light red lighten-2"
-              onClick={this.exit}
-            >Exit</button>
-          </div>
-        </div>
-      </div>
+      <PlainNewDocument
+        save={this.save}
+        saveExit={this.saveExit}
+        exit={this.exit}
+      />
     );
   }
 }

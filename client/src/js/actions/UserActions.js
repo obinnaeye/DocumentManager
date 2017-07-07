@@ -66,15 +66,17 @@ export const updateUserFailure = () =>
 
 export const updateUser = (updateInfo) => {
   const { userId } = updateInfo;
+  const { updateData } = updateInfo;
   setToken();
   return dispatch =>
-    ajaxCall.put(`/users/${userId}`, updateInfo)
+    ajaxCall.put(`/users/${userId}`, updateData)
       .then((response) => {
-        localStorage.setItem('user_profile', JSON.stringify(response.data));
         dispatch(updateUserSuccess(response.data));
+        Materialize.toast('Profile updated successfully!', 3000, 'green');
       })
       .catch((error) => {
         dispatch(updateUserFailure(error));
+        Materialize.toast('Profile update not successful!', 3000, 'red');
       });
 };
 

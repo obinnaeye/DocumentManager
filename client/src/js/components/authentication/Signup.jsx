@@ -57,12 +57,12 @@ class Signup extends React.Component {
 
   /**
    * @desc Handles change events on form input fields
-   * @param {object} e
+   * @param {object} event - triggered event
    * @returns {void}
    * @memberOf Signup
    */
-  onChange(e) {
-    const ref = e.target;
+  onChange(event) {
+    const ref = event.target;
     const inputId = ref.id;
     const value = ref.value;
     const user = this.state.user;

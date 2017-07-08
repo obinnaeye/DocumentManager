@@ -133,6 +133,7 @@ class AllUsers extends React.Component {
         const { firstName, lastName, email, userId } = user;
         return (
           <UserCollapsible
+            key={userId}
             roleId={roleId}
             firstName={firstName}
             lastName={lastName}

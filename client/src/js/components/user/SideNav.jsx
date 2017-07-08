@@ -25,7 +25,6 @@ class SideNav extends React.Component {
       top: 150,
       offset: 0
     });
-
     if (this.props.location.pathname === '/dashboard') {
       $('#pushpin').click();
     }
@@ -40,22 +39,34 @@ class SideNav extends React.Component {
       <div>
         <ul id="slide-out" className="side-nav orange accent-3">
           <li>
-            <Link to="/dashboard/my-documents" > My Documents </Link>
+            <Link to="/dashboard/new-document" >
+              <i className="material-icons">add</i>
+            New Document </Link>
           </li>
           <li>
-            <Link to="/dashboard/new-document" > New Document </Link>
+            <Link to="/dashboard/my-documents" >
+              <i className="material-icons">library_books</i>
+             My Documents </Link>
           </li>
           <li>
-            <Link to="/dashboard/search" > Search Documents </Link>
+            <Link to="/dashboard/search" >
+              <i className="material-icons">search</i>
+            Search </Link>
           </li>
           <li>
-            <Link to="/dashboard/edit-profile" > Edit Profile </Link>
+            <Link to="/dashboard/edit-profile" >
+              <i className="material-icons">mode_edit</i>
+            Edit Profile </Link>
           </li>
           <li>
-            <Link to="/dashboard/all-documents" > All Document </Link>
+            <Link to="/dashboard/all-documents" >
+              <i className="material-icons">view_headline</i>
+            All Document </Link>
           </li>
           <li>
-            <Link to="/dashboard/all-users" > All Users </Link>
+            <Link to="/dashboard/all-users" >
+              <i className="material-icons">person</i>
+            All Users </Link>
           </li>
         </ul>
         <a

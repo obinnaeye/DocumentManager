@@ -1,10 +1,10 @@
 /* global jwt_decode $ */
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../../actions/UserActions';
 import '../../../../public/style/main.scss';
+import PlainNavBar from './PlainNavBar';
 
 /**
  * @class NavBar
@@ -21,9 +21,11 @@ class NavBar extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      authenticated: false
+      authenticated: false,
+      signingIn: false,
+      createdUser: false,
+      count: 0
     };
-    this.navigationButtons = this.navigationButtons.bind(this);
     this.logout = this.logout.bind(this);
   }
 
@@ -37,22 +39,34 @@ class NavBar extends React.Component {
   }
 
   /**
-   * @desc Creates nav buttons depending on user logged in or not
-   * @returns {object} - DOM eleement
+   * @param {objcet} nextProps
    * @memberOf NavBar
+   * @returns {void}
    */
-  navigationButtons() {
-    const authenticated = this.props.authenticated;
-    const signingIn = this.props.signingIn;
-    const createdUser = this.props.createdUser;
+  componentWillReceiveProps(nextProps) {
+    const { authenticated, signingIn, createdUser, count } = nextProps;
+    this.setState({
+      authenticated,
+      signingIn,
+      createdUser,
+      count
+    });
+
     if (authenticated || signingIn || createdUser) {
-      return (
-      [
-        <li key="dashboard"><Link to="/dashboard">
-        Dashboard</Link></li>,
-        <li key="auth"><Link to="/" onClick={this.logout}>Logout</Link></li>
-      ]
+      // initialize collapse button here, so it does not conflict with
+      // sidenav of dashboard when authenticated
+      const dashboard = /dashboard/;
+      const location = window.location.hash;
+      if (!location.match(dashboard)) {
+        $('.button-collapse').sideNav({
+          menuWidth: 'auto',
+          edge: 'left',
+          closeOnClick: true,
+          draggable: true
+        }
       );
+      }
+      return;
     }
     // initialize collapse button here, so it does not conflict with
     // sidenav of dashboard when authenticated
@@ -62,12 +76,6 @@ class NavBar extends React.Component {
       closeOnClick: true,
       draggable: true
     });
-    return (
-    [
-      <li key="dashboard"><Link to="/signin">Signin</Link></li>,
-      <li key="auth"><Link to="/signup" replace>Signup</Link></li>
-    ]
-    );
   }
 
   /**
@@ -76,10 +84,7 @@ class NavBar extends React.Component {
    * @returns {void}
    */
   logout() {
-    this.props.UserActions.logout()
-      .then(() => {
-        this.props.history.push('/dashboard');
-      });
+    this.props.UserActions.logout();
   }
 
   /**
@@ -89,24 +94,12 @@ class NavBar extends React.Component {
    */
   render() {
     return (
-      <header id="header">
-        <div className="navbar-fixed black">
-          <nav className="grey darken-4">
-            <div className="nav-wrapper"><a className="brand-logo">
-              <i className="fa fa-thumbs-up" aria-hidden="true" />okDocs</a>
-              <a data-activates="mobile-demo" className="button-collapse right">
-                <i className="material-icons">menu</i>
-              </a>
-              <ul className="right hide-on-med-and-down">
-                {this.navigationButtons()}
-              </ul>
-            </div>
-          </nav>
-        </div>
-        <ul className="side-nav" id="mobile-demo">
-          {this.navigationButtons()}
-        </ul>
-      </header>
+      <PlainNavBar
+        authenticated={this.state.authenticated}
+        createdUser={this.state.createdUser}
+        signingIn={this.state.signingIn}
+        logout={this.logout}
+      />
     );
   }
 }
@@ -117,16 +110,17 @@ NavBar.defaultProps = {
 
 NavBar.propTypes = {
   UserActions: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
   authenticated: PropTypes.bool,
   signingIn: PropTypes.bool.isRequired,
-  createdUser: PropTypes.bool.isRequired
+  createdUser: PropTypes.bool.isRequired,
+  count: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
   authenticated: state.userReducers.authenticated,
-  signingIn: state.signInReducer.signingIn,
-  createdUser: state.signInReducer.createdUser
+  signingIn: state.userReducers.signingIn,
+  createdUser: state.userReducers.createdUser,
+  count: state.userReducers.count
 });
 
 const mapDispatchToProps = dispatch => ({

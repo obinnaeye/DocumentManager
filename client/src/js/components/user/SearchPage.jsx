@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as DocumentActions from '../../actions/DocumentActions';
 import * as UserActions from '../../actions/UserActions';
+import UserCollapsible from './UserCollapsible';
+import DocumentCollapsible from '../document/DocumentCollapsible';
+import PlainSearchPage from './PlainSearchPage';
 
 /**
  * @class SearchPage
@@ -35,6 +38,10 @@ class SearchPage extends React.Component {
     this.renderedUsers = this.renderedUsers.bind(this);
     this.search = this.search.bind(this);
     this.inputChange = this.inputChange.bind(this);
+    this.viewDocument = this.viewDocument.bind(this);
+    this.deleteDocument = this.deleteDocument.bind(this);
+    this.editUser = this.editUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
   }
 
   /**
@@ -52,12 +59,19 @@ class SearchPage extends React.Component {
    * @returns {void}
    */
   componentWillReceiveProps(nextProps) {
-    const { documents, users, fetchingDocuments, fetchingUsers } = nextProps;
+    const { documents, users, fetchingDocuments,
+      fetchingUsers, documentStateCount, deletingDocument, deletingUser,
+      userStateCount }
+    = nextProps;
     this.setState({
       documents,
       users,
       fetchingDocuments,
-      fetchingUsers
+      fetchingUsers,
+      documentStateCount,
+      deletingDocument,
+      deletingUser,
+      userStateCount
     });
   }
 
@@ -113,7 +127,7 @@ class SearchPage extends React.Component {
    * @desc - Method that handles change events
    * @param {objcet} e - event target
    * @return {void} - Returns void
-   * @memberOf AllUsers
+   * @memberOf SearchPage
    */
   inputChange(e) {
     e.preventDefault();
@@ -130,6 +144,54 @@ class SearchPage extends React.Component {
   }
 
   /**
+   * @desc Delets a docuement and redirects to documents page
+   * @param {object} e
+   * @memberOf SearchPage
+   * @returns {void}
+   */
+  deleteDocument(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.DocumentActions.deleteDocument(id);
+  }
+
+  /**
+   * @desc Redirects to view page using document id
+   * @param {object} e
+   * @memberOf SearchPage
+   * @returns {void}
+   */
+  viewDocument(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.history.push(`/dashboard/documents/${id}`);
+  }
+
+  /**
+   * @desc Redirects to edit page using user id
+   * @param {object} e
+   * @memberOf SearchPage
+   * @returns {void}
+   */
+  editUser(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.history.push(`/dashboard/edit-user/${id}`);
+  }
+
+  /**
+   * @desc Delets a docuement and redirects to users page
+   * @param {object} e
+   * @memberOf SearchPage
+   * @returns {void}
+   */
+  deleteUser(e) {
+    e.preventDefault();
+    const id = e.target.getAttribute('name');
+    this.props.UserActions.deleteUser(id);
+  }
+
+  /**
    * Formats document for rendering
    * @returns {element} DOM element
    * @memberOf SearchPage
@@ -138,19 +200,26 @@ class SearchPage extends React.Component {
     if (this.state.fetchingDocuments && this.state.searching) {
       const documents = this.state.documents;
       const render = documents.map((document) => {
-        const { id, title, content, createdAt, updatedAt } = document;
+        const { id, title, content, createdAt, updatedAt, ownerId } = document;
+        const { userId, roleId } =
+        JSON.parse(localStorage.getItem('user_profile'));
         const parsedContent =
           <span dangerouslySetInnerHTML={{ __html: content }} />;
         return (
-          <li key={id}>
-            <div className="collapsible-header">
-              <i className="material-icons orange">library_books</i>
-              <span><b>Title: </b> <em>{title} </em> ||</span>
-              <span> <b>Created:</b> <em>{createdAt}</em> ||</span>
-              <span> <b>Modified:</b> <em>{updatedAt}</em> </span>
-            </div>
-            <div className="collapsible-body">{parsedContent}</div>
-          </li>);
+          <DocumentCollapsible
+            key={id}
+            id={id}
+            title={title}
+            createdAt={createdAt}
+            updatedAt={updatedAt}
+            ownerId={ownerId}
+            userId={userId}
+            roleId={roleId}
+            parsedContent={parsedContent}
+            viewDocument={this.viewDocument}
+            deleteDocument={this.deleteDocument}
+          />
+        );
       });
       return render;
     }
@@ -167,21 +236,22 @@ class SearchPage extends React.Component {
   renderedUsers() {
     if (this.state.fetchingUsers && this.state.searching) {
       const users = this.state.users;
+      const { roleId } =
+        JSON.parse(localStorage.getItem('user_profile'));
       const render = users.map((user) => {
-        const { firstName, lastName, email, id } = user;
+        const { firstName, lastName, email, userId } = user;
         return (
-          <li key={id}>
-            <div className="collapsible-header">
-              <i className="material-icons orange">person</i>
-              <span><b>First Name: </b>
-                <em>{firstName}</em></span>
-            </div>
-            <div className="collapsible-body">
-              <span> <b>FirstName:</b> {firstName} </span><br />
-              <span> <b>LastName:</b> {lastName} </span><br />
-              <span> <b>Email:</b> {email} </span><br />
-            </div>
-          </li>);
+          <UserCollapsible
+            key={userId}
+            roleId={roleId}
+            firstName={firstName}
+            lastName={lastName}
+            email={email}
+            userId={userId}
+            editUser={this.editUser}
+            deleteUser={this.deleteUser}
+          />
+        );
       });
       return render;
     }
@@ -196,63 +266,13 @@ class SearchPage extends React.Component {
    */
   render() {
     return (
-      <div className="container">
-        <div className="my-centered white">
-          <div className="white" >
-            <div className="row">
-              <h5 className="col s6 m2"> Search for: </h5>
-              <select
-                id="searchSelect"
-                defaultValue="document"
-                className="col s4 m3"
-                onChange={this.changeSearch}
-              >
-                <option value="documents">Document</option>
-                <option value="users">User</option>
-              </select>
-            </div>
-            <div className="row my-top-border">
-              <div className="input-field col m6 s4">
-                <input id="search" type="text" className="validate" />
-                <label htmlFor="search">Search</label>
-              </div>
-              <div className="input-field col m3 s4">
-                <input
-                  id="limit"
-                  type="number"
-                  className="validate"
-                  value={this.state.limit}
-                  onChange={this.inputChange}
-                />
-                <label htmlFor="limit" className="active">Search limit</label>
-              </div>
-              <div className="input-field col m3 s4">
-                <input
-                  id="offset"
-                  type="number"
-                  className="validate"
-                  value={this.state.offset}
-                  onChange={this.inputChange}
-                />
-                <label htmlFor="offset" className="active">Search offset</label>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <button
-              id="searchButton"
-              className="btn orange col m2 s12"
-              onClick={this.search}
-            >
-            Search </button>
-          </div>
-          <div className=" scroll-a row col s12">
-            <ul className="collapsible" data-collapsible="accordion">
-              {this.combinedRendered()}
-            </ul>
-          </div>
-        </div>
-      </div>
+      <PlainSearchPage
+        limit={this.state.limit}
+        offset={this.state.offset}
+        search={this.search}
+        inputChange={this.inputChange}
+        combinedRendered={this.combinedRendered}
+      />
     );
   }
 }
@@ -270,14 +290,23 @@ SearchPage.propTypes = {
   DocumentActions: PropTypes.object.isRequired,
   fetchingUsers: PropTypes.bool,
   UserActions: PropTypes.object.isRequired,
-  users: PropTypes.array
+  users: PropTypes.array,
+  documentStateCount: PropTypes.number.isRequired,
+  userStateCount: PropTypes.number.isRequired,
+  history: PropTypes.object.isRequired,
+  deletingUser: PropTypes.bool.isRequired,
+  deletingDocument: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   documents: state.documentReducer.documents,
   users: state.userReducers.users,
   fetchingDocuments: state.documentReducer.fetchingDocuments,
-  fetchingUsers: state.userReducers.fetchingUsers
+  fetchingUsers: state.userReducers.fetchingUsers,
+  deletingDocument: state.documentReducer.deletingDocument,
+  deletingUser: state.userReducers.deletingUser,
+  documentStateCount: state.documentReducer.count,
+  userStateCount: state.userReducers.count
 });
 
 const mapDispatchToProps = dispatch => ({

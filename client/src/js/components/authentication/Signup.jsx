@@ -1,9 +1,12 @@
-/* global Materialize */
+/* global Materialize jwt_decode */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 import * as SignupActions from '../../actions/SignupActions';
+import * as UserActions from '../../actions/UserActions';
+import SignupForm from './SignupForm';
+import Preloader from '../../helper/Preloader';
 
 /**
  * @class Signup
@@ -13,14 +16,28 @@ class Signup extends React.Component {
   /**
    * Creates an instance of Signup.
    * @memberOf Signup
+   * @param {object} props - componet props
    */
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      createdUser: this.props.createdUser,
+      authenticated: this.props.authenticated,
+      signingIn: this.props.signingIn,
+      count: this.props.count,
       user: {}
     };
     this.submit = this.submit.bind(this);
     this.onChange = this.onChange.bind(this);
+  }
+
+  /**
+   * @memberof Signup
+   * @returns {void}
+   */
+  componentDidMount() {
+    const { userId } = jwt_decode(localStorage.xsrf_token);
+    this.props.UserActions.validateUser(userId);
   }
 
   /**
@@ -29,19 +46,23 @@ class Signup extends React.Component {
    * @memberOf Signup
    */
   componentWillReceiveProps(nextProps) {
-    if (nextProps.createdUser) {
-      this.props.history.push('/dashboard');
-    }
+    const { authenticated, signingIn, createdUser, count } = nextProps;
+    this.setState({
+      authenticated,
+      signingIn,
+      createdUser,
+      count
+    });
   }
 
   /**
    * @desc Handles change events on form input fields
-   * @param {object} e
+   * @param {object} event - triggered event
    * @returns {void}
    * @memberOf Signup
    */
-  onChange(e) {
-    const ref = e.target;
+  onChange(event) {
+    const ref = event.target;
     const inputId = ref.id;
     const value = ref.value;
     const user = this.state.user;
@@ -72,116 +93,39 @@ class Signup extends React.Component {
    * @memberOf Signup
    */
   render() {
-    return (<div className="container">
-      <div className="row white my-container">
-        <h3>Signup Here:</h3>
-        <form className="col s12" onSubmit={this.submit}>
-          <div className="row">
-            <div className="input-field col s6">
-              <input
-                onChange={this.onChange}
-                id="firstName"
-                type="text"
-                className="validate"
-                required=""
-                aria-required="true"
-              />
-              <label
-                htmlFor="firstName"
-                data-error="wrong"
-                data-success="ok"
-              >
-              First Name
-              </label>
-            </div>
-            <div className="input-field col s6">
-              <input
-                onChange={this.onChange}
-                id="lastName"
-                type="text"
-                className="validate"
-                required=""
-                aria-required="true"
-              />
-              <label
-                htmlFor="lastName"
-                data-error="wrong"
-                data-success="ok"
-              >
-                Last Name
-              </label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input
-                onChange={this.onChange}
-                id="email"
-                type="email"
-                className="validate"
-                required=""
-                aria-required="true"
-              />
-              <label
-                htmlFor="email"
-                data-error="wrong"
-                data-success="ok"
-              >
-                Email: (user@domain.com)
-              </label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input
-                onChange={this.onChange}
-                id="password"
-                type="password"
-                className="validate"
-                required=""
-                aria-required="true"
-              />
-              <label htmlFor="password">
-                Password: (Not less than 8 characters)
-              </label>
-            </div>
-          </div>
-          <div className="row">
-            <input
-              className={`col s12 m3 waves-effect waves-light 
-              btn black button-margin`}
-              value="Signup"
-              type="submit"
-            />
-            <em>If you have already registered...</em>
-            <Link
-              className={`col m3 s12 waves-effect 
-              waves-light btn grey button-margin`}
-              to="/signin"
-            >
-              Signin
-            </Link>
-          </div>
-        </form>
-      </div>
-    </div>);
+    const { authenticated, signingIn, createdUser, count } = this.state;
+    const condition = (!authenticated && !signingIn && !createdUser);
+    const signupForm = (
+      <SignupForm
+        onChange={this.onChange}
+        submit={this.submit}
+      />);
+    const redirect = <Redirect to="/dashboard" />;
+    return (
+      Preloader(count, condition, signupForm, redirect)
+    );
   }
 }
 
 Signup.propTypes = {
+  authenticated: PropTypes.bool.isRequired,
+  signingIn: PropTypes.bool.isRequired,
+  UserActions: PropTypes.object.isRequired,
   SignupActions: PropTypes.object.isRequired,
   createdUser: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  count: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
-  createdUser: state.signUpReducer.createdUser
+  createdUser: state.userReducers.createdUser,
+  authenticated: state.userReducers.authenticated,
+  signingIn: state.userReducers.signingIn,
+  count: state.userReducers.count
 });
 
 const mapDispatchToProps = dispatch => ({
-  SignupActions: bindActionCreators(SignupActions, dispatch)
+  SignupActions: bindActionCreators(SignupActions, dispatch),
+  UserActions: bindActionCreators(UserActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
-
-// export default Signup;

@@ -235,7 +235,7 @@ class DocumentController {
         if (foundDocuments.rows.length > 0) {
           ResponseHandler.send200(
             response,
-            foundDocuments
+            foundDocuments.rows
           );
         } else {
           ResponseHandler.send404(response);

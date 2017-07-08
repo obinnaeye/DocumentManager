@@ -11,7 +11,7 @@ const PlainSearchPage = ({
     <div className="my-centered white">
       <div className="white" >
         <div className="row">
-          <h5 className="col s6 m2"> Searchss for: </h5>
+          <h5 className="col s6 m2"> Search for: </h5>
           <select
             id="searchSelect"
             className="col s4 m3"

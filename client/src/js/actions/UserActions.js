@@ -3,6 +3,8 @@ import ajaxCall from 'axios';
 import actionTypes from '../constants/actionTypes';
 import setToken from '../helper/setTokenHelper';
 
+const testing = process.env.NODE_ENV === 'test';
+
 export const searchUserSuccess = users =>
   ({ type: actionTypes.SEARCH_USERS_SUCCESS, users });
 
@@ -11,7 +13,10 @@ export const searchUserFailure = () =>
 
 export const searchUsers = (searchData) => {
   const { q, offset, limit } = searchData;
-  setToken();
+  /* istanbul ignore next */
+  if (!testing) {
+    setToken();
+  }
   return dispatch =>
     ajaxCall.get(`/search/users/?q=${q}&offset=${offset}&limit=${limit}`)
       .then((response) => {
@@ -29,7 +34,10 @@ export const getUserFailure = () =>
   ({ type: actionTypes.GET_USER_FAILURE });
 
 export const getUser = (userId) => {
-  setToken();
+  /* istanbul ignore next */
+  if (!testing) {
+    setToken();
+  }
   return dispatch =>
     ajaxCall.get(`/users/${userId}`)
       .then((response) => {
@@ -47,7 +55,10 @@ export const getUsersFailure = () =>
   ({ type: actionTypes.GET_USERS_FAILURE });
 
 export const getUsers = (offset, limit) => {
-  setToken();
+  /* istanbul ignore next */
+  if (!testing) {
+    setToken();
+  }
   return dispatch =>
     ajaxCall.get(`/users/?limit=${limit}&offset=${offset}`)
       .then((response) => {
@@ -62,21 +73,30 @@ export const updateUserSuccess = updatedUser =>
   ({ type: actionTypes.UPDATE_USER_SUCCESS, updatedUser });
 
 export const updateUserFailure = () =>
-  ({ type: actionTypes.UPDATE_USER_SUCCESS });
+  ({ type: actionTypes.UPDATE_USER_FAILURE });
 
 export const updateUser = (updateInfo) => {
   const { userId } = updateInfo;
   const { updateData } = updateInfo;
-  setToken();
+  /* istanbul ignore next */
+  if (!testing) {
+    setToken();
+  }
   return dispatch =>
     ajaxCall.put(`/users/${userId}`, updateData)
       .then((response) => {
         dispatch(updateUserSuccess(response.data));
-        Materialize.toast('Profile updated successfully!', 3000, 'green');
+        /* istanbul ignore next */
+        if (!testing) {
+          Materialize.toast('Profile updated successfully!', 3000, 'green');
+        }
       })
       .catch((error) => {
         dispatch(updateUserFailure(error));
-        Materialize.toast('Profile update not successful!', 3000, 'red');
+        /* istanbul ignore next */
+        if (!testing) {
+          Materialize.toast('Profile update not successful!', 3000, 'red');
+        }
       });
 };
 
@@ -87,7 +107,10 @@ export const validateUserFailure = () =>
   ({ type: actionTypes.VALIDATE_USER_FAILURE });
 
 export const validateUser = (userId) => {
-  setToken();
+  /* istanbul ignore next */
+  if (!testing) {
+    setToken();
+  }
   return dispatch =>
     ajaxCall.get(`/users/${userId}`)
       .then((response) => {
@@ -105,7 +128,10 @@ export const logoutFailure = () =>
   ({ type: actionTypes.LOGOUT_FAILURE });
 
 export const logout = () => {
-  setToken();
+  /* istanbul ignore next */
+  if (!testing) {
+    setToken();
+  }
   return dispatch =>
     ajaxCall.post('/users/logout')
       .then((response) => {
@@ -123,14 +149,22 @@ export const deleteFailure = () =>
   ({ type: actionTypes.DELETE_USER_FAILURE });
 
 export const deleteUser = (userId) => {
-  setToken();
+  /* istanbul ignore next */
+  if (!testing) {
+    setToken();
+  }
   return dispatch =>
     ajaxCall.delete(`/users/${userId}`)
       .then((response) => {
         dispatch(deleteSuccess(userId));
-        Materialize.toast(response.data.message, 3000, 'green');
+        if (!testing) {
+          Materialize.toast(response.data.message, 3000, 'green');
+        }
       })
       .catch((error) => {
-        Materialize.toast(error.message, 3000, 'red');
+        dispatch(deleteFailure(error));
+        if (!testing) {
+          Materialize.toast(error.message, 3000, 'red');
+        }
       });
 };

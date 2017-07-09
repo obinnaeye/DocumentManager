@@ -3,6 +3,7 @@ import ajaxCall from 'axios';
 import actionTypes from '../constants/actionTypes';
 import setToken from '../helper/setTokenHelper';
 
+const testing = process.env.NODE_ENV === 'test';
 
 export const signinUserSuccess = user => ({
   type: actionTypes.SIGNIN_USER_SUCCESS, user
@@ -16,20 +17,28 @@ export const signinUser = user =>
   dispatch =>
     ajaxCall.post('/users/login', user)
       .then((response) => {
-        const { activeToken } = response.data;
-        localStorage.setItem('xsrf_token', response.data.activeToken);
-        // set jwt authorization token on request header
-        setToken(activeToken);
-        const decodedUser = jwt_decode(activeToken);
-        localStorage.setItem('user_profile', JSON.stringify(decodedUser));
-        dispatch(signinUserSuccess(decodedUser));
-        Materialize.toast(
-          'You have successfully signed in! Welcome!',
-          5000, 'green'
-        );
+        /* istanbul ignore next */
+        if (!testing) {
+          const { activeToken } = response.data;
+          localStorage.setItem('xsrf_token', response.data.activeToken);
+          // set jwt authorization token on request header
+          setToken(activeToken);
+          const decodedUser = jwt_decode(activeToken);
+          localStorage.setItem('user_profile', JSON.stringify(decodedUser));
+          dispatch(signinUserSuccess(decodedUser));
+          Materialize.toast(
+            'You have successfully signed in! Welcome!',
+            5000, 'green'
+          );
+          return;
+        }
+        dispatch(signinUserSuccess(response.data));
       })
       .catch((error) => {
         dispatch(signinUserFailure());
-        Materialize.toast(error.response.data.message, 5000);
+        /* istanbul ignore next */
+        if (!testing) {
+          Materialize.toast(error.response.data.message, 5000);
+        }
       });
 

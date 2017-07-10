@@ -1,0 +1,78 @@
+00:07:12.351 INFO - Selenium build info: version: '3.4.0', revision: 'unknown'
+00:07:12.352 INFO - Launching a standalone Selenium Server
+2017-07-11 00:07:12.383:INFO::main: Logging initialized @333ms to org.seleniumhq.jetty9.util.log.StdErrLog
+00:07:12.452 INFO - Driver provider org.openqa.selenium.ie.InternetExplorerDriver registration is skipped:
+ registration capabilities Capabilities [{ensureCleanSession=true, browserName=internet explorer, version=, platform=WINDOWS}] does not match the current platform MAC
+00:07:12.452 INFO - Driver provider org.openqa.selenium.edge.EdgeDriver registration is skipped:
+ registration capabilities Capabilities [{browserName=MicrosoftEdge, version=, platform=WINDOWS}] does not match the current platform MAC
+00:07:12.453 INFO - Driver class not found: com.opera.core.systems.OperaDriver
+00:07:12.453 INFO - Driver provider com.opera.core.systems.OperaDriver registration is skipped:
+Unable to create new instances on this machine.
+00:07:12.453 INFO - Driver class not found: com.opera.core.systems.OperaDriver
+00:07:12.453 INFO - Driver provider com.opera.core.systems.OperaDriver is not registered
+2017-07-11 00:07:12.523:INFO:osjs.Server:main: jetty-9.4.3.v20170317
+2017-07-11 00:07:12.579:INFO:osjsh.ContextHandler:main: Started o.s.j.s.ServletContextHandler@3e6fa38a{/,null,AVAILABLE}
+2017-07-11 00:07:12.622:INFO:osjs.AbstractConnector:main: Started ServerConnector@4a254d75{HTTP/1.1,[http/1.1]}{0.0.0.0:4444}
+2017-07-11 00:07:12.623:INFO:osjs.Server:main: Started @573ms
+00:07:12.623 INFO - Selenium Server is up and running
+00:07:13.245 INFO - SessionCleaner initialized with insideBrowserTimeout 0 and clientGoneTimeout 1800000 polling every 180000
+00:07:13.277 INFO - Executing: [new session: Capabilities [{acceptSslCerts=true, marionette=false, name=Signin, browserName=chrome, javascriptEnabled=true, platform=ANY}]])
+00:07:13.300 INFO - Creating a new session for Capabilities [{acceptSslCerts=true, marionette=false, name=Signin, browserName=chrome, javascriptEnabled=true, platform=ANY}]
+Starting ChromeDriver 2.29.461585 (0be2cd95f834e9ee7c46bcc7cf405b483f5ae83b) on port 47215
+Only local connections are allowed.
+00:07:14.887 INFO - Detected dialect: OSS
+00:07:14.924 INFO - Done: [new session: Capabilities [{acceptSslCerts=true, marionette=false, name=Signin, browserName=chrome, javascriptEnabled=true, platform=ANY}]]
+00:07:14.949 INFO - Executing: [get: http://localhost:8080/?#/signin])
+00:07:53.625 INFO - Done: [get: http://localhost:8080/?#/signin]
+00:07:53.633 INFO - Executing: [find elements: By.cssSelector: body])
+00:07:53.693 INFO - Done: [find elements: By.cssSelector: body]
+00:07:53.711 INFO - Executing: [is displayed: 0 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: body]])
+00:07:53.746 INFO - Done: [is displayed: 0 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: body]]
+00:07:53.761 INFO - Executing: [find element: By.cssSelector: h3])
+00:07:53.791 INFO - Done: [find element: By.cssSelector: h3]
+00:07:53.799 INFO - Executing: [get text: 1 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: h3]])
+00:07:53.837 INFO - Done: [get text: 1 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: h3]]
+00:07:53.847 INFO - Executing: [find element: By.cssSelector: input[type=email]])
+00:07:53.866 INFO - Done: [find element: By.cssSelector: input[type=email]]
+00:07:53.872 INFO - Executing: [send keys: 2 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: input[type=email]], [a, d, m, i, n, @, o, k, d, o, c, s, ., c, o, m]])
+00:07:54.194 INFO - Done: [send keys: 2 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: input[type=email]], [a, d, m, i, n, @, o, k, d, o, c, s, ., c, o, m]]
+00:07:54.199 INFO - Executing: [find element: By.cssSelector: input[type=password]])
+00:07:54.228 INFO - Done: [find element: By.cssSelector: input[type=password]]
+00:07:54.233 INFO - Executing: [send keys: 3 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: input[type=password]], [a, s, d, f, g, h, j, k]])
+00:07:54.364 INFO - Done: [send keys: 3 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: input[type=password]], [a, s, d, f, g, h, j, k]]
+00:07:54.368 INFO - Executing: [find element: By.cssSelector: input[type=submit]])
+00:07:54.396 INFO - Done: [find element: By.cssSelector: input[type=submit]]
+00:07:54.403 INFO - Executing: [click: 4 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: input[type=submit]]])
+00:07:54.498 INFO - Done: [click: 4 [[ChromeDriver: chrome on MAC (04c888160f45d7fe218d7f29ca7f9c6f)] -> css selector: input[type=submit]]]
+00:07:56.511 INFO - Executing: [get current url])
+00:07:56.521 INFO - Done: [get current url]
+00:07:56.533 INFO - Executing: [delete session: b7f05fac-235c-47d0-9d12-90a4072c01ce])
+00:07:56.663 INFO - Done: [delete session: b7f05fac-235c-47d0-9d12-90a4072c01ce]
+00:07:56.681 INFO - Executing: [new session: Capabilities [{acceptSslCerts=true, marionette=false, name=Signin, browserName=chrome, javascriptEnabled=true, platform=ANY}]])
+00:07:56.681 INFO - Creating a new session for Capabilities [{acceptSslCerts=true, marionette=false, name=Signin, browserName=chrome, javascriptEnabled=true, platform=ANY}]
+Starting ChromeDriver 2.29.461585 (0be2cd95f834e9ee7c46bcc7cf405b483f5ae83b) on port 24157
+Only local connections are allowed.
+00:07:57.681 INFO - Detected dialect: OSS
+00:07:57.685 INFO - Done: [new session: Capabilities [{acceptSslCerts=true, marionette=false, name=Signin, browserName=chrome, javascriptEnabled=true, platform=ANY}]]
+00:07:57.691 INFO - Executing: [get: http://localhost:8080/?#/signin])
+00:08:48.563 INFO - Done: [get: http://localhost:8080/?#/signin]
+00:08:48.592 INFO - Executing: [find elements: By.cssSelector: body])
+00:08:48.624 INFO - Done: [find elements: By.cssSelector: body]
+00:08:48.629 INFO - Executing: [is displayed: 0 [[ChromeDriver: chrome on MAC (f12f3daa7dd446e6ad0404216c06c774)] -> css selector: body]])
+00:08:48.652 INFO - Done: [is displayed: 0 [[ChromeDriver: chrome on MAC (f12f3daa7dd446e6ad0404216c06c774)] -> css selector: body]]
+00:08:48.660 INFO - Executing: [find element: By.cssSelector: input[type=email]])
+00:08:48.693 INFO - Done: [find element: By.cssSelector: input[type=email]]
+00:08:48.699 INFO - Executing: [send keys: 1 [[ChromeDriver: chrome on MAC (f12f3daa7dd446e6ad0404216c06c774)] -> css selector: input[type=email]], [i, n, v, a, l, i, d, @, o, k, d, o, c, s, ., c, o, m]])
+00:08:48.995 INFO - Done: [send keys: 1 [[ChromeDriver: chrome on MAC (f12f3daa7dd446e6ad0404216c06c774)] -> css selector: input[type=email]], [i, n, v, a, l, i, d, @, o, k, d, o, c, s, ., c, o, m]]
+00:08:49.005 INFO - Executing: [find element: By.cssSelector: input[type=password]])
+00:08:49.030 INFO - Done: [find element: By.cssSelector: input[type=password]]
+00:08:49.040 INFO - Executing: [send keys: 2 [[ChromeDriver: chrome on MAC (f12f3daa7dd446e6ad0404216c06c774)] -> css selector: input[type=password]], [p, a, s, s, w, o, r, d]])
+00:08:49.178 INFO - Done: [send keys: 2 [[ChromeDriver: chrome on MAC (f12f3daa7dd446e6ad0404216c06c774)] -> css selector: input[type=password]], [p, a, s, s, w, o, r, d]]
+00:08:49.185 INFO - Executing: [find element: By.cssSelector: input[type=submit]])
+00:08:49.210 INFO - Done: [find element: By.cssSelector: input[type=submit]]
+00:08:49.218 INFO - Executing: [click: 3 [[ChromeDriver: chrome on MAC (f12f3daa7dd446e6ad0404216c06c774)] -> css selector: input[type=submit]]])
+00:08:49.311 INFO - Done: [click: 3 [[ChromeDriver: chrome on MAC (f12f3daa7dd446e6ad0404216c06c774)] -> css selector: input[type=submit]]]
+00:08:51.323 INFO - Executing: [get current url])
+00:08:51.330 INFO - Done: [get current url]
+00:08:51.336 INFO - Executing: [delete session: 8e1b67b6-b01a-442d-85ac-0e730f17f4e1])
+00:08:51.465 INFO - Done: [delete session: 8e1b67b6-b01a-442d-85ac-0e730f17f4e1]

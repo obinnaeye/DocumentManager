@@ -17,6 +17,7 @@ export const signinUser = user =>
   dispatch =>
     ajaxCall.post('/users/login', user)
       .then((response) => {
+        dispatch(signinUserSuccess(response.data));
         /* istanbul ignore next */
         if (!testing) {
           const { activeToken } = response.data;
@@ -25,14 +26,13 @@ export const signinUser = user =>
           setToken(activeToken);
           const decodedUser = jwt_decode(activeToken);
           localStorage.setItem('user_profile', JSON.stringify(decodedUser));
+          console.log(decodedUser);
           dispatch(signinUserSuccess(decodedUser));
           Materialize.toast(
             'You have successfully signed in! Welcome!',
             5000, 'green'
           );
-          return;
         }
-        dispatch(signinUserSuccess(response.data));
       })
       .catch((error) => {
         dispatch(signinUserFailure());

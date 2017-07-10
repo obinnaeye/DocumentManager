@@ -107,6 +107,7 @@ export const validateUserFailure = () =>
   ({ type: actionTypes.VALIDATE_USER_FAILURE });
 
 export const validateUser = (userId) => {
+  console.log('actions', userId)
   /* istanbul ignore next */
   if (!testing) {
     setToken();
@@ -135,6 +136,10 @@ export const logout = () => {
   return dispatch =>
     ajaxCall.post('/users/logout')
       .then((response) => {
+        /* istanbul ignore next */
+        if (!testing) {
+          localStorage.removeItem('xsrf_token');
+        }
         dispatch(logoutSuccess(response.data));
       })
       .catch((error) => {

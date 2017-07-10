@@ -34,8 +34,10 @@ class NavBar extends React.Component {
    * @memberOf NavBar
    */
   componentDidMount() {
-    const { userId } = jwt_decode(localStorage.xsrf_token);
-    this.props.UserActions.validateUser(userId);
+    if (localStorage.xsrf_token) {
+      const { userId } = jwt_decode(localStorage.xsrf_token);
+      this.props.UserActions.validateUser(userId);
+    }
   }
 
   /**

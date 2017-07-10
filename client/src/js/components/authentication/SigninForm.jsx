@@ -49,6 +49,7 @@ const SigninForm = ({
               waves-light btn black button-margin`}
             value="Signin"
             type="submit"
+            id="signin"
           />
           New User?
           <Link

@@ -5,7 +5,7 @@ const PlainNewDocument = ({
   save,
   exit
 }) => (
-  <div className="row center-align white">
+  <div className="row center-align white" id="my-container" >
     <div className="row center-align">
       <div className="input-field col m5 s6">
         <input id="documentTitle" type="text" className="validate" />

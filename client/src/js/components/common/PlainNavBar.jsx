@@ -44,7 +44,7 @@ const PlainNavBar = ({
           <Link to="/" onClick={logout}>Logout</Link>
         </li>] :
       [
-        <li key="dashboard"><Link to="/signin">Signin</Link></li>,
+        <li key="signin"><Link to="/signin">Signin</Link></li>,
         <li key="auth"><Link to="/signup" replace>Signup</Link></li>
       ]}
     </ul>

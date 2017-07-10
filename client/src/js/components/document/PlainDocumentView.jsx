@@ -40,11 +40,6 @@ const PlainDocumentView = ({
   </div>
 );
 
-PlainDocumentView.defaultProps = {
-  editDocument: () => true,
-  parsedContent: () => true
-};
-
 PlainDocumentView.propTypes = {
   title: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,

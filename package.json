@@ -9,6 +9,7 @@
     "build": "./node_modules/.bin/webpack",
     "build:dev": "./node_modules/.bin/webpack -w",
     "deploy": "npm start",
+    "e2e": "./node_modules/.bin/nightwatch --config nightwatch.js",
     "mocha": "NODE_ENV=test mocha server/test/**/*.spec.js --timeout 10000 --compilers js:babel-register",
     "cover": "rm -rf coverage/ && NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec server/test/**/*.spec.js",
     "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls",
@@ -42,11 +43,13 @@
       "babel-register"
     ],
     "inclcude": [
-      "server/**/*.js"
+      "server/**/*.js",
+      "client/**/*.js"
     ],
     "exclude": [
       "**/*.test.jsx",
-      "public"
+      "public",
+      "client/src/helper/*.js"
     ],
     "extension": [
       ".jsx",
@@ -69,6 +72,8 @@
     "chai": "^4.0.2",
     "css-loader": "^0.28.2",
     "dotenv": "^4.0.0",
+    "env2": "^2.2.0",
+    "enzyme": "^2.9.1",
     "expect": "^1.20.2",
     "express": "^4.15.3",
     "faker": "^4.1.0",
@@ -79,6 +84,7 @@
     "lodash": "^4.17.4",
     "mocha": "^3.4.2",
     "morgan": "^1.8.2",
+    "nightwatch": "^0.9.16",
     "nock": "^9.0.13",
     "node-sass": "^4.5.3",
     "path": "^0.12.7",

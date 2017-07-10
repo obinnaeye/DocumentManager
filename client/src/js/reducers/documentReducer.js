@@ -1,15 +1,15 @@
 import findIndex from 'lodash/findIndex';
 import actionTypes from '../constants/actionTypes';
-
-const initialState = { documents: [], userDocuments: [] };
+import initialState from './initialState';
 
 const documentReducer = (state = initialState, action) => {
   switch (action.type) {
   case actionTypes.CREATE_DOCUMENT_SUCCESS: {
     const editID = action.createdDocument.id;
     const stateUserDocuments = state.userDocuments;
+    stateUserDocuments.push(action.createdDocument);
     return { ...state,
-      userDocuments: stateUserDocuments.push(action.createdDocument),
+      userDocuments: stateUserDocuments,
       editID
     };
   }
@@ -27,7 +27,7 @@ const documentReducer = (state = initialState, action) => {
     // Use unary plus to convert id string to number
     const index =
       findIndex(state.documents, { id: +(action.documentId) });
-    const stateDocuments = state.documents;
+    const stateDocuments = state.documents.slice(0);
     stateDocuments.splice(index, 1);
     return { ...state,
       documents: stateDocuments,

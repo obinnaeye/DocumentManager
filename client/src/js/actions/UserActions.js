@@ -157,12 +157,14 @@ export const deleteUser = (userId) => {
     ajaxCall.delete(`/users/${userId}`)
       .then((response) => {
         dispatch(deleteSuccess(userId));
+        /* istanbul ignore next */
         if (!testing) {
           Materialize.toast(response.data.message, 3000, 'green');
         }
       })
       .catch((error) => {
         dispatch(deleteFailure(error));
+        /* istanbul ignore next */
         if (!testing) {
           Materialize.toast(error.message, 3000, 'red');
         }

@@ -17,11 +17,10 @@
     "migrate:test": "NODE_ENV=test sequelize db:migrate",
     "seed:test": "NODE_ENV=test sequelize db:seed:all",
     "seed:dev": "NODE_ENV=development sequelize db:seed:all",
-    "test": "npm run mocha",
-    "test:frontend": "NODE_ENV=test mocha client/test/**/*.spec.js --timeout 10000 --compilers js:babel-register",
+    "test": "npm run test:backend && npm run test:frontend && npm run report-coverage",
+    "test:backend": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=html mocha \"server/test/**/*.spec.js\" --timeout 10000",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "test:coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=html mocha \"server/test/**/*.spec.js\" --timeout 10000 && npm run report-coverage",
-    "test:coverage:frontend": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=html mocha \"client/test/**/*.spec.js\" --timeout 10000 && npm run report-coverage"
+    "test:frontend": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=html mocha \"client/test/**/*.spec.js\" --timeout 10000"
   },
   "repository": {
     "type": "git",

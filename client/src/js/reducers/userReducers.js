@@ -47,17 +47,12 @@ const userReducers = (state = initialState, action) => {
     return ({ ...state, authenticated: false, count: state.count + 1 || 1 });
 
   case actionTypes.LOGOUT_SUCCESS:
-    return ({ ...state,
-      authenticated: false,
-      signingIn: false,
-      createdUser: false,
-      count: state.count + 1 || 1
-    });
+    return (initialState);
 
   case actionTypes.DELETE_USER_SUCCESS: {
     // Use unary plus to convert id string to number
     const index = findIndex(state.users, { userId: +(action.userId) });
-    const stateUsers = state.users;
+    const stateUsers = state.users.slice(0);
     stateUsers.splice(index, 1);
     return ({ ...state,
       users: stateUsers,

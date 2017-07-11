@@ -26,7 +26,6 @@ export const signinUser = user =>
           setToken(activeToken);
           const decodedUser = jwt_decode(activeToken);
           localStorage.setItem('user_profile', JSON.stringify(decodedUser));
-          console.log(decodedUser);
           dispatch(signinUserSuccess(decodedUser));
           Materialize.toast(
             'You have successfully signed in! Welcome!',

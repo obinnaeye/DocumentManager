@@ -27,7 +27,6 @@ export const createUser = user =>
             3000, 'green'
           );
         }
-        console.log('res', response.data)
         dispatch(createUserSuccess(response.data));
       }, (error) => {
         dispatch(createUserFailure());

@@ -5,7 +5,6 @@ import initialState from './initialState';
 const userReducers = (state = initialState, action) => {
   switch (action.type) {
   case actionTypes.CREATE_USER_SUCCESS:
-    console.log('reducer', action);
     return ({
       ...state,
       createdUser: true,
@@ -14,7 +13,6 @@ const userReducers = (state = initialState, action) => {
     });
 
   case actionTypes.CREATE_USER_FAILURE:
-    console.log('reducer2', action);
     return { ...state, createdUser: false, count: state.count + 1 || 1 };
 
   case actionTypes.SIGNIN_USER_SUCCESS:

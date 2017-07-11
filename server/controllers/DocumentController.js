@@ -53,7 +53,7 @@ class DocumentController {
         } else {
           Document.create(newDocument)
             .then((createdDocument) => {
-              ResponseHandler.send200(
+              ResponseHandler.send201(
                 response,
                 DocumentController.getDocumentDetails(createdDocument)
               );

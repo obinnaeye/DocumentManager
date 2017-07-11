@@ -69,7 +69,7 @@ class RoleRoutes {
      *         schema:
      *           $ref: '#/definitions/NewRole'
      *     responses:
-     *       200:
+     *       201:
      *         description: role
      *         schema:
      *          $ref: '#/definitions/Role'
@@ -88,7 +88,7 @@ class RoleRoutes {
    * @return{Void} returns void
    */
   static getRole(router) {
-             /**
+    /**
      * @swagger
      * /roles/{id}:
      *   get:
@@ -173,7 +173,9 @@ class RoleRoutes {
      *       200:
      *         description: roles
      *         schema:
-     *          type: object
+     *          type: array
+     *          items:
+     *              $ref: '#/definitions/Role'
      */
     router.put(
       '/roles/:id',
@@ -211,9 +213,7 @@ class RoleRoutes {
      *         type: integer
      *     responses:
      *       200:
-     *         description: Success message
-     *         schema:
-     *          type: string
+     *         description: statusCode
      */
     router.delete(
       '/roles/:id',

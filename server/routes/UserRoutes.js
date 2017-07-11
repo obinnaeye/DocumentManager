@@ -115,13 +115,11 @@ class UserRoutes {
      *         schema:
      *           $ref: '#/definitions/NewUser'
      *     responses:
-     *       200:
-     *         description: users
+     *       201:
+     *         description: user
      *         schema:
      *          allOf:
-     *            - $ref: '#/definitions/NewUser'
-     *       400:
-     *         description: Error
+     *            - $ref: '#/definitions/User'
      */
     router.post('/users/',
     UserMiddleware.validateCreateRequest,
@@ -229,10 +227,12 @@ class UserRoutes {
    *          description: Search limit
    *          type: integer
    *      responses:
-   *        200:
-   *          description: user
-   *          schema:
-   *            $ref: '#/definitions/User'
+   *          200:
+   *              description: users
+   *              schema:
+   *                  type: array
+   *                  items:
+   *                      $ref: '#/definitions/SafeUser'
    */
     router.get('/search/users/',
     UserAuthenticator.authenticateUser,
@@ -267,7 +267,7 @@ class UserRoutes {
      *         required: true
      *         type: integer
      *       - name: body
-     *         description: 'User object: Delete fields not to be updated'
+     *         description: 'User object'
      *         in:  body
      *         required: true
      *         type: object
@@ -324,9 +324,7 @@ class UserRoutes {
      *           $ref: '#/definitions/User'
      *     responses:
      *       200:
-     *         description: message
-     *         schema:
-     *          type: string
+     *         description: statuCode
      */
     router.delete('/users/:id',
     UserAuthenticator.authenticateUser,

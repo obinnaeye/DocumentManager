@@ -28,6 +28,7 @@ const PlainNewDocument = ({
         <button
           className="btn waves-effect waves-light orange accent-3"
           onClick={save}
+          id="save"
         >Save</button><br />
         <button
           className="btn waves-effect waves-light orange accent-3"
@@ -36,6 +37,7 @@ const PlainNewDocument = ({
         <button
           className="btn waves-effect waves-light red lighten-2"
           onClick={exit}
+          id="exit"
         >Exit</button>
       </div>
     </div>

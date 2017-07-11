@@ -48,7 +48,6 @@ class Signin extends React.Component {
    * @memberOf Signin
    */
   componentWillReceiveProps(nextProps) {
-    console.log('next', nextProps);
     const { authenticated, signingIn, createdUser, count } = nextProps;
     this.setState({
       authenticated,
@@ -91,7 +90,6 @@ class Signin extends React.Component {
    * @memberOf Signin
    */
   render() {
-    console.log(this.state, 'my staste')
     const { authenticated, signingIn, createdUser, count } = this.state;
     const condition = (!authenticated && !signingIn && !createdUser);
     const signinForm = (

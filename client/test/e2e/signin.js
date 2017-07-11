@@ -6,7 +6,7 @@ module.exports = {
       .url(url.signin)
       .waitForElementVisible('body')
       .assert.containsText('h3', 'Signin Here:')
-      .setValue('input[type=email]', 'admin@okdocs.com')
+      .setValue('input[type=email]', 'info@okdocs.com')
       .setValue('input[type=password]', 'asdfghjk')
       .click('input[type=submit]')
       .pause(2000)

@@ -16,7 +16,6 @@ export const createUser = user =>
    dispatch =>
     ajaxCall.post('/users/', user)
       .then((response) => {
-        dispatch(createUserSuccess(response.data));
         /* istanbul ignore next */
         if (!testing) {
           const { activeToken } = response.data;
@@ -28,6 +27,8 @@ export const createUser = user =>
             3000, 'green'
           );
         }
+        console.log('res', response.data)
+        dispatch(createUserSuccess(response.data));
       }, (error) => {
         dispatch(createUserFailure());
         /* istanbul ignore next */

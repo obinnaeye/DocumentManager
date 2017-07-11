@@ -107,7 +107,6 @@ export const validateUserFailure = () =>
   ({ type: actionTypes.VALIDATE_USER_FAILURE });
 
 export const validateUser = (userId) => {
-  console.log('actions', userId)
   /* istanbul ignore next */
   if (!testing) {
     setToken();

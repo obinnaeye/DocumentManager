@@ -1,15 +1,15 @@
 import React from 'react';
 
 const Preloader =
-(count, condition, signinComponent, authenticatedComponent) => {
+(count, condition, authComponent, authenticatedComponent) => {
   if (count !== 0) {
     if (condition) {
-      return signinComponent;
+      return authComponent;
     }
     return authenticatedComponent;
   }
   if (!localStorage.xsrf_token) {
-    return signinComponent;
+    return authComponent;
   }
   return (
     <div className="progress">

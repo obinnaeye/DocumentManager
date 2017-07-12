@@ -762,7 +762,8 @@ describe('Users:', () => {
     });
 
     it('should not allow deletion of admin User', (done) => {
-      client.delete(`/users/${1}`)
+      const adminRoleId = currentAdminUser.roleId;
+      client.delete(`/users/${adminRoleId}`)
       .set({ 'xsrf-token': currentAdminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(403);

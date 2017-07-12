@@ -4,6 +4,7 @@
 
 # Document-Manager
  **_Introduction/Background Information_**:
+ 
  A simple app used for creating, editing, storing and managing documents. You can access documents based on roles and user-type. It also offers API endpoints for creating and managing documents.
 
 View the app [here](https://okdocs.herokuapp.com/)

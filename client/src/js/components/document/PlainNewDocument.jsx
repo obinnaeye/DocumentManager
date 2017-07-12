@@ -5,7 +5,7 @@ const PlainNewDocument = ({
   save,
   exit
 }) => (
-  <div className="row center-align white">
+  <div className="row center-align white" id="my-container" >
     <div className="row center-align">
       <div className="input-field col m5 s6">
         <input id="documentTitle" type="text" className="validate" />
@@ -28,6 +28,7 @@ const PlainNewDocument = ({
         <button
           className="btn waves-effect waves-light orange accent-3"
           onClick={save}
+          id="save"
         >Save</button><br />
         <button
           className="btn waves-effect waves-light orange accent-3"
@@ -36,6 +37,7 @@ const PlainNewDocument = ({
         <button
           className="btn waves-effect waves-light red lighten-2"
           onClick={exit}
+          id="exit"
         >Exit</button>
       </div>
     </div>

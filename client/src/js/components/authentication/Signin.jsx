@@ -22,10 +22,10 @@ class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      createdUser: this.props.createdUser,
-      authenticated: this.props.authenticated,
-      signingIn: this.props.signingIn,
-      count: this.props.count,
+      createdUser: false,
+      authenticated: false,
+      signingIn: false,
+      count: 0,
       user: {}
     };
     this.submit = this.submit.bind(this);
@@ -37,8 +37,7 @@ class Signin extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    const { authenticated, signingIn, createdUser } = this.props;
-    if (!authenticated && !signingIn && !createdUser) {
+    if (localStorage.xsrf_token) {
       const { userId } = jwt_decode(localStorage.xsrf_token);
       this.props.UserActions.validateUser(userId);
     }
@@ -118,7 +117,7 @@ const mapStateToProps = state => ({
   authenticated: state.userReducers.authenticated,
   signingIn: state.userReducers.signingIn,
   createdUser: state.userReducers.createdUser,
-  user: state.userReducers.user
+  count: state.userReducers.count
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -85,7 +85,7 @@ class DocumentRoutes {
      *         schema:
      *           $ref: '#/definitions/NewDocument'
      *     responses:
-     *       200:
+     *       201:
      *         description: Document Object created
      *         schema:
      *           $ref: '#/definitions/Document'
@@ -215,10 +215,12 @@ class DocumentRoutes {
    *          required: true
    *          type: integer
    *      responses:
-   *        200:
-   *          description: document
-   *          schema:
-   *            type: object
+   *          200:
+   *              description: documents
+   *              schema:
+   *                  type: array
+   *                  items:
+   *                      $ref: '#/definitions/Document'
    */
     router.get(
       '/users/:id/documents',
@@ -263,10 +265,12 @@ class DocumentRoutes {
    *          description: Search limit
    *          type: integer
    *      responses:
-   *        200:
-   *          description: document
-   *          schema:
-   *            $ref: '#/definitions/Document'
+   *          200:
+   *              description: documents
+   *              schema:
+   *                  type: array
+   *                  items:
+   *                      $ref: '#/definitions/Document'
    */
     router.get(
       '/search/documents',
@@ -304,7 +308,7 @@ class DocumentRoutes {
    *          type: number
    *        - name: body
    *          in: body
-   *          description: "UpdateDocument object: Delete fields not to update"
+   *          description: "UpdateDocument object"
    *          required: true
    *          type: object
    *          schema:
@@ -318,6 +322,7 @@ class DocumentRoutes {
     router.put(
       '/documents/:id',
       UserAuthenticator.authenticateUser,
+      DocumentMiddleware.validateUpdateRequest,
       DocumentController.updateDocument
     );
   }
@@ -351,9 +356,7 @@ class DocumentRoutes {
    *          type: integer
    *      responses:
    *        200:
-   *          description: Success message
-   *          schema:
-   *            type: string
+   *          description: statusCode
    */
     router.delete(
       '/documents/:id',

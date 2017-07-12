@@ -26,6 +26,16 @@ export default class ResponseHandler {
   }
 
   /**
+   * Method that sends a 201 (Created) response
+   * @param {Object} response - Response Object
+   * @param {Object} body - Object contained in the response body
+   * @return {Object} - Response object sent to requester
+   */
+  static send201(response, body) {
+    return ResponseHandler.sendResponse(response, 201, body);
+  }
+
+  /**
    * Method that sends a 400 (Bad Request) error response
    * @param {Object} response - Response Object
    * @param {Object} body - Object contained in the response body

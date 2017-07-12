@@ -1,5 +1,6 @@
 /* global jwt_decode */
 import React, { PropTypes } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as UserActions from '../actions/UserActions';
@@ -31,8 +32,7 @@ export default (ComposedConmponent) => {
      * @returns {void}
      */
     componentDidMount() {
-      if (!this.props.authenticated && !this.props.signingIn &&
-      !this.props.createdUser) {
+      if (localStorage.xsrf_token) {
         const { userId } = jwt_decode(localStorage.xsrf_token);
         this.props.UserActions.validateUser(userId);
       }
@@ -59,14 +59,10 @@ export default (ComposedConmponent) => {
      * @memberOf Authenticate
      */
     render() {
-      return (
-        <span>
-          { this.state.authenticated || this.state.signingIn
-            || this.state.createdUser
-             ? <ComposedConmponent {...this.props} /> :
-             ''}
-        </span>
-      );
+      if (!localStorage.xsrf_token) {
+        return <Redirect to="signin" />;
+      }
+      return <ComposedConmponent {...this.props} />;
     }
   }
 

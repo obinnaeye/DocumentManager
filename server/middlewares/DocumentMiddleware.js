@@ -54,4 +54,24 @@ export default class DocumentMiddleware {
       next();
     }
   }
+
+  /**
+   * Method that checks and validates document get requests
+   * @param {Object} request - Request Object
+   * @param {Object} response - Response Object
+   * @param {Function} next - Function call to continue with next function
+   * @return {undefined}
+   */
+  static validateUpdateRequest(request, response, next) {
+    if (request.body.access) {
+      const accessTypes = ['private', 'public', 'role'];
+      if (accessTypes.indexOf(request.body.access) < 0) {
+        ResponseHandler.send400(response, { message: 'Invalid access type' });
+      } else {
+        next();
+      }
+    } else {
+      next();
+    }
+  }
 }

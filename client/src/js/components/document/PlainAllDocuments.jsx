@@ -37,7 +37,7 @@ const DocumentCollapsible = ({
           </div>
         </div>
         { documents.length > 0 ?
-          <div className=" scroll-a row col s12">
+          <div className=" scroll-a row col s12" >
             <ul className="collapsible" data-collapsible="accordion">
               {renderedDocuments()}
             </ul>
@@ -60,11 +60,6 @@ const DocumentCollapsible = ({
     </div>
   </div>
 );
-
-DocumentCollapsible.defaultProps = {
-  viewDocument: () => true,
-  deleteDocument: () => true
-};
 
 DocumentCollapsible.propTypes = {
   offset: PropTypes.number.isRequired,

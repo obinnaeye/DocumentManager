@@ -53,7 +53,7 @@ class DocumentController {
         } else {
           Document.create(newDocument)
             .then((createdDocument) => {
-              ResponseHandler.send200(
+              ResponseHandler.send201(
                 response,
                 DocumentController.getDocumentDetails(createdDocument)
               );
@@ -300,7 +300,7 @@ class DocumentController {
                 title: request.body.title || foundDocument.title,
                 content: request.body.content || foundDocument.content,
                 userId,
-                roleId: userRoleId,
+                ownerRoleId: foundDocument.ownerRoleId,
                 access: request.body.access || foundDocument.access
               })
               .then((updatedDocument) => {

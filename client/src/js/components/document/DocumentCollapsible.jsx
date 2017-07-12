@@ -21,7 +21,7 @@ const DocumentCollapsible = ({
 }) => (
   <li>
     <div className="collapsible-header row">
-      <div className="col col s12 m10">
+      <div className="col s12 m10">
         <i className="material-icons orange">library_books</i>
         <span><b>Title: </b> <em>{truncator(title, 30)} </em> ||</span>
         <span> <b>Created:</b> <em>{createdAt}</em> ||</span>
@@ -54,11 +54,6 @@ const DocumentCollapsible = ({
     <div className="collapsible-body white">{parsedContent}</div>
   </li>);
 
-DocumentCollapsible.defaultProps = {
-  viewDocument: () => true,
-  deleteDocument: () => true
-};
-
 DocumentCollapsible.propTypes = {
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
@@ -68,8 +63,8 @@ DocumentCollapsible.propTypes = {
   userId: PropTypes.number.isRequired,
   roleId: PropTypes.number.isRequired,
   parsedContent: PropTypes.element.isRequired,
-  viewDocument: PropTypes.func,
-  deleteDocument: PropTypes.func
+  viewDocument: PropTypes.func.isRequired,
+  deleteDocument: PropTypes.func.isRequired
 };
 
 export default DocumentCollapsible;

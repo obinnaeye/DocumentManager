@@ -36,8 +36,10 @@ class Signup extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    const { userId } = jwt_decode(localStorage.xsrf_token);
-    this.props.UserActions.validateUser(userId);
+    if (localStorage.xsrf_token) {
+      const { userId } = jwt_decode(localStorage.xsrf_token);
+      this.props.UserActions.validateUser(userId);
+    }
   }
 
   /**
@@ -100,7 +102,7 @@ class Signup extends React.Component {
         onChange={this.onChange}
         submit={this.submit}
       />);
-    const redirect = <Redirect to="/dashboard" />;
+    const redirect = <Redirect to="dashboard" />;
     return (
       Preloader(count, condition, signupForm, redirect)
     );

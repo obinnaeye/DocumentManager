@@ -85,6 +85,7 @@ const SigninForm = ({
             btn black button-margin`}
             value="Signup"
             type="submit"
+            id="signup"
           />
           <em>If you have already registered...</em>
           <Link

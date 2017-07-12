@@ -74,7 +74,7 @@ describe('Documents:', () => {
       .send(publicDocument)
       .set({ 'xsrf-token': regularUser1.token })
       .end((error, response) => {
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(201);
         expect(response.body.createdAt).to.not.equal(undefined);
         done();
       });
@@ -89,7 +89,7 @@ describe('Documents:', () => {
       .send(publicDocument)
       .set({ 'xsrf-token': regularUser1.token })
       .end((error, response) => {
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(201);
         done();
       });
     });
@@ -101,7 +101,7 @@ describe('Documents:', () => {
       .send(roleDocument)
       .set({ 'xsrf-token': regularUser1.token })
       .end((error, response) => {
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(201);
         done();
       });
     });
@@ -169,7 +169,7 @@ describe('Documents:', () => {
       .send(defaultDocument)
       .set({ 'xsrf-token': regularUser1.token })
       .end((error, response) => {
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(201);
         expect(response.body.access).to.equal('public');
         done();
       });

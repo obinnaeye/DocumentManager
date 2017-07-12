@@ -5,16 +5,23 @@ import initialState from './initialState';
 const userReducers = (state = initialState, action) => {
   switch (action.type) {
   case actionTypes.CREATE_USER_SUCCESS:
-    return ({ ...state, createdUser: true, user: action.user });
+    return ({
+      ...state,
+      createdUser: true,
+      user: action.user,
+      count: state.count + 1 || 1
+    });
 
   case actionTypes.CREATE_USER_FAILURE:
-    return { ...state, createdUser: false };
+    return { ...state, createdUser: false, count: state.count + 1 || 1 };
 
   case actionTypes.SIGNIN_USER_SUCCESS:
-    return { ...state, signingIn: true, user: action.user, };
+    return {
+      ...state, signingIn: true, user: action.user, count: state.count + 1 || 1
+    };
 
   case actionTypes.SIGNIN_USER_FAILURE:
-    return { ...state, signingIn: false };
+    return { ...state, signingIn: false, count: state.count + 1 || 1 };
 
   case actionTypes.GET_USERS_SUCCESS:
     return ({ ...state, users: action.users, fetchingUsers: true });
@@ -47,17 +54,12 @@ const userReducers = (state = initialState, action) => {
     return ({ ...state, authenticated: false, count: state.count + 1 || 1 });
 
   case actionTypes.LOGOUT_SUCCESS:
-    return ({ ...state,
-      authenticated: false,
-      signingIn: false,
-      createdUser: false,
-      count: state.count + 1 || 1
-    });
+    return (initialState);
 
   case actionTypes.DELETE_USER_SUCCESS: {
     // Use unary plus to convert id string to number
     const index = findIndex(state.users, { userId: +(action.userId) });
-    const stateUsers = state.users;
+    const stateUsers = state.users.slice(0);
     stateUsers.splice(index, 1);
     return ({ ...state,
       users: stateUsers,

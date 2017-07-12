@@ -35,13 +35,15 @@ class DocumentController {
    */
   static createDocument(request, response) {
     const ownerId = request.decoded.userId;
-    const { title } = request.body;
+    const { title, content } = request.body;
+    const accessTypes = ['private', 'public', 'role'];
     const newDocument = {
       title,
-      content: request.body.content,
+      content,
       ownerId,
       ownerRoleId: request.decoded.roleId,
-      access: request.body.access || 'public'
+      access: accessTypes.indexOf(request.body.access) >= 0 ?
+      request.body.access : 'public'
     };
     Document.findOne({ where: { $and: { ownerId, title } } })
       .then((foundDocument) => {
@@ -296,12 +298,14 @@ class DocumentController {
               userId === foundDocument.ownerId
               || userRoleId === 1
               ) {
+              const accessTypes = ['private', 'public', 'role'];
               foundDocument.update({
                 title: request.body.title || foundDocument.title,
                 content: request.body.content || foundDocument.content,
-                userId,
+                ownerId: userId,
                 ownerRoleId: foundDocument.ownerRoleId,
-                access: request.body.access || foundDocument.access
+                access: accessTypes.indexOf(request.body.access) >= 0 ?
+                request.body.access : foundDocument.access
               })
               .then((updatedDocument) => {
                 ResponseHandler.send200(

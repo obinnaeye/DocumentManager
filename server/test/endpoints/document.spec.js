@@ -119,7 +119,7 @@ describe('Documents:', () => {
       });
     });
 
-    it('should NOT create a document with an invalid access type',
+    it('should override access type iif invalid access type is supplied',
     (done) => {
       const roleDocument = SpecHelper.generateRandomDocument('role');
       roleDocument.access = 'privatee';
@@ -127,9 +127,7 @@ describe('Documents:', () => {
       .send(roleDocument)
       .set({ 'xsrf-token': regularUser1.token })
       .end((error, response) => {
-        expect(response.status).to.equal(400);
-        expect(response.body[0].message).to.equal(
-          'Access type should be public, private or role');
+        expect(response.status).to.equal(201);
         done();
       });
     });

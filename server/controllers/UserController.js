@@ -211,6 +211,7 @@ export default class UserController {
     User.findById(request.params.id)
     .then((user) => {
       if (user) {
+        request.body.roleId = user.roleId;
         user.update(request.body)
         .then((updatedUser) => {
           ResponseHandler.send200(

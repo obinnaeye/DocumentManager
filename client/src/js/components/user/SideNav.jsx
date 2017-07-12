@@ -22,8 +22,8 @@ class SideNav extends React.Component {
     );
 
     $('#pushpin').pushpin({
-      top: 150,
-      offset: 0
+      top: 10,
+      offset: 70
     });
     if (this.props.location.pathname === '/dashboard') {
       $('#pushpin').click();

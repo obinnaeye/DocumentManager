@@ -3,9 +3,20 @@
 [![Coverage Status](https://coveralls.io/repos/github/andela-onnenanya/document-manager/badge.svg)](https://coveralls.io/github/andela-onnenanya/document-manager)
 
 # Document-Manager
+ **_Introduction/Background Information_**
 A simple app used for creating, editing, storing and managing documents. You can access documents based on roles and user-type. It also offers API endpoints for creating and managing documents.
 
 View the app [here](https://okdocs.herokuapp.com/)
+
+  **_Features_**
+The app has the following main features:
+* User authentication with jwt
+* Create, Edit and delete Documents
+* Documents are categorized into <code>public</code>, <code>private</code> and <code>role</code>
+* Access to document depends on user role
+* Admin can access and edit all roles, users and documents
+* Search users and documents
+* Paginations: Documents and Users can be retrieved applying limit and offset
 
 ## API Summary
 
@@ -13,7 +24,7 @@ View the app [here](https://okdocs.herokuapp.com/)
 
 For the full API documentation, visit [Api Documentations](https://okdocs.herokuapp.com/docs)
 
-## Users
+### Users
 
 EndPoint | Functionality
 -------- | -------------
@@ -27,7 +38,7 @@ GET /users/<id> | Find user.
 PUT /users/<id> | Update user attributes.
 DELETE /users/<id> | Delete user.
 
-## Documents
+### Documents
 
 EndPoint | Functionality
 -------- | -------------
@@ -79,9 +90,26 @@ npm run migrate:test
 npm test
 ```
 
+### Contributing to the project
+
+If you are interested in participating in the development of okDocs, your ideas and contributions are welcome! It is always better to start by identifying a specific part of the app you can make better. Taking a look at the limitations is a good starting point. You can reach out to the team through the comments or [create a new issue](https://github.com/andela-onnenanya/document-manager/issues/new).
+
+### Limitations of the project
+    Currently the project has the following limitations:
+
+    * Role Management is not available on the UI, only in the API
+    * Deleted documents and users can not be restored
+
+    The above limitations will be handled in later versions.
+
+
 ## Issues?
 Submit your issue [here](https://github.com/andela-onnenanya/document-manager/issues)
 
 ## License
 
-MIT License (MIT).
+[MIT][license] Copyright (c) Nnenanya Obinna K. 2017.
+
+<!-- Definitions -->
+
+[license]: LICENSE

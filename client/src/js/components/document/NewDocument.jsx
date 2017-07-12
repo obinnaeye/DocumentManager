@@ -94,7 +94,7 @@ class NewDocument extends React.Component {
   /**
    * @desc Saves a document and redirects to dashboard
    * @returns {void}
-   * @memberOf EditDocument
+   * @memberOf NewDocument
    */
   saveExit() {
     this.save();
@@ -104,7 +104,7 @@ class NewDocument extends React.Component {
   /**
    * @desc Redirects to dashboard
    * @returns {void}
-   * @memberOf EditDocument
+   * @memberOf NewDocument
    */
   exit() {
     this.props.history.push('/dashboard/my-documents');

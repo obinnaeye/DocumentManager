@@ -57,13 +57,13 @@ class UserDocuments extends React.Component {
 
   /**
    * @desc Opens a single document
-   * @param {object} e
+   * @param {object} event - triggered event
    * @returns {void}
    * @memberOf UserDocuments
    */
-  viewCarousel(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  viewCarousel(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.history.push(`/dashboard/documents/${id}`);
   }
 

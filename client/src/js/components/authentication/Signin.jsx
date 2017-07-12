@@ -57,13 +57,13 @@ class Signin extends React.Component {
     });
   }
   /**
-   *
-   * @param {object} e
+   * @desc Handles change events on form input fields
+   * @param {object} event - triggered event
    * @memberOf Signin
    * @returns {void}
    */
-  onChange(e) {
-    const ref = e.target;
+  onChange(event) {
+    const ref = event.target;
     const inputId = ref.id;
     const value = ref.value;
     const user = this.state.user;
@@ -73,6 +73,7 @@ class Signin extends React.Component {
     });
   }
   /**
+   * @desc    * @desc Sends user data to server for signin
    * @memberOf Signin
    * @return {void}
    */

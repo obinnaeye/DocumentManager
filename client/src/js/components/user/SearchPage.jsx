@@ -125,14 +125,14 @@ class SearchPage extends React.Component {
 
   /**
    * @desc - Method that handles change events
-   * @param {objcet} e - event target
+   * @param {objcet} event - triggered event
    * @return {void} - Returns void
    * @memberOf SearchPage
    */
-  inputChange(e) {
-    e.preventDefault();
-    const value = e.target.value;
-    const name = e.target.getAttribute('id');
+  inputChange(event) {
+    event.preventDefault();
+    const value = event.target.value;
+    const name = event.target.getAttribute('id');
     if (value < 0) {
       Materialize.toast(`${name} can not be negative`, 3000, 'red');
       return;
@@ -144,50 +144,50 @@ class SearchPage extends React.Component {
   }
 
   /**
-   * @desc Delets a docuement and redirects to documents page
-   * @param {object} e
+   * @desc Deletes a docuement
+   * @param {object} event - triggered event
    * @memberOf SearchPage
    * @returns {void}
    */
-  deleteDocument(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  deleteDocument(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.DocumentActions.deleteDocument(id);
   }
 
   /**
    * @desc Redirects to view page using document id
-   * @param {object} e
+   * @param {object} event - triggered event
    * @memberOf SearchPage
    * @returns {void}
    */
-  viewDocument(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  viewDocument(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.history.push(`/dashboard/documents/${id}`);
   }
 
   /**
    * @desc Redirects to edit page using user id
-   * @param {object} e
+   * @param {object} event - triggered event
    * @memberOf SearchPage
    * @returns {void}
    */
-  editUser(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  editUser(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.history.push(`/dashboard/edit-user/${id}`);
   }
 
   /**
-   * @desc Delets a docuement and redirects to users page
-   * @param {object} e
+   * @desc Delets a user
+   * @param {object} event - triggered event
    * @memberOf SearchPage
    * @returns {void}
    */
-  deleteUser(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  deleteUser(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.UserActions.deleteUser(id);
   }
 

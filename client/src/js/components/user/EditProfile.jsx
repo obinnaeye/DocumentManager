@@ -78,7 +78,7 @@ class EditProfile extends React.Component {
   }
 
   /**
-   * Make a PUT call to update user profile
+   * @desc Updates user profile
    * @returns {void}
    * @memberOf EditProfile
    */

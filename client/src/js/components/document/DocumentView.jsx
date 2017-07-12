@@ -53,7 +53,7 @@ class DocumentView extends React.Component {
 
   /**
    * @return {void} Returns void
-   * @memberOf AllDocuments
+   * @memberOf DocumentView
    */
   componentDidUpdate() {
     this.props = this.props;
@@ -61,25 +61,25 @@ class DocumentView extends React.Component {
 
   /**
    * @desc Redirects to edit page using document id
-   * @param {object} e
+   * @param {object} event - triggered event
    * @memberOf DocumentView
    * @returns {void}
    */
-  editDocument(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  editDocument(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.history.push(`/dashboard/edit-document/${id}`);
   }
 
   /**
-   * @desc Delets a docuement and redirects to documents page
-   * @param {object} e
+   * @desc Deletes a docuement and redirects to documents page
+   * @param {object} event - triggered event
    * @memberOf DocumentView
    * @returns {void}
    */
-  deleteDocument(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  deleteDocument(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.DocumentActions.deleteDocument(id)
       .then(() => {
         this.props.history.push('/dashboard/my-documents');

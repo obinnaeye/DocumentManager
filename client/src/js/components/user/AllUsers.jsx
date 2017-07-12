@@ -78,38 +78,38 @@ class AllUsers extends React.Component {
 
   /**
    * @desc Redirects to edit page using user id
-   * @param {object} e
+   * @param {object} event - triggered event
    * @memberOf AllUsers
    * @returns {void}
    */
-  editUser(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  editUser(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.history.push(`/dashboard/edit-user/${id}`);
   }
 
   /**
    * @desc Delets a docuement and redirects to users page
-   * @param {object} e
+   * @param {object} event - triggered event
    * @memberOf AllUsers
    * @returns {void}
    */
-  deleteUser(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  deleteUser(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.UserActions.deleteUser(id);
   }
 
   /**
    * @desc - Method that handles change events
-   * @param {objcet} e - event target
+   * @param {objcet} event - triggered event
    * @return {void} - Returns void
    * @memberOf AllUsers
    */
-  inputChange(e) {
-    e.preventDefault();
-    const value = e.target.value;
-    const name = e.target.getAttribute('id');
+  inputChange(event) {
+    event.preventDefault();
+    const value = event.target.value;
+    const name = event.target.getAttribute('id');
     if (value < 0) {
       Materialize.toast(`${name} can not be negative`, 3000, 'red');
       return;

@@ -65,7 +65,7 @@ class EditDocument extends React.Component {
     // check if document has been fetched
     // first prop recieved may not have updated AJAX call in componentDidMount
     // callcount is used to make sure props must have updated AJAX call
-    // then if fetchingDocument is still falls, then redirect to user documents
+    // then if fetchingDocument still fails, then redirect to user documents
     if (!nextProps.fetchingDocument && this.state.callcount > 0) {
       Materialize.toast(
         `Could not find any document with the id ${editID},
@@ -89,7 +89,7 @@ class EditDocument extends React.Component {
       }, 5000);
     } else {
       const { title, content, access } = nextProps.document;
-      CKEDITOR.instances.editor.insertHtml(content);
+      CKEDITOR.instances.editor.setData(content);
       $('#documentTitle').val(title);
       document.getElementById('documentTitle').focus();
       this.setState({
@@ -101,12 +101,12 @@ class EditDocument extends React.Component {
   }
   /**
    * @desc Handles change event on form input fields
-   * @param {object} e
+   * @param {object} event -triggered event
    * @memberOf EditDocument
    * @returns {void}
    */
-  handleChange(e) {
-    const access = e.target.value;
+  handleChange(event) {
+    const access = event.target.value;
     this.setState({
       access
     });

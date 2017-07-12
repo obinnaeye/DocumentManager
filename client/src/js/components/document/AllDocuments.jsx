@@ -17,7 +17,7 @@ class AllDocuments extends React.Component {
    * @param {object} props
    * @param {object} context
    * @returns {void}
-   * @memberOf UserDocuments
+   * @memberOf AllDocuments
    */
   constructor(props, context) {
     super(props, context);
@@ -35,7 +35,7 @@ class AllDocuments extends React.Component {
   }
 
   /**
-   * @memberOf UserDocuments
+   * @memberOf AllDocuments
    * @returns {void}
    */
   componentDidMount() {
@@ -45,7 +45,7 @@ class AllDocuments extends React.Component {
   /**
    * @param {object} nextProps
    * @returns {void}
-   * @memberOf UserDocuments
+   * @memberOf AllDocuments
    */
   componentWillReceiveProps(nextProps) {
     if (nextProps.documents.length > 0) {
@@ -78,14 +78,14 @@ class AllDocuments extends React.Component {
 
   /**
    * @desc - Method that handles change events
-   * @param {objcet} e - event target
+   * @param {objcet} event - triggered event
    * @return {void} - Returns void
-   * @memberOf AllUsers
+   * @memberOf AllDocuments
    */
-  inputChange(e) {
-    e.preventDefault();
-    const value = e.target.value;
-    const name = e.target.getAttribute('id');
+  inputChange(event) {
+    event.preventDefault();
+    const value = event.target.value;
+    const name = event.target.getAttribute('id');
     if (value < 0) {
       Materialize.toast(`${name} can not be negative`, 3000, 'red');
       return;
@@ -97,32 +97,32 @@ class AllDocuments extends React.Component {
 
   /**
    * @desc Redirects to view page using document id
-   * @param {object} e
-   * @memberOf DocumentView
+   * @param {object} event - triggered event
+   * @memberOf AllDocuments
    * @returns {void}
    */
-  viewDocument(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  viewDocument(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.history.push(`/dashboard/documents/${id}`);
   }
 
   /**
-   * @desc Delets a docuement and redirects to documents page
-   * @param {object} e
-   * @memberOf DocumentView
+   * @desc Deletes a docuement
+   * @param {object} event - triggered event
+   * @memberOf AllDocuments
    * @returns {void}
    */
-  deleteDocument(e) {
-    e.preventDefault();
-    const id = e.target.getAttribute('name');
+  deleteDocument(event) {
+    event.preventDefault();
+    const id = event.target.getAttribute('name');
     this.props.DocumentActions.deleteDocument(id);
   }
 
   /**
    * Formats document for rendering
    * @returns {element} DOM element
-   * @memberOf SearchPage
+   * @memberOf AllDocuments
    */
   renderedDocuments() {
     if (this.state.fetchingDocuments) {
@@ -154,7 +154,7 @@ class AllDocuments extends React.Component {
 
   /**
    * @returns {element} DOM element div
-   * @memberOf UserDocuments
+   * @memberOf AllDocuments
    */
   render() {
     const documents = this.state.documents;

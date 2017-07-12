@@ -300,7 +300,7 @@ class DocumentController {
                 title: request.body.title || foundDocument.title,
                 content: request.body.content || foundDocument.content,
                 userId,
-                roleId: userRoleId,
+                ownerRoleId: foundDocument.ownerRoleId,
                 access: request.body.access || foundDocument.access
               })
               .then((updatedDocument) => {

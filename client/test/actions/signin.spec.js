@@ -16,7 +16,7 @@ describe('Signin Action', () => {
   afterEach(() => {
     nockAjaxCall.cleanAll();
   });
-  it('creates SIGNIN_USER_SUCCESS when is signed in',
+  it('creates SIGNIN_USER_SUCCESS when user is signed in',
     () => {
       const user = {
         email: 'obinna@king.com',

@@ -1,13 +1,19 @@
-body {
+#app {
   background-image: url(/public/img/home.jpg);
   background-color: #663300;
-  margin-top: 50px;;
-  height: 100%
+  background-size: cover;
+  background-repeat:no-repeat;
+  background-position: 90% 30%;
+  min-height: 100vh;
 }
 
-@media screen and (min-width: 300px) {
-    body {
-        background-position: 90% 30%;
+// header {
+//   margin-top: -50px;
+// }
+
+@media only screen and (max-width: 440px) {
+    #app {
+        background-position: 90% 20%;
     }
 }
 

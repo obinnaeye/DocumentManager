@@ -322,6 +322,7 @@ class DocumentRoutes {
     router.put(
       '/documents/:id',
       UserAuthenticator.authenticateUser,
+      DocumentMiddleware.validateUpdateRequest,
       DocumentController.updateDocument
     );
   }

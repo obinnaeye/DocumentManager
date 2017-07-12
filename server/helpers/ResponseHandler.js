@@ -32,7 +32,7 @@ export default class ResponseHandler {
    * @return {Object} - Response object sent to requester
    */
   static send201(response, body) {
-    return ResponseHandler.sendResponse(response, 200, body);
+    return ResponseHandler.sendResponse(response, 201, body);
   }
 
   /**

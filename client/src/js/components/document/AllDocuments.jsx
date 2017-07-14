@@ -24,7 +24,8 @@ class AllDocuments extends React.Component {
     this.state = {
       documents: this.props.documents,
       offset: 0,
-      limit: 10
+      limit: 10,
+      start: 0
     };
 
     this.renderedDocuments = this.renderedDocuments.bind(this);
@@ -32,6 +33,7 @@ class AllDocuments extends React.Component {
     this.deleteDocument = this.deleteDocument.bind(this);
     this.getDocuments = this.getDocuments.bind(this);
     this.inputChange = this.inputChange.bind(this);
+    this.pageNavigation = this.pageNavigation.bind(this);
   }
 
   /**
@@ -49,10 +51,39 @@ class AllDocuments extends React.Component {
    */
   componentWillReceiveProps(nextProps) {
     if (nextProps.documents.length > 0) {
+      const allDocuments = nextProps.documents;
+      const totalDocuments = allDocuments.length;
+      const pagecount = totalDocuments / 10;
+      let { start } = this.state;
+      let target;
+      let documents = allDocuments.slice(start, start + 10);
+      let length;
+      if (this.state.target) {
+        this.state.target.classList.remove('active');
+      }
+      if (start > 0 && totalDocuments <= start) {
+        start = ((start / 10) - 1) * 10;
+        documents = allDocuments.slice(start, start + 10);
+        const parent = document.getElementsByClassName('pagination');
+        length = parent[0].children.length;
+        target = parent[0].children[length - 3];
+        if (length === 3) {
+          target = parent[0].children[length - 2];
+        }
+      }
       this.setState({
-        documents: nextProps.documents,
+        allDocuments,
         fetchingDocuments: nextProps.fetchingDocuments,
-        count: nextProps.count
+        count: nextProps.count,
+        documents,
+        pagecount,
+        totalDocuments,
+        target
+      }, () => {
+        if (target && length >= 4) {
+          target.classList.add('active');
+          target.click();
+        }
       });
     }
   }
@@ -93,6 +124,20 @@ class AllDocuments extends React.Component {
     this.setState({
       [name]: value
     }, this.getDocuments);
+  }
+
+
+  /**
+   * @desc Navigates to next/previous document list
+   * @returns {void} - returns void
+   * @param {object} event - target DOM element
+   * @memberOf AllDocuments
+   */
+  pageNavigation(event) {
+    const selected = event.selected;
+    const start = selected * 10;
+    const documents = this.state.allDocuments.slice(start, start + 10);
+    this.setState({ documents, start, selected });
   }
 
   /**
@@ -166,6 +211,11 @@ class AllDocuments extends React.Component {
         inputChange={this.inputChange}
         documents={documents}
         renderedDocuments={this.renderedDocuments}
+        pageNavigation={this.pageNavigation}
+        totalDocuments={this.state.totalDocuments}
+        pagecount={this.state.pagecount}
+        initialPage={this.state.initialPage}
+        forcePage={this.state.forcePage}
       />
     );
   }

@@ -94,7 +94,7 @@ export const getAllDocuments = (offset, limit) => {
   return dispatch =>
     ajaxCall.get(`/documents/?limit=${limit}&offset=${offset}`)
       .then((response) => {
-        dispatch(getDocumentsSuccess(response.data));
+        dispatch(getDocumentsSuccess(response.data.rows));
       })
       .catch((error) => {
         dispatch(getDocumentsFailure());
@@ -122,7 +122,8 @@ export const searchDocuments = (searchData) => {
   return dispatch =>
     ajaxCall.get(`/search/documents?q=${q}&limit=${limit}&offset=${offset}`)
       .then((response) => {
-        dispatch(getDocumentsSuccess(response.data));
+        console.log('mwer', response.data)
+        dispatch(getDocumentsSuccess(response.data.rows));
       })
       .catch((error) => {
         dispatch(getDocumentsFailure(error));

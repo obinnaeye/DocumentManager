@@ -35,7 +35,7 @@ class UserDocuments extends React.Component {
    * @returns {void}
    */
   componentDidMount() {
-    const { userId } = jwt_decode(localStorage.xsrf_token);
+    const { userId } = jwt_decode(localStorage.accessToken);
     this.props.DocumentActions.getUserDocuments(userId);
   }
 

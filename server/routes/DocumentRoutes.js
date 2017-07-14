@@ -146,39 +146,54 @@ class DocumentRoutes {
    * @memberof DocumentRoutes
    */
   static getDocuments(router) {
-    /**
-     * @swagger
-     * /documents/:
-     *   get:
-     *      description: Returns a list of all documents
-     *      tags:
-     *        - Get Documents List
-     *      produces:
-     *        - application/json
-     *      parameters:
-     *        - name: authorization
-     *          description: Jwt access token
-     *          in: header
-     *          required: true
-     *          type: string
-     *        - name: limit
-     *          description: Documents query limit
-     *          in: query
-     *          required: false
-     *          type: integer
-     *        - name: offset
-     *          description: Documents query offset
-     *          in: query
-     *          required: false
-     *          type: integer
-     *      responses:
-     *          200:
-     *              description: documents
-     *              schema:
-     *                  type: array
-     *                  items:
-     *                      $ref: '#/definitions/Document'
-     */
+  /**
+   * @swagger
+   * /documents/:
+   *   get:
+   *      description: Returns a list of all documents
+   *      tags:
+   *        - Get Documents List
+   *      produces:
+   *        - application/json
+   *      parameters:
+   *        - name: authorization
+   *          description: Jwt access token
+   *          in: header
+   *          required: true
+   *          type: string
+   *        - name: limit
+   *          description: Documents query limit
+   *          in: query
+   *          required: false
+   *          type: integer
+   *        - name: offset
+   *          description: Documents query offset
+   *          in: query
+   *          required: false
+   *          type: integer
+   *      responses:
+   *          200:
+   *              description: documents
+   *              schema:
+   *                type: object
+   *                properties:
+   *                   page:
+   *                      type: number
+   *                   page_count:
+   *                      type: number
+   *                   limit:
+   *                      type: number
+   *                   offset:
+   *                      type: number
+   *                   page_size:
+   *                      type: number
+   *                   total_count:
+   *                      type: number
+   *                   documents:
+   *                      type: array
+   *                      items:
+   *                          $ref: '#/definitions/Document'
+   */
     router.get(
       '/documents/',
       UserAuthenticator.authenticateUser,
@@ -268,9 +283,24 @@ class DocumentRoutes {
    *          200:
    *              description: documents
    *              schema:
-   *                  type: array
-   *                  items:
-   *                      $ref: '#/definitions/Document'
+   *                type: object
+   *                properties:
+   *                   page:
+   *                      type: number
+   *                   page_count:
+   *                      type: number
+   *                   limit:
+   *                      type: number
+   *                   offset:
+   *                      type: number
+   *                   page_size:
+   *                      type: number
+   *                   total_count:
+   *                      type: number
+   *                   documents:
+   *                      type: array
+   *                      items:
+   *                          $ref: '#/definitions/Document'
    */
     router.get(
       '/search/documents',

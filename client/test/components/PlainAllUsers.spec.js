@@ -41,7 +41,7 @@ describe('<PlainAllUsers />', () => {
 
   it('should render only 3 elements with className of row if users is supplied',
   () => {
-    expect(wrapper.find('.row').length).toEqual(3);
+    expect(wrapper.find('.row').length).toEqual(4);
   });
 
   const newUsers = [];

@@ -20,7 +20,7 @@ export const searchUsers = (searchData) => {
   return dispatch =>
     ajaxCall.get(`/search/users/?q=${q}&offset=${offset}&limit=${limit}`)
       .then((response) => {
-        dispatch(searchUserSuccess(response.data));
+        dispatch(searchUserSuccess(response.data.rows));
       })
       .catch((error) => {
         dispatch(searchUserFailure(error));
@@ -62,7 +62,7 @@ export const getUsers = (offset, limit) => {
   return dispatch =>
     ajaxCall.get(`/users/?limit=${limit}&offset=${offset}`)
       .then((response) => {
-        dispatch(getUsersSuccess(response.data));
+        dispatch(getUsersSuccess(response.data.rows));
       })
       .catch((error) => {
         dispatch(getUsersFailure(error));
@@ -137,7 +137,7 @@ export const logout = () => {
       .then((response) => {
         /* istanbul ignore next */
         if (!testing) {
-          localStorage.removeItem('xsrf_token');
+          localStorage.removeItem('accessToken');
         }
         dispatch(logoutSuccess(response.data));
       })

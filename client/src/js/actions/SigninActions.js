@@ -21,7 +21,7 @@ export const signinUser = user =>
         /* istanbul ignore next */
         if (!testing) {
           const { activeToken } = response.data;
-          localStorage.setItem('xsrf_token', response.data.activeToken);
+          localStorage.setItem('accessToken', response.data.activeToken);
           // set jwt authorization token on request header
           setToken(activeToken);
           const decodedUser = jwt_decode(activeToken);

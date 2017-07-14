@@ -24,7 +24,8 @@ class AllUsers extends React.Component {
     this.state = {
       users: this.props.users,
       offset: 0,
-      limit: 10
+      limit: 10,
+      start: 0
     };
 
     this.renderedUsers = this.renderedUsers.bind(this);
@@ -32,6 +33,7 @@ class AllUsers extends React.Component {
     this.deleteUser = this.deleteUser.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.getUsers = this.getUsers.bind(this);
+    this.pageNavigation = this.pageNavigation.bind(this);
   }
 
   /**
@@ -49,10 +51,39 @@ class AllUsers extends React.Component {
    */
   componentWillReceiveProps(nextProps) {
     if (nextProps.users.length > 0) {
+      const allUsers = nextProps.users;
+      const totalUsers = allUsers.length;
+      const pagecount = totalUsers / 10;
+      let { start } = this.state;
+      let target;
+      let users = allUsers.slice(start, start + 10);
+      let length;
+      if (this.state.target) {
+        this.state.target.classList.remove('active');
+      }
+      if (start > 0 && totalUsers <= start) {
+        start = ((start / 10) - 1) * 10;
+        users = allUsers.slice(start, start + 10);
+        const parent = document.getElementsByClassName('pagination');
+        length = parent[0].children.length;
+        target = parent[0].children[length - 3];
+        if (length === 3) {
+          target = parent[0].children[length - 2];
+        }
+      }
       this.setState({
-        users: nextProps.users,
+        allUsers,
+        users,
         fetchingUsers: nextProps.fetchingUsers,
-        count: nextProps.count
+        count: nextProps.count,
+        pagecount,
+        totalUsers,
+        target
+      }, () => {
+        if (target && length >= 4) {
+          target.classList.add('active');
+          target.click();
+        }
       });
     }
   }
@@ -120,6 +151,19 @@ class AllUsers extends React.Component {
   }
 
   /**
+   * @desc Navigates to next/previous document list
+   * @returns {void} - returns void
+   * @param {object} event - target DOM element
+   * @memberOf AllDocuments
+   */
+  pageNavigation(event) {
+    const selected = event.selected;
+    const start = selected * 10;
+    const documents = this.state.allDocuments.slice(start, start + 10);
+    this.setState({ documents, start, selected });
+  }
+
+  /**
    * Formats user for rendering
    * @returns {element} DOM element
    * @memberOf AllUsers
@@ -162,6 +206,11 @@ class AllUsers extends React.Component {
         users={users}
         inputChange={this.inputChange}
         renderedUsers={this.renderedUsers}
+        pageNavigation={this.pageNavigation}
+        totalDocuments={this.state.totalDocuments}
+        pagecount={this.state.pagecount}
+        initialPage={this.state.initialPage}
+        forcePage={this.state.forcePage}
       />
     );
   }

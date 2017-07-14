@@ -38,7 +38,7 @@ describe('<PlainAllDocuments />', () => {
   it('should render collapsible if document exists', () => {
     expect(wrapper.find('.collapsible').length).toEqual(1);
     expect(wrapper.find('.scroll-a').length).toEqual(1);
-    expect(wrapper.find('.row').length).toEqual(3);
+    expect(wrapper.find('.row').length).toEqual(4);
   });
 
   const newDocuments = [];

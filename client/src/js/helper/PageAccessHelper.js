@@ -32,8 +32,8 @@ export default (ComposedConmponent) => {
      * @returns {void}
      */
     componentDidMount() {
-      if (localStorage.xsrf_token) {
-        const { userId } = jwt_decode(localStorage.xsrf_token);
+      if (localStorage.accessToken) {
+        const { userId } = jwt_decode(localStorage.accessToken);
         this.props.UserActions.validateUser(userId);
       }
     }
@@ -59,7 +59,7 @@ export default (ComposedConmponent) => {
      * @memberOf Authenticate
      */
     render() {
-      if (!localStorage.xsrf_token) {
+      if (!localStorage.accessToken) {
         return <Redirect to="signin" />;
       }
       return <ComposedConmponent {...this.props} />;

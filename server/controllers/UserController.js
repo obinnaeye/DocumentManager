@@ -2,6 +2,7 @@ import { User } from '../models';
 import UserAuthenticator from '../middlewares/UserAuthenticator';
 import ResponseHandler from '../helpers/ResponseHandler';
 import ErrorHandler from '../helpers/ErrorHandler';
+import PaginationHelper from '../helpers/PaginationHelper';
 
 /**
  * Class that handles request to user database
@@ -172,7 +173,7 @@ export default class UserController {
     const offset = request.query.offset || '0';
     if (request.query.q) {
       const like = `%${request.query.q}%`;
-      User.findAll({ where:
+      User.findAndCountAll({ where:
       {
         $or: [{ email: { $ilike: like } },
           { firstName: { $ilike: like } },
@@ -184,11 +185,11 @@ export default class UserController {
         order: '"email" DESC'
       })
        .then((foundUsers) => {
-         if (foundUsers.length) {
-           return ResponseHandler.send200(
-             response,
-             UserController.formatedUsers(foundUsers)
-            );
+         if (foundUsers.rows.length > 0) {
+           const formatedUsers = UserController.formatedUsers(foundUsers.rows);
+           foundUsers.rows = formatedUsers;
+           return ResponseHandler.send200(response,
+           PaginationHelper.paginateResult(foundUsers, offset, limit));
          }
          return ResponseHandler.send404(response);
        }).catch(error => ResponseHandler.send500(
@@ -313,9 +314,12 @@ export default class UserController {
     };
     User.findAndCountAll(queryBuilder)
     .then((users) => {
-      if (users.count > 0) {
+      if (users.rows.length > 0) {
+        const formatedUsers = UserController.formatedUsers(users.rows);
+        users.rows = formatedUsers;
+
         ResponseHandler.send200(response,
-        UserController.formatedUsers(users.rows));
+        PaginationHelper.paginateResult(users, offset, limit));
       } else {
         ResponseHandler.send404(response);
       }

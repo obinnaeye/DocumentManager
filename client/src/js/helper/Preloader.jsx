@@ -8,7 +8,7 @@ const Preloader =
     }
     return authenticatedComponent;
   }
-  if (!localStorage.xsrf_token) {
+  if (!localStorage.accessToken) {
     return authComponent;
   }
   return (

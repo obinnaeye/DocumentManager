@@ -1,11 +1,15 @@
 import React, { PropTypes } from 'react';
+import Pagination from 'react-paginate';
 
 const DocumentCollapsible = ({
   inputChange,
   limit,
   offset,
   documents,
-  renderedDocuments
+  renderedDocuments,
+  pageNavigation,
+  pagecount,
+  initialPage
 }) => (
   <div className="container width-85">
     <div className="row">
@@ -41,6 +45,26 @@ const DocumentCollapsible = ({
             <ul className="collapsible" data-collapsible="accordion">
               {renderedDocuments()}
             </ul>
+            <div className="row">
+              <div className="col s10 offset-s1">
+                <Pagination
+                  className="col s2 offset-s1"
+                  initialPage={initialPage}
+                  previousLabel={'previous'}
+                  nextLabel={'next'}
+                  breakLabel={<a href="">...</a>}
+                  breakClassName={'break-me'}
+                  pageCount={pagecount}
+                  onPageChange={pageNavigation}
+                  disableInitialCallback
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  containerClassName={'pagination'}
+                  subContainerClassName={'pages pagination'}
+                  activeClassName={'active'}
+                />
+              </div>
+            </div>
           </div>
             :
           <div className="row">
@@ -66,7 +90,10 @@ DocumentCollapsible.propTypes = {
   limit: PropTypes.number.isRequired,
   inputChange: PropTypes.func.isRequired,
   renderedDocuments: PropTypes.func.isRequired,
-  documents: PropTypes.array.isRequired
+  documents: PropTypes.array.isRequired,
+  pageNavigation: PropTypes.func.isRequired,
+  pagecount: PropTypes.number.isRequired,
+  initialPage: PropTypes.number.isRequired
 };
 
 export default DocumentCollapsible;

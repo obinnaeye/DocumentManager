@@ -1,6 +1,7 @@
 import { Document } from '../models';
 import ResponseHandler from '../helpers/ResponseHandler';
 import ErrorHandler from '../helpers/ErrorHandler';
+import PaginationHelper from '../helpers/PaginationHelper';
 
 /**
  * @class DocumentController
@@ -138,7 +139,7 @@ class DocumentController {
         if (foundDocuments.count > 0) {
           ResponseHandler.send200(
             response,
-            foundDocuments.rows
+            PaginationHelper.paginateResult(foundDocuments, offset, limit)
           );
         } else {
           ResponseHandler.send404(response);
@@ -159,7 +160,7 @@ class DocumentController {
         if (foundDocuments.rows.length > 0) {
           ResponseHandler.send200(
             response,
-            foundDocuments.rows
+            PaginationHelper.paginateResult(foundDocuments, offset, limit)
           );
         } else {
           ResponseHandler.send404(response);
@@ -237,7 +238,7 @@ class DocumentController {
         if (foundDocuments.rows.length > 0) {
           ResponseHandler.send200(
             response,
-            foundDocuments.rows
+            PaginationHelper.paginateResult(foundDocuments, offset, limit)
           );
         } else {
           ResponseHandler.send404(response);
@@ -263,7 +264,7 @@ class DocumentController {
           if (foundDocuments.rows.length > 0) {
             ResponseHandler.send200(
               response,
-              foundDocuments.rows
+              PaginationHelper.paginateResult(foundDocuments, offset, limit)
             );
           } else {
             ResponseHandler.send404(response);

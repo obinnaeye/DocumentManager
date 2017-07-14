@@ -280,7 +280,7 @@ describe('Documents:', () => {
         .set({ 'xsrf-token': regularUser1.token })
         .end((error, response) => {
           expect(response.status).to.equal(200);
-          const documents = response.body;
+          const documents = response.body.rows;
           documents.forEach((document) => {
             expect(document.access).to.be.oneOf(['role', 'private', 'public']);
             // check that only the user private documents are returned
@@ -298,7 +298,7 @@ describe('Documents:', () => {
         .set({ 'xsrf-token': adminUser.token })
         .end((error, response) => {
           expect(response.status).to.equal(200);
-          const documents = response.body;
+          const documents = response.body.rows;
           documents.forEach((document) => {
             expect(document.access).to.be.oneOf(['role', 'private', 'public']);
           });
@@ -353,7 +353,7 @@ describe('Documents:', () => {
         .set({ 'xsrf-token': adminUser.token })
         .end((error, response) => {
           expect(response.status).to.equal(200);
-          expect(response.body.length).to.equal(1);
+          expect(response.body.rows.length).to.equal(1);
           done();
         });
       });
@@ -428,7 +428,7 @@ describe('Documents:', () => {
           .set({ 'xsrf-token': regularUser1.token })
           .end((error, response) => {
             expect(response.status).to.equal(200);
-            expect(response.body.length).to.be.at.least(1);
+            expect(response.body.rows.length).to.be.at.least(1);
             done();
           });
       });
@@ -449,7 +449,7 @@ describe('Documents:', () => {
           .set({ 'xsrf-token': regularUser1.token })
           .end((error, response) => {
             expect(response.status).to.equal(200);
-            expect(response.body.length).to.be.at.least(1);
+            expect(response.body.rows.length).to.be.at.least(1);
             done();
           });
       });

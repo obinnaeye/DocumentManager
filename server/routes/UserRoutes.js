@@ -230,9 +230,24 @@ class UserRoutes {
    *          200:
    *              description: users
    *              schema:
-   *                  type: array
-   *                  items:
-   *                      $ref: '#/definitions/SafeUser'
+   *                type: object
+   *                properties:
+   *                   page:
+   *                      type: number
+   *                   page_count:
+   *                      type: number
+   *                   limit:
+   *                      type: number
+   *                   offset:
+   *                      type: number
+   *                   page_size:
+   *                      type: number
+   *                   total_count:
+   *                      type: number
+   *                   users:
+   *                      type: array
+   *                      items:
+   *                          $ref: '#/definitions/SafeUser'
    */
     router.get('/search/users/',
     UserAuthenticator.authenticateUser,
@@ -283,7 +298,7 @@ class UserRoutes {
      *                format: password
      *     responses:
      *       200:
-     *         description: users
+     *         description: user
      *         schema:
      *          $ref: '#/definitions/User'
      */
@@ -361,7 +376,7 @@ class UserRoutes {
      *         type: integer
      *     responses:
      *       200:
-     *         description: users
+     *         description: user
      *         schema:
      *          $ref: '#/definitions/SafeUser'
      */
@@ -404,9 +419,24 @@ class UserRoutes {
      *        200:
      *          description: users
      *          schema:
-     *            type: array
-     *            items:
-     *              $ref: '#/definitions/SafeUser'
+     *            type: object
+     *            properties:
+     *               page:
+     *                  type: number
+     *               page_count:
+     *                  type: number
+     *               limit:
+     *                  type: number
+     *               offset:
+     *                  type: number
+     *               page_size:
+     *                  type: number
+     *               total_count:
+     *                  type: number
+     *               users:
+     *                  type: array
+     *                  items:
+     *                      $ref: '#/definitions/SafeUser'
      */
     router.get('/users/',
     UserAuthenticator.authenticateUser,

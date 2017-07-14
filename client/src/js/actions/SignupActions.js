@@ -19,7 +19,7 @@ export const createUser = user =>
         /* istanbul ignore next */
         if (!testing) {
           const { activeToken } = response.data;
-          localStorage.setItem('xsrf_token', activeToken);
+          localStorage.setItem('accessToken', activeToken);
           const decodedUser = jwt_decode(activeToken);
           localStorage.setItem('user_profile', JSON.stringify(decodedUser));
           Materialize.toast(

@@ -60,7 +60,7 @@ export default (ComposedConmponent) => {
      */
     render() {
       if (!localStorage.accessToken) {
-        return <Redirect to="signin" />;
+        return <Redirect to="/signin" />;
       }
       return <ComposedConmponent {...this.props} />;
     }

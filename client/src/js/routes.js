@@ -1,4 +1,5 @@
-import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch, Redirect }
+  from 'react-router-dom';
 import React from 'react';
 import Signin from '../js/components/authentication/Signin';
 import NavBar from './components/common/NavBar';

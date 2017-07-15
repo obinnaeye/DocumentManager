@@ -14,7 +14,7 @@
   <body>
     <div id="app"></div>
     <script>
-      if (window.location.host.indexOf('heroku') < 0) {
+      if (window.location.host.indexOf('localhost') < 0) {
         window.console.log = function(){};
         window.console.error = function(){};
         window.console.warn = function(){};

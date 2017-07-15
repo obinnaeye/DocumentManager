@@ -7,13 +7,13 @@ import DocumentCollapsible from './DocumentCollapsible';
 import PlainAllDocuments from './PlainAllDocuments';
 
 /**
- * @class UserDocuments
+ * @class AllDocuments
  * @extends {React.Component}
  */
 class AllDocuments extends React.Component {
 
   /**
-   * Creates an instance of UserDocuments.
+   * Creates an instance of AllDocuments.
    * @param {object} props
    * @param {object} context
    * @returns {void}

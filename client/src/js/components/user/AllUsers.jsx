@@ -90,7 +90,7 @@ class AllUsers extends React.Component {
 
   /**
    * @return {void} Returns void
-   * @memberOf AllDocuments
+   * @memberOf AllUsers
    */
   componentDidUpdate() {
     $('.collapsible').collapsible();
@@ -151,16 +151,16 @@ class AllUsers extends React.Component {
   }
 
   /**
-   * @desc Navigates to next/previous document list
+   * @desc Navigates to next/previous users list
    * @returns {void} - returns void
    * @param {object} event - target DOM element
-   * @memberOf AllDocuments
+   * @memberOf AllUsers
    */
   pageNavigation(event) {
     const selected = event.selected;
     const start = selected * 10;
-    const documents = this.state.allDocuments.slice(start, start + 10);
-    this.setState({ documents, start, selected });
+    const users = this.state.allUsers.slice(start, start + 10);
+    this.setState({ users, start, selected });
   }
 
   /**
@@ -207,7 +207,6 @@ class AllUsers extends React.Component {
         inputChange={this.inputChange}
         renderedUsers={this.renderedUsers}
         pageNavigation={this.pageNavigation}
-        totalDocuments={this.state.totalDocuments}
         pagecount={this.state.pagecount}
         initialPage={this.state.initialPage}
         forcePage={this.state.forcePage}

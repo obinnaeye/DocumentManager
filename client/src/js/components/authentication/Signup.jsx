@@ -102,7 +102,7 @@ class Signup extends React.Component {
         onChange={this.onChange}
         submit={this.submit}
       />);
-    const redirect = <Redirect to="dashboard" />;
+    const redirect = <Redirect to="/dashboard" />;
     return (
       Preloader(count, condition, signupForm, redirect)
     );

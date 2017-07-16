@@ -50,6 +50,7 @@ class AllDocuments extends React.Component {
    * @memberOf AllDocuments
    */
   componentWillReceiveProps(nextProps) {
+    console.log('my state', this.props.state)
     if (nextProps.documents.length > 0) {
       const allDocuments = nextProps.documents;
       const totalDocuments = allDocuments.length;
@@ -230,6 +231,7 @@ AllDocuments.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  state: state,
   documents: state.documentReducer.documents,
   fetchingDocuments: state.documentReducer.fetchingDocuments,
   deletingDocument: state.documentReducer.deletingDocument,

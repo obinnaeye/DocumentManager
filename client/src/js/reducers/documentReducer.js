@@ -7,7 +7,6 @@ const documentReducer = (state = initialState, action) => {
   case actionTypes.CREATE_DOCUMENT_SUCCESS: {
     const editID = action.createdDocument.id;
     const stateUserDocuments = state.userDocuments;
-    console.log('reducer', editID)
     stateUserDocuments.push(action.createdDocument);
     return { ...state,
       userDocuments: stateUserDocuments,

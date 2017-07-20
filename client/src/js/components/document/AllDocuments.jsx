@@ -121,13 +121,15 @@ export class AllDocuments extends React.Component {
     event.preventDefault();
     const value = event.target.value;
     const name = event.target.getAttribute('id');
-    if (value < 0) {
+    if (value < 1 && name === 'limit') {
+      Materialize.toast(`${name} can not be 0`, 3000, 'red');
+    } else if (value < 0 && name === 'offset') {
       Materialize.toast(`${name} can not be negative`, 3000, 'red');
-      return;
+    } else {
+      this.setState({
+        [name]: value
+      }, this.getDocuments);
     }
-    this.setState({
-      [name]: value
-    }, this.getDocuments);
   }
 
 
@@ -207,7 +209,6 @@ export class AllDocuments extends React.Component {
    */
   render() {
     const documents = this.state.documents;
-
     return (
       <div>
         <PlainAllDocuments

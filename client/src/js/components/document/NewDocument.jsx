@@ -51,7 +51,6 @@ class NewDocument extends React.Component {
       editID
     }, () => {
       if (this.state.exiting) {
-        console.log(this.state, 'histry', this.props.history);
         this.props.history.push(`/dashboard/documents/${editID}`);
       }
     });

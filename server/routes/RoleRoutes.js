@@ -53,7 +53,7 @@ class RoleRoutes {
      *   post:
      *     description: Creates a new role
      *     tags:
-     *      - Create Role
+     *      - Role
      *     produces:
      *      - application/json
      *     parameters:
@@ -94,7 +94,7 @@ class RoleRoutes {
      *   get:
      *     description: Returns a role
      *     tags:
-     *      - Returns a Role by id
+     *      - Role
      *     produces:
      *      - application/json
      *     parameters:
@@ -148,7 +148,7 @@ class RoleRoutes {
      *   put:
      *     description: Updates a role
      *     tags:
-     *      - Updates a role
+     *      - Role
      *     produces:
      *      - application/json
      *     parameters:
@@ -197,7 +197,7 @@ class RoleRoutes {
      *   delete:
      *     description: Deletes a role
      *     tags:
-     *      - Deletes a role
+     *      - Role
      *     produces:
      *      - application/json
      *     parameters:

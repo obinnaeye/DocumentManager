@@ -1,5 +1,4 @@
 import cluster from 'cluster';
-import os from 'os';
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';

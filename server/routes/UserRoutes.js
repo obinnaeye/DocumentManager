@@ -103,7 +103,7 @@ class UserRoutes {
      *   post:
      *     description: Creates a new user
      *     tags:
-     *      - Create User
+     *      - User
      *     produces:
      *      - application/json
      *     parameters:
@@ -156,7 +156,7 @@ class UserRoutes {
      *   post:
      *     description: Signs in a user
      *     tags:
-     *      - Signs in a user
+     *      - User
      *     produces:
      *      - application/json
      *     parameters:
@@ -204,7 +204,7 @@ class UserRoutes {
    *    get:
    *      description: Returns the user
    *      tags:
-   *        - Searches for a user
+   *        - User
    *      produces:
    *        - application/json
    *      parameters:
@@ -267,7 +267,7 @@ class UserRoutes {
      *   put:
      *     description: Updates details of a single user by id
      *     tags:
-     *      - Updates user details
+     *      - User
      *     produces:
      *      - application/json
      *     parameters:
@@ -321,7 +321,7 @@ class UserRoutes {
      *   delete:
      *     description: Deletes a user by id
      *     tags:
-     *      - Deletes a user by id
+     *      - User
      *     produces:
      *      - application/json
      *     parameters:
@@ -360,7 +360,7 @@ class UserRoutes {
      *   get:
      *     description: Return a single user by id
      *     tags:
-     *      - Return a single user by id
+     *      - User
      *     produces:
      *      - application/json
      *     parameters:
@@ -398,7 +398,7 @@ class UserRoutes {
      *   get:
      *     description: Gets a list of all users
      *     tags:
-     *      - Get Users List
+     *      - User
      *     produces:
      *      - application/json
      *     parameters:

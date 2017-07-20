@@ -23,11 +23,11 @@ const PlainNavBar = ({
               <Link to="/dashboard">Dashboard</Link>
             </li>,
               <li key="auth">
-                <Link to="/" onClick={logout}>Logout</Link>
+                <Link to="/" onClick={logout} id="logout">Logout</Link>
               </li>] :
             [
-              <li key="dashboard"><Link to="/signin">Signin</Link></li>,
-              <li key="auth"><Link to="/signup" replace>Signup</Link></li>
+              <li key="dashboard"><Link to="/signin" id="signin">Signin</Link></li>,
+              <li key="auth"><Link to="/signup">Signup</Link></li>
             ]}
           </ul>
         </div>
@@ -41,11 +41,11 @@ const PlainNavBar = ({
         <Link to="/dashboard">Dashboard</Link>
       </li>,
         <li key="auth">
-          <Link to="/" onClick={logout}>Logout</Link>
+          <Link to="/" onClick={logout} id="logout">Logout</Link>
         </li>] :
       [
         <li key="signin"><Link to="/signin">Signin</Link></li>,
-        <li key="auth"><Link to="/signup" replace>Signup</Link></li>
+        <li key="auth"><Link to="/signup">Signup</Link></li>
       ]}
     </ul>
   </header>

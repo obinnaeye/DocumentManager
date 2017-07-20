@@ -51,6 +51,10 @@ module.exports = {
      .pause(2000)
      .assert.elementPresent('input[id="firstName"]')
      .assert.elementPresent('input[id="password"]')
+     .click('a[id=logout]')
+     .waitForElementVisible('header')
+     .pause(5000)
+     .assert.urlEquals('http://localhost:8080/?#/')
      .end();
   }
 };

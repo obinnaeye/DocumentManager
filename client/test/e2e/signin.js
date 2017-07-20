@@ -11,6 +11,11 @@ module.exports = {
       .click('input[type=submit]')
       .pause(2000)
       .assert.urlContains('dashboard')
+      .click('#editprofile')
+      .click('a[id=logout]')
+      .waitForElementVisible('header')
+      .pause(5000)
+      .assert.urlEquals('http://localhost:8080/?#/')
       .end();
   },
   'Invalid user': (browser) => {

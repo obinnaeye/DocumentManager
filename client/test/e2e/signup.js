@@ -2,7 +2,7 @@ import faker from 'faker';
 import url from './constant';
 
 module.exports = {
-  'Login Users': (browser) => {
+  'Signup Users': (browser) => {
     browser
       .url(url.signup)
       .waitForElementVisible('body')

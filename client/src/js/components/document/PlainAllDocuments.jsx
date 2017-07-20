@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Pagination from 'react-paginate';
 
-const DocumentCollapsible = ({
+const PlainAllDocuments = ({
   inputChange,
   limit,
   offset,
@@ -85,7 +85,7 @@ const DocumentCollapsible = ({
   </div>
 );
 
-DocumentCollapsible.propTypes = {
+PlainAllDocuments.propTypes = {
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
   inputChange: PropTypes.func.isRequired,
@@ -96,4 +96,4 @@ DocumentCollapsible.propTypes = {
   initialPage: PropTypes.number.isRequired
 };
 
-export default DocumentCollapsible;
+export default PlainAllDocuments;

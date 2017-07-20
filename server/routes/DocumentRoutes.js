@@ -67,7 +67,7 @@ class DocumentRoutes {
      * /documents:
      *   post:
      *     tags:
-     *       - New Document
+     *       - Document
      *     description: Creates a document
      *     produces:
      *       - application/json
@@ -111,7 +111,7 @@ class DocumentRoutes {
      *   get:
      *      description: Returns a document by id
      *      tags:
-     *        - Get Document
+     *        - Document
      *      produces:
      *        - application/json
      *      parameters:
@@ -152,7 +152,7 @@ class DocumentRoutes {
    *   get:
    *      description: Returns a list of all documents
    *      tags:
-   *        - Get Documents List
+   *        - Document
    *      produces:
    *        - application/json
    *      parameters:
@@ -215,7 +215,7 @@ class DocumentRoutes {
    *    get:
    *      description: Returns user documents
    *      tags:
-   *        - User Documents
+   *        - Document
    *      produces:
    *        - application/json
    *      parameters:
@@ -257,7 +257,7 @@ class DocumentRoutes {
    *    get:
    *      description: Search Documents by title
    *      tags:
-   *        - Search for documents by title
+   *        - Document
    *      produces:
    *        - application/json
    *      parameters:
@@ -322,7 +322,7 @@ class DocumentRoutes {
    *    put:
    *      description: Update a document
    *      tags:
-   *        - Update a document
+   *        - Document
    *      produces:
    *        - application/json
    *      parameters:
@@ -370,7 +370,7 @@ class DocumentRoutes {
    *    delete:
    *      description: Delete a document
    *      tags:
-   *        - Delete a document
+   *        - Document
    *      produces:
    *        - application/json
    *      parameters:

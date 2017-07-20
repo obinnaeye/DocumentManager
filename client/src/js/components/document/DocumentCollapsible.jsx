@@ -43,6 +43,7 @@ const DocumentCollapsible = ({
               className=" my-danger lighten-2 my-zindex-high"
               onClick={deleteDocument}
               name={id}
+              id={id}
             >
               <i
                 className="material-icons"

@@ -35,10 +35,12 @@ const PlainEditDocument = ({
         <button
           className="btn waves-effect waves-light orange accent-3"
           onClick={save}
+          id="save"
         >Save</button><br />
         <button
           className="btn waves-effect waves-light orange accent-3"
           onClick={saveExit}
+          id="saveExit"
         >Save and Exit</button><br />
         <button
           className="btn waves-effect waves-light red lighten-2"

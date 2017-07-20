@@ -24,7 +24,8 @@ class EditDocument extends React.Component {
       access: this.props.document.access,
       callcount: this.props.count,
       userProfile: JSON.parse(localStorage.user_profile),
-      content: this.props.document.content
+      content: this.props.document.content,
+      exiting: false
     };
     this.save = this.save.bind(this);
     this.saveExit = this.saveExit.bind(this);
@@ -85,7 +86,7 @@ class EditDocument extends React.Component {
         document with the id ${editID},
         redirecting...`, 5000, 'red');
       setTimeout(() => {
-        this.props.history.push('/dashboard/my-documents');
+        this.props.history.push('/dashboard');
       }, 5000);
     } else {
       const { title, content, access } = nextProps.document;
@@ -96,6 +97,10 @@ class EditDocument extends React.Component {
         title,
         content,
         access
+      }, () => {
+        if (this.state.currentAction === 'saveExit' && editID) {
+          this.props.history.push(`/dashboard/documents/${editID}`);
+        }
       });
     }
   }
@@ -115,9 +120,13 @@ class EditDocument extends React.Component {
   /**
    * @desc Send document to server for update
    * @returns {void}
+   * @param {object} event - target object
    * @memberOf EditDocument
    */
-  save() {
+  save(event) {
+    event.preventDefault();
+    const currentAction = event.target.getAttribute('id');
+    this.setState({ currentAction });
     const title = $('#documentTitle').val() || this.state.title;
     const content = CKEDITOR.instances.editor.getData() || this.state.content;
     const access = this.state.access;
@@ -135,7 +144,7 @@ class EditDocument extends React.Component {
       const documentData = {
         title,
         content,
-        access
+        access,
       };
       this.props.DocumentActions.updateDocument(
         documentData, this.state.editID
@@ -146,11 +155,11 @@ class EditDocument extends React.Component {
   /**
    * @desc Saves a document and redirects to dashboard
    * @returns {void}
+   * @param {object} event - target object
    * @memberOf EditDocument
    */
-  saveExit() {
-    this.save();
-    this.exit();
+  saveExit(event) {
+    this.save(event);
   }
 
   /**
@@ -159,7 +168,7 @@ class EditDocument extends React.Component {
    * @memberOf EditDocument
    */
   exit() {
-    this.props.history.push('/dashboard/my-documents');
+    this.props.history.push('/dashboard');
   }
 
   /**

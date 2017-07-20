@@ -24,8 +24,10 @@ const DocumentCollapsible = ({
       <div className="col s12 m10">
         <i className="material-icons orange">library_books</i>
         <span><b>Title: </b> <em>{truncator(title, 30)} </em> ||</span>
-        <span> <b>Created:</b> <em>{createdAt}</em> ||</span>
-        <span> <b>Modified:</b> <em>{updatedAt}</em> </span>
+        <span> <b>Created:</b>
+          <em>{String(new Date(createdAt)).substr(0, 24)}</em> ||</span>
+        <span> <b>Modified:</b>
+          <em>{String(new Date(updatedAt)).substr(0, 24)}</em> </span>
       </div>
       { userId === ownerId || roleId === 1 ?
         <div className="col col s12 m2">

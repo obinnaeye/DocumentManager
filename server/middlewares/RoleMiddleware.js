@@ -66,11 +66,18 @@ export default class UserMiddleware {
    * @return {Void} - Returns void
    */
   static validateDeleteRequest(request, response, next) {
+    console.log('body', request.params);
     const requesterRoleId = request.decoded.roleId;
     if (requesterRoleId !== 1) {
       ResponseHandler.send403(
         response,
         { message: 'Admin Access Required!' }
+      );
+    } else if (Number(request.params.id) === 1 ||
+      Number(request.params.id) === 2) {
+      ResponseHandler.send403(
+        response,
+        { message: 'Protected Roles Cannot be deleted!' }
       );
     } else {
       next();

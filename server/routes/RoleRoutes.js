@@ -173,9 +173,7 @@ class RoleRoutes {
      *       200:
      *         description: roles
      *         schema:
-     *          type: array
-     *          items:
-     *              $ref: '#/definitions/Role'
+     *           $ref: '#/definitions/Role'
      */
     router.put(
       '/roles/:id',

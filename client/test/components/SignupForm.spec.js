@@ -10,8 +10,8 @@ const wrapper = shallow(
 describe('<SignupForm />', () => {
   it('should render the input element for firstName', () => {
     expect(wrapper.find('#firstName').length).toEqual(1);
-    expect(wrapper.find('.validate').length).toEqual(4);
-    expect(wrapper.find('input').length).toEqual(5);
+    expect(wrapper.find('.validate').length).toEqual(5);
+    expect(wrapper.find('input').length).toEqual(6);
   });
 
   it('should render the input element for password', () => {

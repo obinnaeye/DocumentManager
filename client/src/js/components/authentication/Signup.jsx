@@ -81,9 +81,11 @@ class Signup extends React.Component {
    */
   submit() {
     const user = this.state.user;
-    const { firstName, lastName, password, email } = user;
+    const { firstName, lastName, password, email, passwordConfirm } = user;
     if (!firstName || !lastName || !password || !email) {
       Materialize.toast('Please fill on all form fields!', 5000, 'red');
+    } else if (password !== passwordConfirm) {
+      Materialize.toast('Passwords do not match!', 5000, 'red');
     } else {
       this.props.SignupActions.createUser(this.state.user);
     }

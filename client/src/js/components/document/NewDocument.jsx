@@ -21,7 +21,8 @@ class NewDocument extends React.Component {
     super(props, context);
     this.state = {
       editMode: false,
-      editID: null
+      editID: null,
+      exiting: false
     };
     this.save = this.save.bind(this);
     this.saveExit = this.saveExit.bind(this);
@@ -48,6 +49,11 @@ class NewDocument extends React.Component {
     const { editID } = nextProps;
     this.setState({
       editID
+    }, () => {
+      if (this.state.exiting) {
+        console.log(this.state, 'histry', this.props.history);
+        this.props.history.push(`/dashboard/documents/${editID}`);
+      }
     });
   }
 
@@ -98,7 +104,7 @@ class NewDocument extends React.Component {
    */
   saveExit() {
     this.save();
-    this.exit();
+    this.setState({ exiting: true });
   }
 
   /**
@@ -107,7 +113,7 @@ class NewDocument extends React.Component {
    * @memberOf NewDocument
    */
   exit() {
-    this.props.history.push('/dashboard/my-documents');
+    this.props.history.push('/dashboard/dashboard');
   }
 
   /**

@@ -19,6 +19,8 @@ class DocumentRoutes {
    * definition:
    *   NewDocument:
    *     type: object
+   *     example:
+   *          { title: "Big", content: "All are big", access: "role"}
    *     required:
    *        - title
    *        - content
@@ -31,6 +33,10 @@ class DocumentRoutes {
    *           type: string
    *   Document:
    *     type: object
+   *     example:
+   *          { title: "Big", content: "All are big", access: "role", id: 2,
+   * createdAt: 2017-07-20T08:31:51.737Z, updatedAt: 2017-07-20T09:31:51.737Z,
+   * ownerId: 3, ownerRoleId: 2}
    *     required:
    *        - title
    *        - content
@@ -179,16 +185,22 @@ class DocumentRoutes {
    *                properties:
    *                   page:
    *                      type: number
+   *                      example: 2
    *                   page_count:
    *                      type: number
+   *                      example: 3
    *                   limit:
    *                      type: number
+   *                      example: 10
    *                   offset:
    *                      type: number
+   *                      example: 0
    *                   page_size:
    *                      type: number
+   *                      example: 10
    *                   total_count:
    *                      type: number
+   *                      example: 100
    *                   documents:
    *                      type: array
    *                      items:
@@ -287,16 +299,22 @@ class DocumentRoutes {
    *                properties:
    *                   page:
    *                      type: number
+   *                      example: 2
    *                   page_count:
    *                      type: number
+   *                      example: 4
    *                   limit:
    *                      type: number
+   *                      example: 50
    *                   offset:
    *                      type: number
+   *                      example: 0
    *                   page_size:
    *                      type: number
+   *                      example: 10
    *                   total_count:
    *                      type: number
+   *                      example: 100
    *                   documents:
    *                      type: array
    *                      items:

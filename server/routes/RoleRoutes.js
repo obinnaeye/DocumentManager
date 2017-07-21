@@ -18,6 +18,7 @@ class RoleRoutes {
    * definition:
    *   NewRole:
    *     type: object
+   *     example: { title: "devops"}
    *     required:
    *       - title
    *     properties:
@@ -25,6 +26,8 @@ class RoleRoutes {
    *         type: string
    *   Role:
    *     type: object
+   *     example: { title: "devops", id: 2, createdAt: 2017-07-20T08:31:51.737Z,
+   * updatedAt: 2017-07-20T09:31:51.737Z}
    *     required:
    *       - title
    *       - id

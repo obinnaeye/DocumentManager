@@ -20,6 +20,8 @@ class UserRoutes {
      * definition:
      *   NewUser:
      *     type: object
+     *     example: { firstName: "King", lastName: "Obi",
+     * email: "king@okdocs.com", password: "mysimplepass"}
      *     required:
      *       - firstname
      *       - lastname
@@ -37,6 +39,10 @@ class UserRoutes {
      *         type: string
      *   User:
      *     type: object
+     *     example: { id: 2, firstName: "King", lastName: "Obi", roleId: 2,
+     * email: "king@okdocs.com", createdAt: 2017-07-20T08:31:51.737Z,
+     * updatedAt: 2017-07-20T09:31:51.737Z,
+     * activeToken: "afafjAFAF848Q4BLABLABLAafafaf.afjaflafafalfadf"}
      *     required:
      *       - firstname
      *       - lastname
@@ -60,6 +66,9 @@ class UserRoutes {
      *          type: string
      *   SafeUser:
      *     type: object
+     *     example: { id: 2, firstName: "King", lastName: "Obi", roleId: 2,
+     * email: "king@okdocs.com", createdAt: 2017-07-20T08:31:51.737Z,
+     * updatedAt: 2017-07-20T09:31:51.737Z}
      *     required:
      *       - firstname
      *       - lastname
@@ -234,16 +243,22 @@ class UserRoutes {
    *                properties:
    *                   page:
    *                      type: number
+   *                      example: 2
    *                   page_count:
    *                      type: number
+   *                      example: 3
    *                   limit:
    *                      type: number
+   *                      example: 20
    *                   offset:
    *                      type: number
+   *                      example: 5
    *                   page_size:
    *                      type: number
+   *                      example: 5
    *                   total_count:
    *                      type: number
+   *                      example: 100
    *                   users:
    *                      type: array
    *                      items:
@@ -398,7 +413,7 @@ class UserRoutes {
      *   get:
      *     description: Gets a list of all users
      *     tags:
-     *      - GUser
+     *      - User
      *     produces:
      *      - application/json
      *     parameters:
@@ -423,16 +438,22 @@ class UserRoutes {
      *            properties:
      *               page:
      *                  type: number
+     *                  example: 1
      *               page_count:
      *                  type: number
+     *                  example: 3
      *               limit:
      *                  type: number
+     *                  example: 30
      *               offset:
      *                  type: number
+     *                  example: 8
      *               page_size:
      *                  type: number
+     *                  example: 5
      *               total_count:
      *                  type: number
+     *                  example: 50
      *               users:
      *                  type: array
      *                  items:

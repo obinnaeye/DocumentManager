@@ -48,7 +48,7 @@ describe('Roles:', () => {
       .set({ 'xsrf-token': adminUser.token })
       .send(newRole)
       .end((error, response) => {
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(201);
         expect(response.body.title).to.equal(newRole.title);
         done();
       });
@@ -88,6 +88,7 @@ describe('Roles:', () => {
       .set({ 'xsrf-token': adminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.title).to.oneOf(['admin', 'regular', 'random']);
         done();
       });
     });
@@ -98,6 +99,7 @@ describe('Roles:', () => {
       .set({ 'xsrf-token': adminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.rows[0].title).to.be.oneOf(['admin', 'regular']);
         done();
       });
     });
@@ -142,6 +144,7 @@ describe('Roles:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.be.instanceOf(Object);
+        expect(response.body.rows[0].title).to.be.oneOf(['admin', 'regular', 'random', 'ttl']);
         done();
       });
     });
@@ -177,6 +180,7 @@ describe('Roles:', () => {
       .send({ title: newTitle })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal('Update Successful');
         done();
       });
     });

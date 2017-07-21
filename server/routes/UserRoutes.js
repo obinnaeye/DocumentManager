@@ -266,6 +266,7 @@ class UserRoutes {
    */
     router.get('/search/users/',
     UserAuthenticator.authenticateUser,
+    UserMiddleware.validateGetRequest,
     UserController.searchUser);
   }
 
@@ -461,6 +462,7 @@ class UserRoutes {
      */
     router.get('/users/',
     UserAuthenticator.authenticateUser,
+    UserMiddleware.validateGetRequest,
     UserController.getUsers);
   }
 }

@@ -15,6 +15,8 @@ class PaginationHelper {
     paginatedResult.page_count = Math.ceil(result.count / limit);
     paginatedResult.page_size = Number(limit);
     paginatedResult.total_count = result.count;
+    paginatedResult.offset = offset;
+    paginatedResult.limit = limit;
     paginatedResult.rows = result.rows;
 
     return paginatedResult;

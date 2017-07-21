@@ -1,6 +1,7 @@
 /* global before after */
 import supertest from 'supertest';
 import { expect } from 'chai';
+import findIndex from 'lodash/findIndex';
 import app from '../../../server';
 import database from '../../models';
 import SpecHelper from '../helpers/SpecHelper';
@@ -76,6 +77,7 @@ describe('Documents:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(201);
         expect(response.body.createdAt).to.not.equal(undefined);
+        expect(response.body.title).to.equal(publicDocument.title);
         done();
       });
     });
@@ -90,6 +92,7 @@ describe('Documents:', () => {
       .set({ 'xsrf-token': regularUser1.token })
       .end((error, response) => {
         expect(response.status).to.equal(201);
+        expect(response.body.title).to.equal(publicDocument.title);
         done();
       });
     });
@@ -102,6 +105,7 @@ describe('Documents:', () => {
       .set({ 'xsrf-token': regularUser1.token })
       .end((error, response) => {
         expect(response.status).to.equal(201);
+        expect(response.body.title).to.equal(roleDocument.title);
         done();
       });
     });
@@ -119,7 +123,7 @@ describe('Documents:', () => {
       });
     });
 
-    it('should override access type iif invalid access type is supplied',
+    it('should override access type if invalid access type is supplied',
     (done) => {
       const roleDocument = SpecHelper.generateRandomDocument('role');
       roleDocument.access = 'privatee';
@@ -128,6 +132,7 @@ describe('Documents:', () => {
       .set({ 'xsrf-token': regularUser1.token })
       .end((error, response) => {
         expect(response.status).to.equal(201);
+        expect(response.body.title).to.equal(roleDocument.title);
         done();
       });
     });
@@ -242,7 +247,10 @@ describe('Documents:', () => {
         .set({ 'xsrf-token': regularUser3.token })
         .end((error, response) => {
           expect(response.status).to.equal(200);
-          expect(response.body[0].ownerId).to.equal(regularUser3.id);
+          const documents = response.body;
+          documents.forEach((document) => {
+            expect(document.onwerId).to.equal(regularUser3.userId);
+          });
           done();
         });
       });
@@ -302,6 +310,18 @@ describe('Documents:', () => {
           documents.forEach((document) => {
             expect(document.access).to.be.oneOf(['role', 'private', 'public']);
           });
+          const privateIndex = findIndex(
+              documents, { access: 'private' }
+              );
+          expect(privateIndex).to.be.gt(-1);
+          const roleIndex = findIndex(
+              response.body.rows, { access: 'role' }
+              );
+          expect(roleIndex).to.be.gt(-1);
+          const publicIndex = findIndex(
+              response.body.rows, { access: 'public' }
+              );
+          expect(publicIndex).to.be.gt(-1);
           done();
         });
       });
@@ -313,6 +333,7 @@ describe('Documents:', () => {
         .end((error, response) => {
           expect(response.status).to.equal(200);
           expect(response.body).to.be.instanceof(Object);
+          expect(+(response.body.offset)).to.equal(searchOffset);
           done();
         });
       });
@@ -352,8 +373,10 @@ describe('Documents:', () => {
         client.get(`/documents/?limit=${searchLimit}`)
         .set({ 'xsrf-token': adminUser.token })
         .end((error, response) => {
+          console.log('resss....', response.body);
           expect(response.status).to.equal(200);
           expect(response.body.rows.length).to.equal(1);
+          expect(+(response.body.limit)).to.equal(searchLimit);
           done();
         });
       });
@@ -410,7 +433,7 @@ describe('Documents:', () => {
         });
       });
 
-      it('should return 404 for no docuemnt exists with the given id',
+      it('should return 404 if no docuemnt exists with the given id',
       (done) => {
         client.get('/documents/911911')
         .set({ 'xsrf-token': adminUser.token })
@@ -427,8 +450,13 @@ describe('Documents:', () => {
         client.get(`/search/documents/?q=${publicDocument.title}`)
           .set({ 'xsrf-token': regularUser1.token })
           .end((error, response) => {
+            const index = findIndex(
+              response.body.rows, { title: publicDocument.title }
+              );
             expect(response.status).to.equal(200);
             expect(response.body.rows.length).to.be.at.least(1);
+            expect(response.body.rows[index].title)
+              .to.equal(publicDocument.title);
             done();
           });
       });
@@ -438,7 +466,12 @@ describe('Documents:', () => {
         client.get(`/search/documents/?q=${publicDocument.title}`)
           .set({ 'xsrf-token': adminUser.token })
           .end((error, response) => {
+            const index = findIndex(
+              response.body.rows, { title: publicDocument.title }
+              );
             expect(response.status).to.equal(200);
+            expect(response.body.rows[index].title)
+              .to.equal(publicDocument.title);
             done();
           });
       });
@@ -448,8 +481,13 @@ describe('Documents:', () => {
         client.get(`/search/documents/?q=${publicDocument.title}`)
           .set({ 'xsrf-token': regularUser1.token })
           .end((error, response) => {
+            const index = findIndex(
+              response.body.rows, { title: publicDocument.title }
+              );
             expect(response.status).to.equal(200);
             expect(response.body.rows.length).to.be.at.least(1);
+            expect(response.body.rows[index].title)
+              .to.equal(publicDocument.title);
             done();
           });
       });
@@ -478,16 +516,6 @@ describe('Documents:', () => {
       (done) => {
         client.get('/search/documents/?q=wronginvalidfalse')
           .set({ 'xsrf-token': adminUser.token })
-          .end((error, response) => {
-            expect(response.status).to.equal(404);
-            done();
-          });
-      });
-
-      it('should not allow regular User access other user\'s document',
-      (done) => {
-        client.get(`/search/documents/?q=${privateDocument.title}`)
-          .set({ 'xsrf-token': userWithoutDocument.token })
           .end((error, response) => {
             expect(response.status).to.equal(404);
             done();
@@ -547,6 +575,7 @@ describe('Documents:', () => {
       .send({ title: titleUpdate })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.title).to.equal(titleUpdate);
         done();
       });
     });
@@ -573,6 +602,7 @@ describe('Documents:', () => {
       .send({ title: titleUpdate })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.title).to.equal(titleUpdate);
         done();
       });
     });
@@ -667,17 +697,6 @@ describe('Documents:', () => {
 
     it(`should return status code 404 (NOT Found) when a user with valid
     access tries to delete a non-existing document`,
-    (done) => {
-      // roleDocument has already been deleted in the previous test
-      client.delete(`/documents/${roleDocument.id}`)
-      .set({ 'xsrf-token': roleDocument.owner.token })
-      .end((error, response) => {
-        expect(response.status).to.equal(404);
-        done();
-      });
-    });
-
-    it('should NOT allow a regular User to delete another user\'s document',
     (done) => {
       // roleDocument has already been deleted in the previous test
       client.delete(`/documents/${roleDocument.id}`)

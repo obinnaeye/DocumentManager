@@ -47,6 +47,31 @@ describe('Users:', () => {
       });
     });
 
+    it('should return a TOKEN if a Regular User is successfully created',
+    (done) => {
+      client.post('/users')
+      .send(SpecHelper.generateRandomUser(2))
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('activeToken');
+        done();
+      });
+    });
+
+    it('should return public details of the created Regular User',
+    (done) => {
+      client.post('/users')
+      .send(SpecHelper.generateRandomUser(2))
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('firstName');
+        expect(response.body).to.have.property('lastName');
+        expect(response.body).to.have.property('email');
+        expect(response.body).to.have.property('userId');
+        done();
+      });
+    });
+
     it(`should override provided ID if User ID is specified
     in new User to be created`,
     (done) => {
@@ -72,17 +97,6 @@ describe('Users:', () => {
       });
     });
 
-    it('should return a TOKEN if a Regular User if successfully created',
-    (done) => {
-      client.post('/users')
-      .send(SpecHelper.generateRandomUser(2))
-      .end((error, response) => {
-        expect(response.status).to.equal(200);
-        expect(response.body).to.have.property('activeToken');
-        done();
-      });
-    });
-
     it('should not allow password to be less than 8 characters',
     (done) => {
       const user = SpecHelper.generateRandomUser(2);
@@ -93,20 +107,6 @@ describe('Users:', () => {
         expect(response.status).to.equal(400);
         expect(response.body.message).to.equal(
           'Password should be between 8 and 50 letters');
-        done();
-      });
-    });
-
-    it('should return public details of the created Regular User',
-    (done) => {
-      client.post('/users')
-      .send(SpecHelper.generateRandomUser(2))
-      .end((error, response) => {
-        expect(response.status).to.equal(200);
-        expect(response.body).to.have.property('firstName');
-        expect(response.body).to.have.property('lastName');
-        expect(response.body).to.have.property('email');
-        expect(response.body).to.have.property('userId');
         done();
       });
     });
@@ -128,6 +128,11 @@ describe('Users:', () => {
       .send(SpecHelper.generateRandomUser())
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('firstName');
+        expect(response.body).to.have.property('lastName');
+        expect(response.body).to.have.property('email');
+        expect(response.body).to.have.property('userId');
         done();
       });
     });
@@ -151,6 +156,11 @@ describe('Users:', () => {
       .send(SpecHelper.generateRandomUser(10))
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('firstName');
+        expect(response.body).to.have.property('lastName');
+        expect(response.body).to.have.property('email');
+        expect(response.body).to.have.property('userId');
         done();
       });
     });
@@ -159,13 +169,20 @@ describe('Users:', () => {
   describe('Login:', () => {
     it('should allow login for CORRECT details of an Admin User',
     (done) => {
+      const { email, password } = SpecHelper.validAdminUser;
       client.post('/users/login')
       .send({
-        email: SpecHelper.validAdminUser.email,
-        password: SpecHelper.validAdminUser.password
+        email,
+        password
       })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('firstName');
+        expect(response.body).to.have.property('lastName');
+        expect(response.body).to.have.property('email');
+        expect(response.body).to.have.property('userId');
+        expect(response.body.email).to.equal(email);
         done();
       });
     });
@@ -187,13 +204,15 @@ describe('Users:', () => {
 
     it('should allow login for CORRECT details of a Regular User',
     (done) => {
+      const { email, password } = SpecHelper.validRegularUser;
       client.post('/users/login')
       .send({
-        email: SpecHelper.validRegularUser.email,
-        password: SpecHelper.validRegularUser.password
+        email,
+        password
       })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.email).to.equal(email);
         done();
       });
     });
@@ -207,6 +226,7 @@ describe('Users:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property('activeToken');
+        expect(response.body.email).to.equal(SpecHelper.validRegularUser.email);
         done();
       });
     });
@@ -234,6 +254,7 @@ describe('Users:', () => {
         expect(decodedToken).to.have.property('roleId');
         expect(decodedToken).to.have.property('firstName');
         expect(decodedToken).to.have.property('lastName');
+        expect(decodedToken.email).to.equal(SpecHelper.validRegularUser.email);
         done();
       });
     });
@@ -333,6 +354,9 @@ describe('Users:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.be.instanceof(Object);
+        expect(response.body.rows.length).to.be.gt(0);
+        expect(response.body).to.have.property('limit');
+        expect(response.body).to.have.property('offset');
         done();
       });
     });
@@ -343,6 +367,9 @@ describe('Users:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.be.instanceOf(Object);
+        expect(response.body.rows.length).to.be.gt(0);
+        expect(response.body).to.have.property('limit');
+        expect(response.body).to.have.property('offset');
         done();
       });
     });
@@ -357,44 +384,44 @@ describe('Users:', () => {
 
     it('should allow specifying offset when fetching Users', (done) => {
       const searchOffset = 2;
-      client.get(`/api/users/?offset=${searchOffset}`)
+      client.get(`/users/?offset=${searchOffset}`)
       .set({ 'xsrf-token': adminUserToken })
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.be.instanceof(Object);
+        expect(+(response.body.offset)).to.equal(searchOffset);
         done();
       });
     });
 
-    it('should overridee invalid offset when fetching Users', (done) => {
+    it('should return 400 if offset if less than 0', (done) => {
       const searchOffset = -2;
-      client.get(`/api/users/?offset=${searchOffset}`)
+      client.get(`/users/?offset=${searchOffset}`)
       .set({ 'xsrf-token': adminUserToken })
       .end((error, response) => {
-        expect(response.status).to.equal(200);
-        expect(response.body).to.be.instanceof(Object);
+        expect(response.status).to.equal(400);
         done();
       });
     });
 
     it('should allow specifying limit when fetching Users', (done) => {
       const searchLimit = 2;
-      client.get(`/api/users/?limit=${searchLimit}`)
+      client.get(`/users/?limit=${searchLimit}`)
       .set({ 'xsrf-token': adminUserToken })
       .end((error, response) => {
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.instanceof(Object);
+        expect((response.body)).to.be.instanceof(Object);
+        expect(+(response.body.limit)).to.equal(2);
         done();
       });
     });
 
-    it('should overridee invalid limit when fetching Users', (done) => {
+    it('should return 400 if limit if less than 0', (done) => {
       const searchLimit = -2;
-      client.get(`/api/users/?limit=${searchLimit}`)
+      client.get(`/users/?limit=${searchLimit}`)
       .set({ 'xsrf-token': adminUserToken })
       .end((error, response) => {
-        expect(response.status).to.equal(200);
-        expect(response.body).to.be.instanceof(Object);
+        expect(response.status).to.equal(400);
         done();
       });
     });
@@ -408,6 +435,7 @@ describe('Users:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.be.instanceOf(Object);
+        expect(response.body.userId).to.equal(regularUserId + 1);
         done();
       });
     });
@@ -419,6 +447,7 @@ describe('Users:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.be.instanceOf(Object);
+        expect(response.body.userId).to.equal(regularUserId);
         done();
       });
     });
@@ -568,6 +597,7 @@ describe('Users:', () => {
       .set({ 'xsrf-token': regularUserToken })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.email).to.equal(regularUser.email);
         done();
       });
     });
@@ -621,6 +651,7 @@ describe('Users:', () => {
       })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.email).to.equal(regularUser.email);
         done();
       });
     });
@@ -664,6 +695,8 @@ describe('Users:', () => {
       })
       .end((error, response) => {
         expect(response.status).to.equal(200);
+        expect(response.body.email).to.equal(regularUser.email);
+
         // update the user token as a new token is always
         // generated on every login
         regularUserToken = response.body.activeToken;
@@ -717,7 +750,7 @@ describe('Users:', () => {
       });
     });
 
-    it('shouldss Successfully Logout a Regular User with a valid token',
+    it('should Successfully Logout a Regular User with a valid token',
     (done) => {
       client.post('/users/logout')
       .set({ 'xsrf-token': newRegularUser.token })
@@ -762,8 +795,8 @@ describe('Users:', () => {
     });
 
     it('should not allow deletion of admin User', (done) => {
-      const adminRoleId = currentAdminUser.roleId;
-      client.delete(`/users/${adminRoleId}`)
+      const adminId = currentAdminUser.id;
+      client.delete(`/users/${adminId}`)
       .set({ 'xsrf-token': currentAdminUser.token })
       .end((error, response) => {
         expect(response.status).to.equal(403);

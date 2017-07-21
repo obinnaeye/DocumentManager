@@ -1,4 +1,4 @@
-import url from './constant';
+import url from '../helper/constant';
 
 module.exports = {
   'Login Users': (browser) => {

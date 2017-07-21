@@ -20,7 +20,7 @@ const PlainNavBar = ({
               signingIn ||
               createdUser ?
             [<li key="dashboard">
-              <Link to="/dashboard">Dashboard</Link>
+              <Link to="/dashboard" id="dashboard">Dashboard</Link>
             </li>,
               <li key="auth">
                 <Link to="/" onClick={logout} id="logout">Logout</Link>
@@ -38,7 +38,7 @@ const PlainNavBar = ({
         signingIn ||
         createdUser ?
       [<li key="dashboard">
-        <Link to="/dashboard">Dashboard</Link>
+        <Link to="/dashboard" id="dashboard">Dashboard</Link>
       </li>,
         <li key="auth">
           <Link to="/" onClick={logout} id="logout">Logout</Link>

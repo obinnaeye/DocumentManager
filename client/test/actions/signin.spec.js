@@ -5,9 +5,12 @@ import nockAjaxCall from 'nock';
 import ajaxCall from 'axios';
 import * as signinActions from '../../src/js/actions/SigninActions';
 import actionTypes from '../../src/js/constants/actionTypes';
+import url from '../helper/constant';
+
+const baseUrl = url.baseUrl;
 
 // set ajaxCall call default base url to localhost
-ajaxCall.defaults.baseURL = 'http://localhost:8080/';
+ajaxCall.defaults.baseURL = baseUrl;
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -29,7 +32,7 @@ describe('Signin Action', () => {
         lastName: 'Nnenanya',
         roleId: 2
       };
-      nockAjaxCall('http://localhost:8080/')
+      nockAjaxCall(baseUrl)
         .post('/users/login', user)
         .reply(200, response);
 
@@ -49,7 +52,7 @@ describe('Signin Action', () => {
         password: 'king',
         lastName: 'Nnenanya'
       };
-      nockAjaxCall('http://localhost:8080/')
+      nockAjaxCall(baseUrl)
         .post('/users/', user)
         .reply(400, user);
 

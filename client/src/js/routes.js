@@ -15,7 +15,6 @@ export default (
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/signin" component={Signin} />
         <UserPage />
-        <Redirect from="*" to="/signin" />
       </div>
     </Switch>
   </Router>

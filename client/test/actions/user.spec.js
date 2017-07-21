@@ -5,9 +5,12 @@ import nockAjaxCall from 'nock';
 import ajaxCall from 'axios';
 import * as userActions from '../../src/js/actions/UserActions';
 import actionTypes from '../../src/js/constants/actionTypes';
+import url from '../helper/constant';
+
+const baseUrl = url.baseUrl;
 
 // set ajaxCall call default base url to localhost
-ajaxCall.defaults.baseURL = 'http://localhost:8080/';
+ajaxCall.defaults.baseURL = baseUrl;
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -31,7 +34,7 @@ describe('User Actions:', () => {
           lastName: 'Nnenanya',
           roleId: 2
         }];
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get('/search/users/')
           .query({ q: 'ob', limit: 2, offset: 0 })
           .reply(200, users);
@@ -60,7 +63,7 @@ describe('User Actions:', () => {
           lastName: 'Nnenanya',
           roleId: 2
         }];
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get('/search/users/')
           .query({ q: 'ob', limit: 2, offset: 0 })
           .reply(404, users);
@@ -89,7 +92,7 @@ describe('User Actions:', () => {
           lastName: 'Nnenanya',
           roleId: 2
         };
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get(`/users/${2}`)
           .reply(200, user);
 
@@ -106,7 +109,7 @@ describe('User Actions:', () => {
 
       it('creates GET_USER_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get(`/users/${2}`)
           .reply(404);
 
@@ -134,7 +137,7 @@ describe('User Actions:', () => {
           lastName: 'Nnenanya',
           roleId: 2
         }];
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get('/users/')
           .query({ offset: 0, limit: 2 })
           .reply(200, users);
@@ -152,7 +155,7 @@ describe('User Actions:', () => {
 
       it('creates GET_USERS_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get('/users/')
           .query({ offset: 0, limit: 2 })
           .reply(404);
@@ -187,7 +190,7 @@ describe('User Actions:', () => {
 
       updateInfo.userId = 2;
       it('should create UPDATE_USER_SUCCESS when user is updated', () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .put(`/users/${2}`)
           .reply(200, updateData);
 
@@ -203,7 +206,7 @@ describe('User Actions:', () => {
       });
 
       it('creates UPDATE_USER_FAILURE when an error is encountered', () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .put(`/users/${2}`)
           .reply(404);
 
@@ -231,7 +234,7 @@ describe('User Actions:', () => {
           lastName: 'Nnenanya',
           roleId: 2
         };
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get(`/users/${2}`)
           .reply(200, user);
 
@@ -248,7 +251,7 @@ describe('User Actions:', () => {
 
       it('creates VALIDATE_USER_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get(`/users/${2}`)
           .reply(404);
 
@@ -269,7 +272,7 @@ describe('User Actions:', () => {
     });
     it('creates LOGOUT_SUCCESS when is logged out',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .post('/users/logout')
           .reply(200);
 
@@ -285,7 +288,7 @@ describe('User Actions:', () => {
       });
     it('creates LOGOUT_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .post('/users/logout')
           .reply(400);
 
@@ -306,7 +309,7 @@ describe('User Actions:', () => {
     });
     it('creates DELETE_USER_SUCCESS when user is deleted',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .delete(`/users/${2}`)
           .reply(200);
 
@@ -322,7 +325,7 @@ describe('User Actions:', () => {
       });
     it('creates DELETE_USER_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .delete(`/users/${2}`)
           .reply(400);
 

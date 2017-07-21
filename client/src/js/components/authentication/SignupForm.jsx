@@ -65,7 +65,7 @@ const SigninForm = ({
           </div>
         </div>
         <div className="row">
-          <div className="input-field col s12">
+          <div className="input-field col s6">
             <input
               onChange={onChange}
               id="password"
@@ -76,6 +76,20 @@ const SigninForm = ({
             />
             <label htmlFor="password">
               Password: (Not less than 8 characters)
+            </label>
+          </div>
+          <div className="input-field col s6">
+            <input
+              onChange={onChange}
+              id="passwordConfirm"
+              type="password"
+              className="validate"
+              required=""
+              aria-required="true"
+              autoComplete="off"
+            />
+            <label htmlFor="passwordConfirm">
+              Password: (Confirm password)
             </label>
           </div>
         </div>

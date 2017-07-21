@@ -21,7 +21,8 @@ class NewDocument extends React.Component {
     super(props, context);
     this.state = {
       editMode: false,
-      editID: null
+      editID: null,
+      exiting: false
     };
     this.save = this.save.bind(this);
     this.saveExit = this.saveExit.bind(this);
@@ -48,6 +49,16 @@ class NewDocument extends React.Component {
     const { editID } = nextProps;
     this.setState({
       editID
+    }, () => {
+      if (nextProps.creatingDocument) {
+        this.setState({
+          editMode: true
+        });
+      }
+      if (this.state.currentAction === 'saveExit'
+        && nextProps.creatingDocument && editID) {
+        this.props.history.push(`/dashboard/documents/${editID}`);
+      }
     });
   }
 
@@ -55,8 +66,12 @@ class NewDocument extends React.Component {
    * @desc Saves document
    * @memberOf NewDocument
    * @returns {void}
+   * @param {object} event - target object
    */
-  save() {
+  save(event) {
+    event.preventDefault();
+    const currentAction = event.target.getAttribute('id');
+    this.setState({ currentAction });
     const title = $('#documentTitle').val() || this.state.title;
     const content = CKEDITOR.instances.editor.getData() || this.state.content;
     const access = $('#access').val() || this.state.access;
@@ -73,20 +88,14 @@ class NewDocument extends React.Component {
       const documentData = {
         title,
         content,
-        access
+        access,
       };
-      if (this.state.editMode) {
+      if (this.state.editMode && this.state.editID) {
         this.props.DocumentActions.updateDocument(
           documentData, this.state.editID
         );
       } else {
-        this.props.DocumentActions.createDocument(documentData)
-          .then(() => {
-            this.setState({
-              editMode: true
-            });
-          }
-        );
+        this.props.DocumentActions.createDocument(documentData);
       }
     }
   }
@@ -94,11 +103,11 @@ class NewDocument extends React.Component {
   /**
    * @desc Saves a document and redirects to dashboard
    * @returns {void}
+   * @param {object} event - event target object
    * @memberOf NewDocument
    */
-  saveExit() {
-    this.save();
-    this.exit();
+  saveExit(event) {
+    this.save(event);
   }
 
   /**
@@ -107,7 +116,7 @@ class NewDocument extends React.Component {
    * @memberOf NewDocument
    */
   exit() {
-    this.props.history.push('/dashboard/my-documents');
+    this.props.history.push('/dashboard');
   }
 
   /**
@@ -126,17 +135,21 @@ class NewDocument extends React.Component {
 }
 
 NewDocument.defaultProps = {
-  editID: ''
+  editID: null,
+  creatingDocument: false
 };
 
 NewDocument.propTypes = {
   editID: PropTypes.string,
   DocumentActions: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  creatingDocument: PropTypes.bool
 };
 
 const mapStateToProps = state => ({
-  editID: state.documentReducer.editID || null
+  editID: state.documentReducer.editID || null,
+  creatingDocument: state.documentReducer.creatingDocument,
+  count: state.documentReducer.count
 });
 
 const mapDispatchToProps = dispatch => ({

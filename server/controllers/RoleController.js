@@ -18,7 +18,7 @@ export default class RoleController {
     const newRole = request.body;
     Role.create(newRole)
       .then((createdRole) => {
-        ResponseHandler.send200(response, createdRole);
+        ResponseHandler.send201(response, createdRole);
       }, (error) => {
         ErrorHandler.handleRequestError(response, error);
       });

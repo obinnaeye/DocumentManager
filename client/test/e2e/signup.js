@@ -1,8 +1,8 @@
 import faker from 'faker';
-import url from './constant';
+import url from '../helper/constant';
 
 module.exports = {
-  'Login Users': (browser) => {
+  'Signup Users': (browser) => {
     browser
       .url(url.signup)
       .waitForElementVisible('body')
@@ -20,8 +20,9 @@ module.exports = {
       .assert.urlContains('signup')
       .setValue('input[id="email"]', faker.internet.email())
       .setValue('input[id="password"]', 'password')
+      .setValue('input[id="passwordConfirm"]', 'password')
       .click('input[type=submit]')
-      .pause(2000)
+      .waitForElementVisible('a[id=logout]')
       .assert.urlContains('dashboard')
       .end();
   }

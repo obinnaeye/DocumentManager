@@ -141,13 +141,15 @@ class AllUsers extends React.Component {
     event.preventDefault();
     const value = event.target.value;
     const name = event.target.getAttribute('id');
-    if (value < 0) {
+    if (value < 1 && name === 'limit') {
+      Materialize.toast(`${name} can not be 0`, 3000, 'red');
+    } else if (value < 0 && name === 'offset') {
       Materialize.toast(`${name} can not be negative`, 3000, 'red');
-      return;
+    } else {
+      this.setState({
+        [name]: value
+      }, this.getUsers);
     }
-    this.setState({
-      [name]: value
-    }, this.getUsers);
   }
 
   /**

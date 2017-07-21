@@ -10,15 +10,29 @@ const documentReducer = (state = initialState, action) => {
     stateUserDocuments.push(action.createdDocument);
     return { ...state,
       userDocuments: stateUserDocuments,
+      creatingDocument: true,
       editID
     };
   }
+
+  case actionTypes.CREATE_DOCUMENT_FAILURE:
+    return { ...state, creatingDocument: false };
   // This handles any action that gets documents, aside user documents
   case actionTypes.GET_DOCUMENTS_SUCCESS:
     return { ...state, documents: action.documents, fetchingDocuments: true };
 
   case actionTypes.GET_DOCUMENTS_FAILURE:
     return { ...state, fetchingDocuments: false, count: state.count + 1 || 1 };
+
+  case actionTypes.UPDATE_DOCUMENT_SUCCESS:
+    return { ...state,
+      documents: action.updatedDocument,
+      fetchingDocuments: true,
+      count: state.count + 1 || 1
+    };
+
+  case actionTypes.UPDATE_DOCUMENT_FAILURE:
+    return { ...state, count: state.count + 1 || 1 };
 
   case actionTypes.GET_USER_DOCUMENTS_SUCCESS:
     return { ...state, userDocuments: action.userDocuments };

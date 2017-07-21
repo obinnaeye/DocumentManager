@@ -86,6 +86,7 @@ class UserDocuments extends React.Component {
               className="btn-floating waves-effect waves-light"
               onClick={this.viewCarousel}
               name={id}
+              mytag="view"
             ><i className="material-icons" name={id}>pageview</i></button>
             <h5>{title}</h5>
             {formatedContent}

@@ -5,9 +5,12 @@ import nockAjaxCall from 'nock';
 import ajaxCall from 'axios';
 import * as documentActions from '../../src/js/actions/DocumentActions';
 import actionTypes from '../../src/js/constants/actionTypes';
+import url from '../helper/constant';
+
+const baseUrl = url.baseUrl;
 
 // set ajaxCall call default base url to localhost
-ajaxCall.defaults.baseURL = 'http://localhost:8080/';
+ajaxCall.defaults.baseURL = baseUrl;
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -31,7 +34,7 @@ describe('Document Actions:', () => {
     });
     it('creates CREATE_DOCUMENT_SUCCESS when document is created',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .post('/documents')
           .reply(200, singleDocument);
 
@@ -47,7 +50,7 @@ describe('Document Actions:', () => {
       });
     it('creates CREATE_DOCUMENT_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .delete('/documents')
           .reply(409);
 
@@ -68,7 +71,7 @@ describe('Document Actions:', () => {
       });
 
       it('should create GET_DOCUMENTS_SUCCESS when document is found', () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get(`/documents/${2}`)
           .reply(200, singleDocument);
 
@@ -85,7 +88,7 @@ describe('Document Actions:', () => {
 
       it('creates GET_DOCUMENTS_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get(`/documents/${2}`)
           .reply(404);
 
@@ -111,7 +114,7 @@ describe('Document Actions:', () => {
           limit: 10,
           offset: 0
         };
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get('/search/documents')
           .query({ q: 'title', limit: 10, offset: 0 })
           .reply(200, documents);
@@ -134,7 +137,7 @@ describe('Document Actions:', () => {
           limit: 2,
           offset: 0
         };
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get('/search/documents')
           .query({ q: 'ob', limit: 2, offset: 0 })
           .reply(404);
@@ -157,7 +160,7 @@ describe('Document Actions:', () => {
       });
 
       it('should create GET_DOCUMENTS_SUCCESS when document is found', () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get('/documents/')
           .query({ offset: 0, limit: 2 })
           .reply(200, documents);
@@ -175,7 +178,7 @@ describe('Document Actions:', () => {
 
       it('creates GET_DOCUMENTS_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get('/documents/')
           .query({ offset: 0, limit: 2 })
           .reply(404);
@@ -199,7 +202,7 @@ describe('Document Actions:', () => {
 
       it('should create GET_USER_DOCUMENTS_SUCCESS when document is found',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get(`/users/${2}/documents`)
           .reply(200, documents);
 
@@ -216,7 +219,7 @@ describe('Document Actions:', () => {
 
       it('creates GET_USER_DOCUMENTS_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .get(`/users/${2}/documents`)
           .reply(404);
 
@@ -239,7 +242,7 @@ describe('Document Actions:', () => {
       });
       it('should create UPDATE_DOCUMENT_SUCCESS when document is updated',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .put(`/documents/${2}`)
           .reply(200, singleDocument);
 
@@ -255,7 +258,7 @@ describe('Document Actions:', () => {
       });
 
       it('creates UPDATE_DOCUMENT_FAILURE when an error is encountered', () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .put(`/documents/${2}`)
           .reply(404);
 
@@ -276,7 +279,7 @@ describe('Document Actions:', () => {
     });
     it('creates DELETE_DOCUMENT_SUCCESS when document is deleted',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .delete(`/documents/${2}`)
           .reply(200);
 
@@ -292,7 +295,7 @@ describe('Document Actions:', () => {
       });
     it('creates DELETE_DOCUMENT_FAILURE when an error is encountered',
       () => {
-        nockAjaxCall('http://localhost:8080/')
+        nockAjaxCall(baseUrl)
           .delete(`/documents/${2}`)
           .reply(400);
 

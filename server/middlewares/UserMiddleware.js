@@ -29,6 +29,29 @@ export default class UserMiddleware {
     }
   }
 
+    /**
+   * Method that checks and validates user get requests
+   * @param {Object} request - Request Object
+   * @param {Object} response - Response Object
+   * @param {Function} next - Function call to continue with next function
+   * @return {undefined}
+   */
+  static validateGetRequest(request, response, next) {
+    if (request.query && Number(request.query.limit) < 1) {
+      ResponseHandler.send400(
+        response,
+        { message: 'Invalid limit; limit should not be less than 1' }
+      );
+    } else if (request.query && Number(request.query.offset) < 0) {
+      ResponseHandler.send400(
+        response,
+        { message: 'Invalid offset; offset should not be less than 1' }
+      );
+    } else {
+      next();
+    }
+  }
+
   /**
    * Middleware to check and handle validation of user deletion request
    * @param {Object} request - Request Object

@@ -10,7 +10,7 @@ import PlainAllDocuments from './PlainAllDocuments';
  * @class AllDocuments
  * @extends {React.Component}
  */
-class AllDocuments extends React.Component {
+export class AllDocuments extends React.Component {
 
   /**
    * Creates an instance of AllDocuments.
@@ -25,7 +25,8 @@ class AllDocuments extends React.Component {
       documents: this.props.documents,
       offset: 0,
       limit: 10,
-      start: 0
+      start: 0,
+      fetchingDocuments: this.props.fetchingDocuments
     };
 
     this.renderedDocuments = this.renderedDocuments.bind(this);
@@ -93,8 +94,11 @@ class AllDocuments extends React.Component {
    * @memberOf AllDocuments
    */
   componentDidUpdate() {
-    $('.collapsible').collapsible();
-    this.props = this.props;
+    const testing = process.env.NODE_ENV === 'test';
+    if (!testing) {
+      $('.collapsible').collapsible();
+      this.props = this.props;
+    }
   }
 
   /**
@@ -117,13 +121,15 @@ class AllDocuments extends React.Component {
     event.preventDefault();
     const value = event.target.value;
     const name = event.target.getAttribute('id');
-    if (value < 0) {
+    if (value < 1 && name === 'limit') {
+      Materialize.toast(`${name} can not be 0`, 3000, 'red');
+    } else if (value < 0 && name === 'offset') {
       Materialize.toast(`${name} can not be negative`, 3000, 'red');
-      return;
+    } else {
+      this.setState({
+        [name]: value
+      }, this.getDocuments);
     }
-    this.setState({
-      [name]: value
-    }, this.getDocuments);
   }
 
 
@@ -203,20 +209,21 @@ class AllDocuments extends React.Component {
    */
   render() {
     const documents = this.state.documents;
-
     return (
-      <PlainAllDocuments
-        limit={this.state.limit}
-        offset={this.state.offset}
-        inputChange={this.inputChange}
-        documents={documents}
-        renderedDocuments={this.renderedDocuments}
-        pageNavigation={this.pageNavigation}
-        totalDocuments={this.state.totalDocuments}
-        pagecount={this.state.pagecount}
-        initialPage={this.state.initialPage}
-        forcePage={this.state.forcePage}
-      />
+      <div>
+        <PlainAllDocuments
+          limit={this.state.limit}
+          offset={this.state.offset}
+          inputChange={this.inputChange}
+          documents={documents}
+          renderedDocuments={this.renderedDocuments}
+          pageNavigation={this.pageNavigation}
+          totalDocuments={this.state.totalDocuments}
+          pagecount={this.state.pagecount}
+          initialPage={this.state.initialPage}
+          forcePage={this.state.forcePage}
+        />
+      </div>
     );
   }
 }
@@ -229,11 +236,11 @@ AllDocuments.propTypes = {
   count: PropTypes.number.isRequired
 };
 
-const mapStateToProps = state => ({
-  documents: state.documentReducer.documents,
-  fetchingDocuments: state.documentReducer.fetchingDocuments,
-  deletingDocument: state.documentReducer.deletingDocument,
-  count: state.documentReducer.count
+const mapStateToProps = ({ documentReducer }) => ({
+  documents: documentReducer.documents,
+  fetchingDocuments: documentReducer.fetchingDocuments,
+  deletingDocument: documentReducer.deletingDocument,
+  count: documentReducer.count
 });
 
 const mapDispatchToProps = dispatch => ({

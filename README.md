@@ -91,11 +91,42 @@ npm run migrate:test
 npm test
 ```
 
-### Contributing to the project
+## Contributing to the project
 
 If you are interested in participating in the development of okDocs, your ideas and contributions are welcome! It is always better to start by identifying a specific part of the app you can make better. Taking a look at the limitations is a good starting point. You can reach out to the team through the comments or [create a new issue](https://github.com/andela-onnenanya/document-manager/issues/new).
 
-### Limitations of the project
+### Git Workflow
+
+```
+git checkout develop
+git pull origin develop
+npm install
+git checkout -b branchname
+Branch Naming convention: Story-Id/Story-Category/Description. eg. 093839000/Feature/Make-Api-Restful
+Always review changes for styleguide and debug lines
+git commit -m “message” (Commit messages)
+git push origin branchname
+
+Opening PR - (only against develop)
+
+git pull --rebase origin develop
+fix merge conflicts if any
+git add . & git rebase --continue
+All conflicts resolved, git push, open PR
+
+NOTE: Pull request should be as decriptive as possible; should explain what task has been completed
+```
+
+### Style Guide & Continous Integration
+
+```
+The project uses airbnb style guide. To keep Airbnb, we have used eslint for linting the code. Looking at the .eslintrc file, Airbnb style guide is extended in linting the code.
+On github, we have integrated Hounds for automated quality checks.
+TravisCI is also integrated for build. Although you can raise a PR even when build fails, Merged PRs are only automatically deployed if build passes.
+With this, your PRs will not be merged if the build fails. 
+```
+
+## Limitations of the project
     Currently the project has the following limitations:
 
     * Role Management is not available on the UI, only in the API

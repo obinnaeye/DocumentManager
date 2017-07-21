@@ -12,7 +12,7 @@ const PlainAllDocuments = ({
   initialPage
 }) => (
   <div className="container width-85">
-    <div className="row">
+    <div className="row ">
       <div className="col s12 m10 offset-m1">
         <p className="col s12 center-align white"> <strong>
         All Documents</strong> </p>

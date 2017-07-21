@@ -5,13 +5,13 @@ const PlainNewDocument = ({
   save,
   exit
 }) => (
-  <div className="row center-align white" id="my-container" >
+  <div className="row center-align white new-doc" id="my-container" >
     <div className="row center-align">
       <div className="input-field col m5 s6">
         <input id="documentTitle" type="text" className="validate" />
         <label htmlFor="documentTitle">Title: Unique Title</label>
       </div>
-      <div className="input-field col m5 s6 center-align">
+      <div className="input-field col m4 s6 center-align">
         <select id="access">
           <option value="" disabled selected>Choose Access Type</option>
           <option value="private">Private</option>

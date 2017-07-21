@@ -8,13 +8,13 @@ const PlainEditDocument = ({
   exit,
   content
 }) => (
-  <div className="row center-align edit-document-container white">
+  <div className="row center-align edit-document-container white new-doc">
     <div className="row center-align">
-      <div className="input-field col s5">
+      <div className="input-field col m5 s6">
         <input id="documentTitle" type="text" className="validate" />
         <label htmlFor="documentTitle">Title: Unique Title</label>
       </div>
-      <div className="input-field col s5 center-align">
+      <div className="input-field col m4 s6 center-align">
         <select
           className="browser-default"
           onChange={handleChange}

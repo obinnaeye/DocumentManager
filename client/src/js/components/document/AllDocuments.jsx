@@ -54,7 +54,7 @@ export class AllDocuments extends React.Component {
     if (nextProps.documents.length > 0) {
       const allDocuments = nextProps.documents;
       const totalDocuments = allDocuments.length;
-      const pagecount = totalDocuments / 10;
+      const pagecount = Math.ceil(totalDocuments / 10);
       let { start } = this.state;
       let target;
       let documents = allDocuments.slice(start, start + 10);
@@ -78,7 +78,6 @@ export class AllDocuments extends React.Component {
         count: nextProps.count,
         documents,
         pagecount,
-        totalDocuments,
         target
       }, () => {
         if (target && length >= 4) {
@@ -218,7 +217,6 @@ export class AllDocuments extends React.Component {
           documents={documents}
           renderedDocuments={this.renderedDocuments}
           pageNavigation={this.pageNavigation}
-          totalDocuments={this.state.totalDocuments}
           pagecount={this.state.pagecount}
           initialPage={this.state.initialPage}
           forcePage={this.state.forcePage}

@@ -187,7 +187,7 @@ class DocumentController {
     } else {
       const queryBuilder = {
         where: { ownerId },
-        order: '"title" DESC'
+        order: '"createdAt" DESC'
       };
       Document.findAll(queryBuilder)
         .then((foundDocuments) => {

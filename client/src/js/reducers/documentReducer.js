@@ -35,7 +35,10 @@ const documentReducer = (state = initialState, action) => {
     return { ...state, count: state.count + 1 || 1 };
 
   case actionTypes.GET_USER_DOCUMENTS_SUCCESS:
-    return { ...state, userDocuments: action.userDocuments };
+    return { ...state,
+      userDocuments: action.userDocuments,
+      count: state.count + 1 || 1
+    };
 
   case actionTypes.DELETE_DOCUMENT_SUCCESS: {
     // Use unary plus to convert id string to number
@@ -46,8 +49,14 @@ const documentReducer = (state = initialState, action) => {
     return { ...state,
       documents: stateDocuments,
       deletingDocument: true,
-      count: state.count + 1 || 1 };
+      count: state.count + 1 || 1,
+      deleteId: action.documentId
+    };
   }
+
+  case actionTypes.DELETE_DOCUMENT_FAILURE:
+    return { ...state, deletingDocument: false, count: state.count + 1 || 1 };
+
   default:
     return state;
   }

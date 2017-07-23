@@ -6,9 +6,6 @@
     "ADMIN_EMAIL": {
       "required": true
     },
-    "DATABASE_URL": {
-      "required": true
-    },
     "ADMIN_FIRST_NAME": {
       "required": true
     },

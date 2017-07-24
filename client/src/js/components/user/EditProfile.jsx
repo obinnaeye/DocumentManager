@@ -84,21 +84,32 @@ class EditProfile extends React.Component {
    */
   updateProfile() {
     const { userId } = this.state.user;
+    const oldPassword = $('#oldPassword').val();
     const password = $('#password').val();
+    const passwordConfirm = $('#passwordConfirm').val();
     const firstName = $('#firstName').val();
     const lastName = $('#lastName').val();
-    const updateData = { lastName, firstName };
+    const updateData = { lastName, firstName, oldPassword };
     const updateInfo = { updateData, userId };
-    if (password && password.length < 8) {
-      Materialize.toast(`Password must be up to 8 characters<br />
-      You can leave password blank if you do not want to change your password`,
-         5000, 'red');
-      return;
+    if (password) {
+      if (password.length < 8) {
+        Materialize.toast(`Password must be up to 8 characters<br />
+        You can leave password blank if you do not want 
+        to change your password`,
+          5000, 'red');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        Materialize.toast('Passwords do not match!',
+          5000, 'red');
+        return;
+      }
     }
     // add password if up to 8 characters
     if (password.length > 7) {
-      updateInfo.password = password;
+      updateInfo.updateData.password = password;
     }
+
     this.props.UserActions.updateUser(updateInfo);
   }
 

@@ -95,7 +95,7 @@ export const updateUser = (updateInfo) => {
         dispatch(updateUserFailure(error));
         /* istanbul ignore next */
         if (!testing) {
-          Materialize.toast('Profile update not successful!', 3000, 'red');
+          Materialize.toast(error.response.data.message, 3000, 'red');
         }
       });
 };

@@ -176,14 +176,14 @@ class AllUsers extends React.Component {
       const { roleId } =
         JSON.parse(localStorage.getItem('user_profile'));
       const render = users.map((user) => {
-        const { firstName, lastName, email, userId } = user;
+        const { firstName, lastName, userId } = user;
         return (
           <UserCollapsible
             key={userId}
             roleId={roleId}
             firstName={firstName}
             lastName={lastName}
-            email={email}
+            role={user.roleId === 1 ? 'Admin' : 'Regular'}
             userId={userId}
             editUser={this.editUser}
             deleteUser={this.deleteUser}

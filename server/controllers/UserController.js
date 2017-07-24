@@ -213,16 +213,46 @@ export default class UserController {
     .then((user) => {
       if (user) {
         request.body.roleId = user.roleId;
-        user.update(request.body)
-        .then((updatedUser) => {
-          ResponseHandler.send200(
-            response,
-            UserController.getUserDetails(updatedUser)
-          );
-        })
-        .catch((error) => {
-          ErrorHandler.handleRequestError(response, error);
-        });
+        const admin = request.decoded.roleId === 1;
+        const password = request.body.oldPassword;
+        if (!admin) {
+          if (!user.verifyPassword(password)) {
+            ResponseHandler.send403(response, {
+              message: 'Wrong Password!'
+            });
+          } else {
+            user.update(request.body)
+            .then((updatedUser) => {
+              ResponseHandler.send200(
+                response,
+                UserController.getUserDetails(updatedUser)
+              );
+            })
+            .catch((error) => {
+              ErrorHandler.handleRequestError(response, error);
+            });
+          }
+        } else {
+          User.findById(request.decoded.userId)
+            .then((adminUser) => {
+              if (!adminUser.verifyPassword(password)) {
+                ResponseHandler.send403(response, {
+                  message: 'Wrong Password!'
+                });
+              } else {
+                user.update(request.body)
+                .then((updatedUser) => {
+                  ResponseHandler.send200(
+                    response,
+                    UserController.getUserDetails(updatedUser)
+                  );
+                })
+                .catch((error) => {
+                  ErrorHandler.handleRequestError(response, error);
+                });
+              }
+            });
+        }
       } else {
         ResponseHandler.send404(response);
       }

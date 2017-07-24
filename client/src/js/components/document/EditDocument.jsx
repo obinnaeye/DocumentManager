@@ -46,6 +46,7 @@ class EditDocument extends React.Component {
     this.props.DocumentActions.getDocument(this.state.editID);
   }
 
+
   /**
    * @param {objcet} nextProps
    * @memberOf EditDocument
@@ -55,6 +56,14 @@ class EditDocument extends React.Component {
     this.checkProps(nextProps);
   }
 
+  /**
+   * @memberOf EditDocument
+   * @returns {void}
+   */
+  componentWillUnmount() {
+    CKEDITOR.instances.editor.destroy();
+    this.state = this.state;
+  }
   /**
    * @desc Checks nextProps and redirects if no user-editable document
    * @param {objcet} nextProps
@@ -90,7 +99,9 @@ class EditDocument extends React.Component {
       }, 5000);
     } else {
       const { title, content, access } = nextProps.document;
-      CKEDITOR.instances.editor.setData(content);
+      if (nextProps.count === 0) {
+        CKEDITOR.instances.editor.setData(content);
+      }
       $('#documentTitle').val(title);
       document.getElementById('documentTitle').focus();
       this.setState({

@@ -9,6 +9,7 @@ import SeedHelper from '../helpers/SeedHelper';
 const client = supertest.agent(app);
 const regularUser = SpecHelper.generateRandomUser(2);
 let regularUserToken;
+let adminUserPassword;
 let adminUserToken;
 let regularUserId;
 
@@ -83,6 +84,7 @@ describe('Users:', () => {
         expect(response.status).to.equal(200);
         expect(response.body.message)
         .to.equal('You have successfully signed up!');
+        expect(response.body.userId).to.not.equal(invalidNewUser.id);
         done();
       });
     });
@@ -188,16 +190,18 @@ describe('Users:', () => {
     });
 
     it('should return a TOKEN if Admin Login is successful', (done) => {
+      const { password } = SpecHelper.validAdminUser;
       client.post('/users/login')
       .send({
         email: SpecHelper.validAdminUser.email,
-        password: SpecHelper.validAdminUser.password
+        password
       })
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body).to.have.property('activeToken');
         // set the admin user token for other tests
         adminUserToken = response.body.activeToken;
+        adminUserPassword = password;
         done();
       });
     });
@@ -592,8 +596,9 @@ describe('Users:', () => {
     (done) => {
       // add the new password to the regular userObject
       regularUser.newPassword = 'mynewpassword';
+      const oldPassword = regularUser.password;
       client.put(`/users/${regularUserId}`)
-      .send({ password: regularUser.newPassword })
+      .send({ password: regularUser.newPassword, oldPassword })
       .set({ 'xsrf-token': regularUserToken })
       .end((error, response) => {
         expect(response.status).to.equal(200);
@@ -675,9 +680,11 @@ describe('Users:', () => {
     (done) => {
       // add the admin set password to the regular user Object
       regularUser.adminSetPassword = 'admin set password';
+      const oldPassword = adminUserPassword;
       client.put(`/users/${regularUserId}`)
       .send({
-        password: regularUser.adminSetPassword
+        password: regularUser.adminSetPassword,
+        oldPassword
       })
       .set({ 'xsrf-token': adminUserToken })
       .end((error, response) => {

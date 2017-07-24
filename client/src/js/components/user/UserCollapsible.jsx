@@ -4,9 +4,8 @@ const UserCollapsible = ({
   userId,
   firstName,
   lastName,
-  email,
+  role,
   roleId,
-  editUser,
   deleteUser
 }) => (
   <li key={userId}>
@@ -18,18 +17,9 @@ const UserCollapsible = ({
     <div className="collapsible-body white">
       <span> <b>FirstName:</b> {firstName} </span><br />
       <span> <b>LastName:</b> {lastName} </span><br />
-      <span> <b>Email:</b> {email} </span><br />
-      { roleId === 1 ?
+      <span> <b>Role:</b> {role} </span><br />
+      { roleId === 1 && role !== 'Admin' ?
         <span className="right">
-          <a
-            className="my-zindex-high button-margin"
-            onClick={editUser}
-            name={userId}
-          >
-            <i
-              className="material-icons my-pointer"
-              name={userId}
-            >mode_edit</i></a>
           <a
             className="my-danger lighten-2 my-zindex-high button-margin"
             onClick={deleteUser}
@@ -48,9 +38,8 @@ UserCollapsible.propTypes = {
   userId: PropTypes.number.isRequired,
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
+  role: PropTypes.string.isRequired,
   roleId: PropTypes.number.isRequired,
-  editUser: PropTypes.func.isRequired,
   deleteUser: PropTypes.func.isRequired
 };
 

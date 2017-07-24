@@ -23,10 +23,33 @@ const PlainEditProfile = ({
           User email is not editable!</label>
         </div>
         <div className="input-field col s12 m6">
+          <input
+            id="oldPassword"
+            type="password"
+            className="validate"
+            required
+            aria-required="true"
+          />
+          <label
+            htmlFor="oldPassword"
+          >Password: Current Password</label>
+        </div>
+        <div className="input-field col s12 m6">
           <input id="password" type="password" className="validate" />
           <label
             htmlFor="password"
-          >Password: Not less than 8 characters</label>
+          >New Password: Not less than 8 characters</label>
+        </div>
+        <div className="input-field col s12 m6">
+          <input
+            id="passwordConfirm"
+            type="password"
+            className="validate"
+            autoComplete="off"
+          />
+          <label htmlFor="passwordConfirm">
+            New Password: (Confirm password)
+          </label>
         </div>
         <div className="input-field col s12 m6">
           <input
@@ -36,6 +59,7 @@ const PlainEditProfile = ({
             className="validate"
             onChange={onChange}
             required
+            aria-required="true"
           />
           <label className="active" htmlFor="firstName">First Name</label>
         </div>
@@ -47,6 +71,7 @@ const PlainEditProfile = ({
             className="validate"
             onChange={onChange}
             required
+            aria-required="true"
           />
           <label className="active" htmlFor="lastName">Last Name</label>
         </div>

@@ -40,11 +40,20 @@ const documentReducer = (state = initialState, action) => {
       count: state.count + 1 || 1
     };
 
+  case actionTypes.GET_USER_DOCUMENTS_FAILURE:
+    return { ...state, userDocuments: [], count: state.count + 1 || 1 };
+
   case actionTypes.DELETE_DOCUMENT_SUCCESS: {
     // Use unary plus to convert id string to number
     const index =
-      findIndex(state.documents, { id: +(action.documentId) });
-    const stateDocuments = state.documents.slice(0);
+      findIndex(state.documents || state.userDocuments,
+      { id: +(action.documentId) });
+    let stateDocuments;
+    if (state.documents.length > 0) {
+      stateDocuments = state.documents.slice(0);
+    } else {
+      stateDocuments = state.userDocuments.slice(0);
+    }
     stateDocuments.splice(index, 1);
     return { ...state,
       documents: stateDocuments,

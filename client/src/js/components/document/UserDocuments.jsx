@@ -57,40 +57,38 @@ class UserDocuments extends React.Component {
       );
       return;
     }
-    if (nextProps.userDocuments.length > 0) {
-      const allDocuments = nextProps.userDocuments;
-      const totalDocuments = allDocuments.length;
-      const pageCount = Math.ceil(totalDocuments / 10);
-      let { start } = this.state;
-      let target;
-      let documents = allDocuments.slice(start, start + 10);
-      let length;
-      if (this.state.target) {
-        this.state.target.classList.remove('active');
-      }
-      if (start > 0 && totalDocuments <= start) {
-        start = ((start / 10) - 1) * 10;
-        documents = allDocuments.slice(start, start + 10);
-        const parent = document.getElementsByClassName('pagination');
-        length = parent[0].children.length;
-        target = parent[0].children[length - 3];
-        if (length === 3) {
-          target = parent[0].children[length - 2];
-        }
-      }
-      this.setState({
-        allDocuments,
-        count: nextProps.count,
-        documents,
-        pageCount,
-        target
-      }, () => {
-        if (target && length >= 4) {
-          target.classList.add('active');
-          target.click();
-        }
-      });
+    const allDocuments = nextProps.userDocuments;
+    const totalDocuments = allDocuments.length;
+    const pageCount = Math.ceil(totalDocuments / 10);
+    let { start } = this.state;
+    let target;
+    let documents = allDocuments.slice(start, start + 10);
+    let length;
+    if (this.state.target) {
+      this.state.target.classList.remove('active');
     }
+    if (start > 0 && totalDocuments <= start) {
+      start = ((start / 10) - 1) * 10;
+      documents = allDocuments.slice(start, start + 10);
+      const parent = document.getElementsByClassName('pagination');
+      length = parent[0].children.length;
+      target = parent[0].children[length - 3];
+      if (length === 3) {
+        target = parent[0].children[length - 2];
+      }
+    }
+    this.setState({
+      allDocuments,
+      count: nextProps.count,
+      documents,
+      pageCount,
+      target
+    }, () => {
+      if (target && length >= 4) {
+        target.classList.add('active');
+        target.click();
+      }
+    });
   }
 
   /**

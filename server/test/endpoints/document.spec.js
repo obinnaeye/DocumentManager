@@ -93,6 +93,7 @@ describe('Documents:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(201);
         expect(response.body.title).to.equal(publicDocument.title);
+        expect(response.body.id).to.not.equal(publicDocument.id);
         done();
       });
     });
@@ -133,6 +134,7 @@ describe('Documents:', () => {
       .end((error, response) => {
         expect(response.status).to.equal(201);
         expect(response.body.title).to.equal(roleDocument.title);
+        expect(response.body.access).to.not.equal(roleDocument.access);
         done();
       });
     });

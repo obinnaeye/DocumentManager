@@ -83,6 +83,7 @@ describe('Users:', () => {
         expect(response.status).to.equal(200);
         expect(response.body.message)
         .to.equal('You have successfully signed up!');
+        expect(response.body.userId).to.not.equal(invalidNewUser.id);
         done();
       });
     });

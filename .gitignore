@@ -10,3 +10,4 @@ bower_components
 /client/public/js
 /migrations.1
 /screenshots
+/client/test/e2ess

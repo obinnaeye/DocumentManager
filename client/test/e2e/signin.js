@@ -9,12 +9,15 @@ module.exports = {
       .setValue('input[type=email]', 'info@okdocs.com')
       .setValue('input[type=password]', 'asdfghjk')
       .click('input[type=submit]')
-      .pause(2000)
+      .execute('Materialize.Toast.removeAll()')
+      .waitForElementVisible('a[id=logout]')
       .assert.urlContains('dashboard')
       .click('#editprofile')
+      .waitForElementVisible('input[id=firstName]')
+      .pause(2000)
+      .assert.value('input[id="firstName"]', 'Info')
       .click('a[id=logout]')
-      .waitForElementVisible('header')
-      .pause(5000)
+      .waitForElementPresent('a[id=signin]')
       .assert.urlEquals('http://localhost:8080/?#/')
       .end();
   },
@@ -25,7 +28,6 @@ module.exports = {
       .setValue('input[type=email]', 'invalid@okdocs.com')
       .setValue('input[type=password]', 'password')
       .click('input[type=submit]')
-      .pause(2000)
       .assert.urlEquals(url.signin)
       .end();
   }

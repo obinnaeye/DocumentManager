@@ -122,7 +122,11 @@ export const searchDocuments = (searchData) => {
   return dispatch =>
     ajaxCall.get(`/search/documents?q=${q}&limit=${limit}&offset=${offset}`)
       .then((response) => {
-        dispatch(getDocumentsSuccess(response.data.rows));
+        if (response.data.rows.length > 0) {
+          dispatch(getDocumentsSuccess(response.data.rows));
+        } else {
+          dispatch(getDocumentsFailure());
+        }
       })
       .catch((error) => {
         dispatch(getDocumentsFailure(error));

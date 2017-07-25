@@ -185,13 +185,10 @@ export default class UserController {
         order: '"email" DESC'
       })
        .then((foundUsers) => {
-         if (foundUsers.rows.length > 0) {
-           const formatedUsers = UserController.formatedUsers(foundUsers.rows);
-           foundUsers.rows = formatedUsers;
-           return ResponseHandler.send200(response,
-           PaginationHelper.paginateResult(foundUsers, offset, limit));
-         }
-         return ResponseHandler.send404(response);
+         const formatedUsers = UserController.formatedUsers(foundUsers.rows);
+         foundUsers.rows = formatedUsers;
+         return ResponseHandler.send200(response,
+          PaginationHelper.paginateResult(foundUsers, offset, limit));
        }).catch(error => ResponseHandler.send500(
            response,
            { message: error }

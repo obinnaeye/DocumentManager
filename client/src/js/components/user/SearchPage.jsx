@@ -197,7 +197,8 @@ class SearchPage extends React.Component {
    * @memberOf SearchPage
    */
   renderedDocuments() {
-    if (this.state.fetchingDocuments && this.state.searching) {
+    if (this.state.fetchingDocuments && this.state.searching
+      && this.state.documents.length > 0) {
       const documents = this.state.documents;
       const render = documents.map((document) => {
         const { id, title, content, createdAt, updatedAt, ownerId } = document;

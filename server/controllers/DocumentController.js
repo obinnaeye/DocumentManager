@@ -235,14 +235,10 @@ class DocumentController {
       };
       Document.findAndCountAll(queryBuilder)
       .then((foundDocuments) => {
-        if (foundDocuments.rows.length > 0) {
-          ResponseHandler.send200(
-            response,
-            PaginationHelper.paginateResult(foundDocuments, offset, limit)
-          );
-        } else {
-          ResponseHandler.send404(response);
-        }
+        ResponseHandler.send200(
+          response,
+          PaginationHelper.paginateResult(foundDocuments, offset, limit)
+        );
       });
     } else {
       const queryBuilder = {
@@ -261,14 +257,10 @@ class DocumentController {
       };
       Document.findAndCountAll(queryBuilder)
         .then((foundDocuments) => {
-          if (foundDocuments.rows.length > 0) {
-            ResponseHandler.send200(
-              response,
-              PaginationHelper.paginateResult(foundDocuments, offset, limit)
-            );
-          } else {
-            ResponseHandler.send404(response);
-          }
+          ResponseHandler.send200(
+            response,
+            PaginationHelper.paginateResult(foundDocuments, offset, limit)
+          );
         });
     }
   }

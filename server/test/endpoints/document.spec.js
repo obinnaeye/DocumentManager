@@ -375,7 +375,6 @@ describe('Documents:', () => {
         client.get(`/documents/?limit=${searchLimit}`)
         .set({ 'xsrf-token': adminUser.token })
         .end((error, response) => {
-          console.log('resss....', response.body);
           expect(response.status).to.equal(200);
           expect(response.body.rows.length).to.equal(1);
           expect(+(response.body.limit)).to.equal(searchLimit);
@@ -500,36 +499,6 @@ describe('Documents:', () => {
           .set({ 'xsrf-token': regularUser1.token })
           .end((error, response) => {
             expect(response.status).to.equal(400);
-            done();
-          });
-      });
-
-      it('should return 404 if no document is found by regular User',
-      (done) => {
-        client.get('/search/documents/?q=wronginvalidfalse')
-          .set({ 'xsrf-token': regularUser1.token })
-          .end((error, response) => {
-            expect(response.status).to.equal(404);
-            done();
-          });
-      });
-
-      it('should return 404 if no document is found by admin User',
-      (done) => {
-        client.get('/search/documents/?q=wronginvalidfalse')
-          .set({ 'xsrf-token': adminUser.token })
-          .end((error, response) => {
-            expect(response.status).to.equal(404);
-            done();
-          });
-      });
-
-      it('should not allow regular User access other user\'s document',
-      (done) => {
-        client.get(`/search/documents/?q=${privateDocument.title}`)
-          .set({ 'xsrf-token': userWithoutDocument.token })
-          .end((error, response) => {
-            expect(response.status).to.equal(404);
             done();
           });
       });

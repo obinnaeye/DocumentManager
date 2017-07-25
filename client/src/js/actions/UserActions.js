@@ -20,7 +20,11 @@ export const searchUsers = (searchData) => {
   return dispatch =>
     ajaxCall.get(`/search/users/?q=${q}&offset=${offset}&limit=${limit}`)
       .then((response) => {
-        dispatch(searchUserSuccess(response.data.rows));
+        if (response.data.rows.length > 0) {
+          dispatch(searchUserSuccess(response.data.rows));
+        } else {
+          dispatch(searchUserFailure());
+        }
       })
       .catch((error) => {
         dispatch(searchUserFailure(error));

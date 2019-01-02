@@ -1,0 +1,21 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "mat610",
+    "database": "postgres",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "mat610",
+    "database": "okdocs_test",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  }
+}

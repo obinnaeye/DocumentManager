@@ -1,0 +1,28 @@
+{
+  "name": "okdocs",
+  "description": "A simple document management application",
+  "main": "server.js",
+  "authors": [
+    "Nnenanya Obinna K"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "document",
+    "document-manager",
+    "document-management"
+  ],
+  "homepage": "https://github.com/andela-onnenanya/document-manager",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "components-font-awesome": "^4.7.0",
+    "materialize": "0.98.2",
+    "jquery": "3.2.1",
+    "jwt-decode": "^2.2.0"
+  }
+}

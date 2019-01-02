@@ -1,0 +1,13 @@
+/node_modules
+/coverage
+.env
+.DS_Store
+/reports
+npm-debug.log
+client/public/js/bundle.min.js
+bower_components
+.nyc_output
+/client/public/js
+/migrations.1
+/screenshots
+/client/test/e2ess

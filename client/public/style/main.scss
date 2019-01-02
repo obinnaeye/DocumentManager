@@ -1,0 +1,145 @@
+#app {
+  background-image: url(/public/img/home.jpg);
+  background-color: #663300;
+  background-size: cover;
+  background-repeat:no-repeat;
+  background-position: 90% 30%;
+  min-height: 100vh;
+}
+
+// header {
+//   margin-top: -50px;
+// }
+
+@media only screen and (max-width: 440px) {
+    #app {
+        background-position: 90% 20%;
+    }
+}
+
+.nav-wrapper {
+  padding: 0px 20px;
+}
+
+figure {
+  padding-left: 20px !important;
+  //width: 400px !important; 
+  background: white !important;
+  height: 350px !important;
+  align-self: stretch !important;
+  word-wrap: break-word;
+  opacity: 1
+}
+
+.coverflow__container__1P-xE {
+  margin-top: 50px !important;
+  background: black !important;
+  opacity: 0.8
+}
+.open-doc{
+  z-index: 10000;
+  cursor: pointer;
+  pointer-events: auto
+}
+
+.coverflow__cover__25-7e {
+  margin-top: 50px !important;
+}
+
+.my-centered {
+  margin: 15px auto;
+}
+
+.my-top-border {
+  border-top: 3px solid orange;
+}
+
+.pin-top {
+    position: relative;
+  }
+
+// Class for when element is below threshold
+.pin-bottom {
+  position: relative;
+}
+
+// Class for when element is pinned
+.pinned {
+  position: fixed !important;
+}
+
+.edit-document-container {
+  margin-top: 25px;
+  padding: 10px
+}
+.edit-document-buttons button {
+  margin-top: 15px;
+  width: 80%
+}
+
+.width-85 {
+  width: 100% !important;
+}
+
+.button-margin {
+  margin: 0 10px
+}
+
+.my-container {
+  padding: 10px !important;
+  margin: 0px auto;
+}
+
+.my-centered {
+  margin: 0 auto;
+  background: red;
+  padding: 20px;
+}
+
+.empty {
+  width: 100%;
+  height: 50%;
+}
+
+.scroll-a {
+  max-height: 95%;
+  overflow: auto
+}
+.my-danger {
+  color: red !important
+}
+.my-zindex-high {
+  z-index: 10101090 !important
+}
+
+.my-top-margin {
+  margin-top: 10px;
+}
+
+.my-pointer {
+  cursor: pointer
+}
+.collapsible-header {
+  margin: 0px !important;
+}
+.center-text {
+  text-align: center
+}
+
+.pagination li {
+  cursor: pointer;
+}
+
+.new-doc {
+  width: 80vw;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.top_30 {
+  margin-top: 30px;
+}
+
+.pagination {
+  background-color: white
+}
